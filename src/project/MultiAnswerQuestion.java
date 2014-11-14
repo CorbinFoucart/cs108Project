@@ -2,15 +2,13 @@ package project;
 
 import java.util.*;
 
-import project.QuestionResponse.Answer;
-
 public class MultiAnswerQuestion {
 	
-	private String question;
+	private String question; 
 	private boolean ordered;
 	private ArrayList<String> userAnswers;
 	private ArrayList<Answer> acceptedAnswers;
-	private int numCorrect;
+	public int numCorrect;
 	
 	/**
 	 * Constructor for multi-answer question.
@@ -18,7 +16,7 @@ public class MultiAnswerQuestion {
 	 * @param ordered - user determines if order matters in
 	 * answering the questions.
 	 */
-	public MultiAnswerQuestion(boolean ordered, String question) {
+	public MultiAnswerQuestion(String question, boolean ordered) {
 		this.ordered = ordered;
 		this.question = question;
 		this.userAnswers = new ArrayList<String>();
@@ -36,18 +34,30 @@ public class MultiAnswerQuestion {
 		userAnswers.add(userAns);
 	}
 	
+	public void clearUserAnswers() {
+		userAnswers = new ArrayList<String>();
+		for (int i = 0; i < acceptedAnswers.size(); i++) {
+			acceptedAnswers.get(i).correct = false;
+		}
+		numCorrect = 0;
+	}
 	
-	public boolean getScore() {
-		for (int i = 0; i < userAnswers.size(); i++) {
+	
+	public boolean tallyScore() {
+		int nUserAnswers = userAnswers.size();
+		int nAcceptedAnswers = acceptedAnswers.size();
+		for (int i = 0; i < nUserAnswers; i++) {
+			String currUserAns = userAnswers.get(i);
 			if (ordered) {
-				if (acceptedAnswers.size() > i && 
-						userAnswers.get(i).equals(acceptedAnswers.get(i).answer)) {
+				String correctAns = acceptedAnswers.get(i).answer;
+				if (nAcceptedAnswers > i && currUserAns.equals(correctAns)) {
 					numCorrect++;
 				}
 			} else {
-				for (int j = 0; j < acceptedAnswers.size(); j++) {
-					if (userAnswers.get(i).equals(acceptedAnswers.get(j).answer) 
-							&& acceptedAnswers.get(j).correct) {
+				for (int j = 0; j < nAcceptedAnswers; j++) {
+					String correctAnswer = acceptedAnswers.get(j).answer;
+					boolean alreadyAnswered = acceptedAnswers.get(j).correct;
+					if (currUserAns.equals(correctAnswer) && !alreadyAnswered) {
 								numCorrect++;
 								acceptedAnswers.get(j).correct = true;
 							}
@@ -59,7 +69,7 @@ public class MultiAnswerQuestion {
 		return false;
 	}
 	
-	
+
 	
 	
 	// ---- answer inner array ----- //
@@ -85,9 +95,7 @@ public class MultiAnswerQuestion {
 		public String toString() {
 			return answer;
 		}
-		
-		 
-		
 	}
+	
 	
 }
