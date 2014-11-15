@@ -2,9 +2,30 @@ package project;
 
 public interface Question {
 
-	public boolean isCorrect();
-
-	public Object getQuestion();
+	/**
+	 * getScore() always returns a double between 0 and 1
+	 * indicating a percentage that the user earned on a
+	 * particular question.
+	 * 
+	 * Weighting of each question is handled in the page 
+	 * class. 
+	 * 
+	 */
+	public double getScore();
+	
+	/**
+	 * getQuestion() always returns a string specifying the
+	 * question. 
+	 * 
+	 * For QuestionResponse, MultiAnswerQuestion, 
+	 * QuestionMultipleChoice, and QuestionFillInBlank
+	 * objects, returns a string of the question asked.
+	 * 
+	 * For pictureQuestion, returns a string of the image
+	 * filename associated with the question.
+	 * 
+	 */
+	public String getQuestion();
 	
 	
 	

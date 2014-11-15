@@ -19,12 +19,13 @@ public class MultiAnswerQuestionTest {
 	public void q1test() {
 		String q1Str = "List the 5 only types of bread worth knowing about";
 		boolean q1_Ordered = false;
-		q1 = new MultiAnswerQuestion(q1Str, q1_Ordered);
 		String[] breads = { "Pumpernickel", 
-							"Potato Bread", 
-							"Subway's Italian Bread", 
-							"Portuguese Sweet Bread",
-							"Sourdough"};
+				"Potato Bread", 
+				"Subway's Italian Bread", 
+				"Portuguese Sweet Bread",
+				"Sourdough"};
+		q1 = new MultiAnswerQuestion(q1Str, q1_Ordered, breads.length);
+
 		
 		q1.addAcceptedAnswer(breads[0]);
 		q1.addAcceptedAnswer(breads[1]);
@@ -99,12 +100,32 @@ public class MultiAnswerQuestionTest {
 		q1.setUserAnswer(breads[3]);
 		q1.setUserAnswer(breads[4]);
 		q1.setUserAnswer("Foccacia");
-		q1.setUserAnswer("Poop bread");
+		q1.setUserAnswer("Hawaii Toast");
 		q1.tallyScore();
 		assertEquals(5, q1.numCorrect);
 		q1.clearUserAnswers();	
 
 		
 	}
+	
+	// testing order matters
+	@Test
+	public void orderTest() {
+		String qstr = "List the last three presidents who had IQs below 80, in reverse order";
+		String[] answers = {"George W. Bush", "Ronald Reagan", "Warren G. Harding"};
+		MultiAnswerQuestion q2 = new MultiAnswerQuestion(qstr, true, answers.length);
+		q2.addAcceptedAnswer("George W. Bush");
+		q2.addAcceptedAnswer("Ronald Reagan");
+		q2.addAcceptedAnswer("Warren G. Harding");
+		
+		q2.setUserAnswer(answers[0]);
+		q2.setUserAnswer(answers[1]);
+		q2.setUserAnswer(answers[2]);
+		System.out.println(q2.getScore());
+		assertEquals(3, q2.numCorrect);
+
+		assertTrue(1.0 == q2.getScore());
+	}
+	
 
 }

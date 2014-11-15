@@ -34,7 +34,7 @@ public class QuestionResponse implements Question{
 		return false;
 	}
 
-	public Object getQuestion() {
+	public String getQuestion() {
 		return question;
 	}
 	
@@ -49,6 +49,11 @@ public class QuestionResponse implements Question{
 	
 	public void clearAcceptedAnswers() {
 		acceptedAnswers = new ArrayList<Answer>();
+	}
+	
+	public double getScore() {
+		if (isCorrect()) return 1;
+		return 0;
 	}
 	
 	

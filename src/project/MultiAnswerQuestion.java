@@ -2,13 +2,14 @@ package project;
 
 import java.util.*;
 
-public class MultiAnswerQuestion {
+public class MultiAnswerQuestion implements Question{
 	
 	private String question; 
 	private boolean ordered;
 	private ArrayList<String> userAnswers;
 	private ArrayList<Answer> acceptedAnswers;
 	public int numCorrect;
+	public int numPossibleCorrect;
 	
 	/**
 	 * Constructor for multi-answer question.
@@ -16,12 +17,13 @@ public class MultiAnswerQuestion {
 	 * @param ordered - user determines if order matters in
 	 * answering the questions.
 	 */
-	public MultiAnswerQuestion(String question, boolean ordered) {
+	public MultiAnswerQuestion(String question, boolean ordered, int numPossibleCorrect) {
 		this.ordered = ordered;
 		this.question = question;
 		this.userAnswers = new ArrayList<String>();
 		this.acceptedAnswers = new ArrayList<Answer>();
 		this.numCorrect = 0;
+		this.numPossibleCorrect = numPossibleCorrect;
 	}
 	
 	public void addAcceptedAnswer(String ans) {
@@ -43,15 +45,17 @@ public class MultiAnswerQuestion {
 	}
 	
 	
-	public boolean tallyScore() {
+	public void tallyScore() {
+		numCorrect = 0;
 		int nUserAnswers = userAnswers.size();
 		int nAcceptedAnswers = acceptedAnswers.size();
 		for (int i = 0; i < nUserAnswers; i++) {
 			String currUserAns = userAnswers.get(i);
 			if (ordered) {
 				String correctAns = acceptedAnswers.get(i).answer;
-				if (nAcceptedAnswers > i && currUserAns.equals(correctAns)) {
+				if (currUserAns.equals(correctAns)) {
 					numCorrect++;
+					acceptedAnswers.get(i).correct = true;
 				}
 			} else {
 				for (int j = 0; j < nAcceptedAnswers; j++) {
@@ -63,10 +67,19 @@ public class MultiAnswerQuestion {
 							}
 				}
 			}
-		}
-		
-		
-		return false;
+		}	
+	
+	}
+	
+	public double getScore() {
+		tallyScore();
+		double correctAnswers = numCorrect;
+		return correctAnswers / numPossibleCorrect;		
+	}
+	
+	@Override
+	public String getQuestion() {
+		return question;
 	}
 	
 
@@ -96,6 +109,10 @@ public class MultiAnswerQuestion {
 			return answer;
 		}
 	}
-	
+
+
+
+
+
 	
 }

@@ -13,7 +13,6 @@ public class QuestionMultipleChoice implements Question{
 		choices = new ArrayList<Choice>();
 	}
 	
-	@Override
 	public boolean isCorrect() {
 		for (int i = 0; i < choices.size(); i++) {
 			Choice ch = choices.get(i);
@@ -23,9 +22,14 @@ public class QuestionMultipleChoice implements Question{
 		}
 		return true;
 	}
+	
+	public double getScore() {
+		if (isCorrect()) return 1;
+		return 0;
+	}
 
 	@Override
-	public Object getQuestion() {
+	public String getQuestion() {
 		return question;
 	}
 	
@@ -62,6 +66,8 @@ public class QuestionMultipleChoice implements Question{
 			unChoose(i);
 		}
 	}
+	
+
 	
 	private class Choice {
 		
