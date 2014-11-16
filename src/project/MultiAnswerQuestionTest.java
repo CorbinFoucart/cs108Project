@@ -33,30 +33,38 @@ public class MultiAnswerQuestionTest {
 		q1.addAcceptedAnswer(breads[3]);
 		q1.addAcceptedAnswer(breads[4]);
 		
+		assertTrue(q1.getWeight() == 1);
+		q1.setWeight(3);
+		assertTrue(q1.getWeight() == 3);
+		
 		// 1 correct answer
 		q1.setUserAnswer(breads[0]);
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(1, q1.numCorrect);
+		assertTrue(0.2 == q1.getPercentage());
 		q1.clearUserAnswers();
 		
 		q1.setUserAnswer(breads[1]);
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(1, q1.numCorrect);
+		assertTrue(0.2 == q1.getPercentage());
 		q1.clearUserAnswers();
 		
 		// 2 correct answers
 		q1.setUserAnswer(breads[0]);
 		q1.setUserAnswer(breads[1]);
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(2, q1.numCorrect);
+		assertTrue(0.4 == q1.getPercentage());
 		q1.clearUserAnswers();
 
 		// same correct answer
 		q1.setUserAnswer(breads[0]);
 		q1.setUserAnswer(breads[0]);
 		q1.setUserAnswer(breads[1]);
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(2, q1.numCorrect);
+		assertTrue(0.4 == q1.getPercentage());
 		q1.clearUserAnswers();
 		
 		// all correct answers
@@ -65,15 +73,17 @@ public class MultiAnswerQuestionTest {
 		q1.setUserAnswer(breads[2]);
 		q1.setUserAnswer(breads[3]);
 		q1.setUserAnswer(breads[4]);
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(5, q1.numCorrect);
+		assertTrue(1 == q1.getPercentage());
 		q1.clearUserAnswers();
 		
 		// 1 right one wrong
 		q1.setUserAnswer("Foccacia");
 		q1.setUserAnswer(breads[1]);
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(1, q1.numCorrect);
+		assertTrue(0.2 == q1.getPercentage());
 		q1.clearUserAnswers();
 		
 		// all wrong
@@ -82,13 +92,15 @@ public class MultiAnswerQuestionTest {
 		q1.setUserAnswer("");
 		q1.setUserAnswer("Sucky Bread");
 		q1.setUserAnswer("Dry Rolls");
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(0, q1.numCorrect);
+		assertTrue(0 == q1.getPercentage());
 		q1.clearUserAnswers();
 		
 		// no answers
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(0, q1.numCorrect);
+		assertTrue(0 == q1.getPercentage());
 		q1.clearUserAnswers();
 		
 		// this SHOULD be prevented by number of boxes
@@ -101,9 +113,11 @@ public class MultiAnswerQuestionTest {
 		q1.setUserAnswer(breads[4]);
 		q1.setUserAnswer("Foccacia");
 		q1.setUserAnswer("Hawaii Toast");
-		q1.tallyScore();
+		q1.tallyAnswers();
 		assertEquals(5, q1.numCorrect);
+		assertTrue(1.0 == q1.getPercentage());
 		q1.clearUserAnswers();	
+		assertTrue(0 == q1.getPercentage());
 
 		
 	}
@@ -121,10 +135,10 @@ public class MultiAnswerQuestionTest {
 		q2.setUserAnswer(answers[0]);
 		q2.setUserAnswer(answers[1]);
 		q2.setUserAnswer(answers[2]);
-		System.out.println(q2.getScore());
+		System.out.println(q2.getPercentage());
 		assertEquals(3, q2.numCorrect);
 
-		assertTrue(1.0 == q2.getScore());
+		assertTrue(1.0 == q2.getPercentage());
 	}
 	
 

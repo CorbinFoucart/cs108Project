@@ -27,15 +27,19 @@ public class QuestionResponseTest {
 	public void q1Test() {
 		q1.setUserAnswer("George Washington");
 		assertEquals(true, q1.isCorrect());
+		assertTrue(1 == q1.getPercentage());
 		
 		q1.setUserAnswer("george washington");
 		assertEquals(true, q1.isCorrect());
+		assertTrue(1 == q1.getPercentage());
 		
 		q1.setUserAnswer("washington");
 		assertEquals(true, q1.isCorrect());
+		assertTrue(1 == q1.getPercentage());
 		
 		q1.setUserAnswer("meow");
 		assertEquals(false, q1.isCorrect());
+		assertTrue(0 == q1.getPercentage());
 		
 //		q1.printPossible();
 		
@@ -43,11 +47,17 @@ public class QuestionResponseTest {
 		q1.printPossible();
 		q1.setUserAnswer("washington");
 		assertEquals(false, q1.isCorrect());	
+		assertTrue(0 == q1.getPercentage());
+		
+		assertTrue(q1.getWeight() == 1);
+		q1.setWeight(3);
+		assertTrue(q1.getWeight() == 3);
 	}
 	
 	@Test
 	public void q2Test() {
 		assertEquals(false, q2.isCorrect());
+		assertTrue(0 == q2.getPercentage());
 		
 	}
 

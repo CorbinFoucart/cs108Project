@@ -18,6 +18,8 @@ public class QuestionMultipleChoiceTest {
 		mc1.addChoice(false, "Wii Tennis");
 		
 		mc1.choose(2);
+		assertTrue(1 == mc1.getPercentage());
+		
 	}
 
 	@Test
@@ -27,17 +29,23 @@ public class QuestionMultipleChoiceTest {
 		mc1.unChoose(2);
 		mc1.choose(1);
 		assertEquals(false, mc1.isCorrect());
+		assertTrue(0 == mc1.getPercentage());
 		
 		mc1.choose(2);
 		mc1.resetUserChoices();
 		assertEquals(false, mc1.isCorrect());
+		assertTrue(0 == mc1.getPercentage());
 		
 		mc1.choose(2);
 		assertEquals(true, mc1.isCorrect());
+		assertTrue(1 == mc1.getPercentage());
 		mc1.choose(3);
 		assertEquals(false, mc1.isCorrect());
+		assertTrue(0 == mc1.getPercentage());
 		
-		
+		assertTrue(mc1.getWeight() == 1);
+		mc1.setWeight(3);
+		assertTrue(mc1.getWeight() == 3);
 	}
 
 }

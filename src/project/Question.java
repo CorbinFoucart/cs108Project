@@ -1,9 +1,11 @@
 package project;
 
-public interface Question {
+import java.io.Serializable;
+
+public interface Question extends Serializable {
 
 	/**
-	 * getScore() always returns a double between 0 and 1
+	 * getPercentage() always returns a double between 0 and 1
 	 * indicating a percentage that the user earned on a
 	 * particular question.
 	 * 
@@ -11,7 +13,7 @@ public interface Question {
 	 * class. 
 	 * 
 	 */
-	public double getScore();
+	public double getPercentage();
 	
 	/**
 	 * getQuestion() always returns a string specifying the
@@ -27,6 +29,8 @@ public interface Question {
 	 */
 	public String getQuestion();
 	
+	public String getClassName();
 	
+	public double getWeight();
 	
 }

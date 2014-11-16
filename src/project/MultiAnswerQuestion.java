@@ -3,7 +3,7 @@ package project;
 import java.util.*;
 
 public class MultiAnswerQuestion implements Question{
-	
+	private double weight;
 	private String question; 
 	private boolean ordered;
 	private ArrayList<String> userAnswers;
@@ -24,6 +24,7 @@ public class MultiAnswerQuestion implements Question{
 		this.acceptedAnswers = new ArrayList<Answer>();
 		this.numCorrect = 0;
 		this.numPossibleCorrect = numPossibleCorrect;
+		this.weight = 1;
 	}
 	
 	public void addAcceptedAnswer(String ans) {
@@ -44,8 +45,16 @@ public class MultiAnswerQuestion implements Question{
 		numCorrect = 0;
 	}
 	
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
 	
-	public void tallyScore() {
+	public double getWeight() {
+		return weight;
+	}
+	
+	
+	public void tallyAnswers() {
 		numCorrect = 0;
 		int nUserAnswers = userAnswers.size();
 		int nAcceptedAnswers = acceptedAnswers.size();
@@ -67,12 +76,15 @@ public class MultiAnswerQuestion implements Question{
 							}
 				}
 			}
-		}	
+		}
+		for (int i = 0; i < acceptedAnswers.size(); i++) {
+			acceptedAnswers.get(i).correct = false;
+		}
 	
 	}
 	
-	public double getScore() {
-		tallyScore();
+	public double getPercentage() {
+		tallyAnswers();
 		double correctAnswers = numCorrect;
 		return correctAnswers / numPossibleCorrect;		
 	}
@@ -82,7 +94,9 @@ public class MultiAnswerQuestion implements Question{
 		return question;
 	}
 	
-
+	public String getClassName() {
+		return "MultiAnswerQuestion";
+	}
 	
 	
 	// ---- answer inner array ----- //

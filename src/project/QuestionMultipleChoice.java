@@ -6,11 +6,13 @@ public class QuestionMultipleChoice implements Question{
 
 	private String question;
 	private ArrayList<Choice> choices;
+	private double weight;
 	
 	
 	public QuestionMultipleChoice(String question) {
 		this.question = question;
-		choices = new ArrayList<Choice>();
+		this.choices = new ArrayList<Choice>();
+		this.weight = 1;
 	}
 	
 	public boolean isCorrect() {
@@ -23,7 +25,7 @@ public class QuestionMultipleChoice implements Question{
 		return true;
 	}
 	
-	public double getScore() {
+	public double getPercentage() {
 		if (isCorrect()) return 1;
 		return 0;
 	}
@@ -67,7 +69,17 @@ public class QuestionMultipleChoice implements Question{
 		}
 	}
 	
-
+	public String getClassName() {
+		return "QuestionMultipleChoice";
+	}
+	
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+	
+	public double getWeight() {
+		return weight;
+	}
 	
 	private class Choice {
 		
@@ -78,7 +90,7 @@ public class QuestionMultipleChoice implements Question{
 		public Choice(boolean correct, String option) {
 			this.correct = correct;
 			this.option = option;
-			userSelection = false;
+			this.userSelection = false;
 		}
 		
 		// Possibly implement equals

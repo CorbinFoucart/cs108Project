@@ -4,13 +4,16 @@ import java.util.*;
 
 public class QuestionResponse implements Question{
 	
-	public String question;
-	public ArrayList<Answer> acceptedAnswers;
-	public Answer userAnswer;
+	private String question;
+	private ArrayList<Answer> acceptedAnswers;
+	private Answer userAnswer;
+	private double weight;
 	
 	public QuestionResponse(String question) {
 		this.question = question;
-		acceptedAnswers = new ArrayList<Answer>();
+		this.acceptedAnswers = new ArrayList<Answer>();
+		this.weight = 1;
+		this.userAnswer = new Answer("");
 	}
 	
 	public void addAcceptedAnswer(String str) {
@@ -51,11 +54,22 @@ public class QuestionResponse implements Question{
 		acceptedAnswers = new ArrayList<Answer>();
 	}
 	
-	public double getScore() {
+	public double getPercentage() {
 		if (isCorrect()) return 1;
 		return 0;
 	}
 	
+	public String getClassName() {
+		return "QuestionResponse";
+	}
+	
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+	
+	public double getWeight() {
+		return weight;
+	}
 	
 	// ----------------------- Answer Inner Class ----------------- //
 	
