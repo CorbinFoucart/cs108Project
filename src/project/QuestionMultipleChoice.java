@@ -1,12 +1,14 @@
 package project;
 
 import java.util.*;
+import java.io.*;
 
-public class QuestionMultipleChoice implements Question{
+public class QuestionMultipleChoice implements Question, Serializable {
 
 	private String question;
 	private ArrayList<Choice> choices;
 	private double weight;
+	private String quiz_id;
 	
 	
 	public QuestionMultipleChoice(String question) {
@@ -81,7 +83,15 @@ public class QuestionMultipleChoice implements Question{
 		return weight;
 	}
 	
-	private class Choice {
+	public void setQuizID(String id) {
+		quiz_id = id;
+	}
+	
+	public String getQuizID() {
+		return quiz_id;
+	}
+	
+	private class Choice implements Serializable {
 		
 		private boolean correct;
 		private String option;

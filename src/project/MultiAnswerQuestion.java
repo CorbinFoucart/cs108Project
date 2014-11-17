@@ -1,8 +1,9 @@
 package project;
 
 import java.util.*;
+import java.io.*;
 
-public class MultiAnswerQuestion implements Question{
+public class MultiAnswerQuestion implements Question, Serializable{
 	private double weight;
 	private String question; 
 	private boolean ordered;
@@ -10,6 +11,7 @@ public class MultiAnswerQuestion implements Question{
 	private ArrayList<Answer> acceptedAnswers;
 	public int numCorrect;
 	public int numPossibleCorrect;
+	public String quiz_id;
 	
 	/**
 	 * Constructor for multi-answer question.
@@ -98,10 +100,18 @@ public class MultiAnswerQuestion implements Question{
 		return "MultiAnswerQuestion";
 	}
 	
+	public void setQuizID(String id) {
+		quiz_id = id;
+	}
+	
+	public String getQuizID() {
+		return quiz_id;
+	}
+	
 	
 	// ---- answer inner array ----- //
 	
-	private class Answer {
+	private class Answer implements Serializable {
 		
 		private boolean correct;
 		private String answer;
@@ -112,10 +122,12 @@ public class MultiAnswerQuestion implements Question{
 			correct = false;
 		}
 		
-		public boolean equals(Answer other) {
+		@Override
+		public boolean equals(Object obj) {
 			// LATER need 1 step away comparator etc
 			
 			// for now, just use string matching
+			Answer other = (Answer) obj;
 			return (other.answer.equals(answer));
 		}
 		

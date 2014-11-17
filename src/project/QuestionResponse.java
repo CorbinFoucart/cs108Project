@@ -1,13 +1,15 @@
 package project;
 
 import java.util.*;
+import java.io.*;
 
-public class QuestionResponse implements Question{
+public class QuestionResponse implements Question, Serializable {
 	
 	private String question;
 	private ArrayList<Answer> acceptedAnswers;
 	private Answer userAnswer;
 	private double weight;
+	private String quiz_id;
 	
 	public QuestionResponse(String question) {
 		this.question = question;
@@ -71,9 +73,17 @@ public class QuestionResponse implements Question{
 		return weight;
 	}
 	
+	public void setQuizID(String id) {
+		quiz_id = id;
+	}
+	
+	public String getQuizID() {
+		return quiz_id;
+	}
+	
 	// ----------------------- Answer Inner Class ----------------- //
 	
-	private class Answer {
+	private class Answer implements Serializable {
 		
 		private String answer;
 		

@@ -2,7 +2,7 @@ package project;
 
 import java.io.Serializable;
 
-public interface Question extends Serializable {
+public interface Question {
 
 	/**
 	 * getPercentage() always returns a double between 0 and 1
@@ -32,5 +32,9 @@ public interface Question extends Serializable {
 	public String getClassName();
 	
 	public double getWeight();
+	
+	public String getQuizID();
+	
+	public void setQuizID(String id);
 	
 }
