@@ -28,12 +28,13 @@ public class DatabasePipeline {
 		db_con.closeConnection();
 	}
 	
+	// right now questions indexed from 0
 	public void addQuizToDB(Quiz quiz) {
 		Blob quizBlob = blobify(quiz);
 		String id = generateQuizID();
 		quiz.setQuizID(id);
 		for (int i = 0; i < quiz.getNumQuestions(); i++) {
-			Question q = quiz.getQuestion(i + 1);
+			Question q = quiz.getQuestion(i);
 			q.setQuizID(id);
 			addQuestionToDB(q);
 		}
@@ -76,7 +77,7 @@ public class DatabasePipeline {
 			pstmt.setString(3, perf.getUser());
 			pstmt.setDouble(4, perf.getScore());
 			pstmt.setString(5, perf.getDateAsString());
-			pstmt.setInt(6, perf.getDateAsInt());
+			pstmt.setLong(6, perf.getDateAsLong());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -158,10 +159,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME = "ccs108rdeubler";
-		public static final String MYSQL_PASSWORD = "vohhaegh";
+		public static final String MYSQL_USERNAME = "ccs108cfoucart"; // "ccs108rdeubler";
+		public static final String MYSQL_PASSWORD =  "aigookue"; //"vohhaegh";
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler";
+		public static final String MYSQL_DATABASE_NAME =  "c_cs108_cfoucart"; //"c_cs108_rdeubler";
 		
 		public DBConnection() {
 			try {
