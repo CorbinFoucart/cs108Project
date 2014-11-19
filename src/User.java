@@ -36,6 +36,8 @@ public class User {
 	
 	// creating a User Object for a database entry (a user that already exists in the table)
 	public User(String username, String hashedPassword, int privacySetting){
+		this.username = username;
+		this.hashedPassword = hashedPassword;
 		this.admin = false; 
 		this.privacySetting = privacySetting; 
 		this.friends = db.getFriends(username); 

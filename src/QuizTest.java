@@ -11,7 +11,7 @@ public class QuizTest {
 	// test with no questions
 	@Test
 	public void test1() {
-		Quiz quiz1 = new Quiz("Books I Like", false, "Rebecca");
+		Quiz quiz1 = new Quiz("Books I Like", false, false, false, "Rebecca");
 		quiz1.setCategory("A Rebecca Quiz");
 		assertTrue(quiz1.getTagsString().equals(""));
 		quiz1.addTag("Books");
@@ -33,7 +33,7 @@ public class QuizTest {
 	// test with 2 questions, unweighted, pre-set user answers
 	@Test
 	public void test3() {
-		Quiz quiz1 = new Quiz("Books I Like", false, "Rebecca");
+		Quiz quiz1 = new Quiz("Books I Like", false, false, false, "Rebecca");
 		QuestionMultipleChoice q1 = new QuestionMultipleChoice("What is Rebecca's favorite book?");
 		q1.addChoice(false, "The Scarlet Letter");
 		q1.addChoice(true, "Atonement");
@@ -66,7 +66,7 @@ public class QuizTest {
 	// 2 questions, weighted, later added user answers
 	@Test
 	public void test4() {
-		Quiz quiz1 = new Quiz("Books I Like", false, "Rebecca");
+		Quiz quiz1 = new Quiz("Books I Like", false, false, false, "Rebecca");
 		QuestionMultipleChoice q1 = new QuestionMultipleChoice("What is Rebecca's favorite book?");
 		q1.addChoice(false, "The Scarlet Letter");
 		q1.addChoice(true, "Atonement");
@@ -103,7 +103,7 @@ public class QuizTest {
 	// testing 3 kinds of questions, weighting, late addition of answers
 	@Test
 	public void test5() {
-		Quiz quiz1 = new Quiz("Rebecca and Books", false, "Rebecca");
+		Quiz quiz1 = new Quiz("Rebecca and Books", false, false, false, "Rebecca");
 		QuestionMultipleChoice q1 = new QuestionMultipleChoice("What is Rebecca's favorite book?");
 		q1.addChoice(false, "The Scarlet Letter");
 		q1.addChoice(true, "Atonement");
@@ -163,7 +163,7 @@ public class QuizTest {
 	
 	@Test
 	public void test6() {
-		Quiz quiz1 = new Quiz("Rebecca and Books", true, "Rebecca");
+		Quiz quiz1 = new Quiz("Rebecca and Books", true, false, false, "Rebecca");
 		QuestionMultipleChoice q1 = new QuestionMultipleChoice("What is Rebecca's favorite book?");
 		q1.addChoice(false, "The Scarlet Letter");
 		q1.addChoice(true, "Atonement");

@@ -8,6 +8,8 @@ package project;
  * (turnPage, goBackAPage)
  */
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
@@ -22,12 +24,20 @@ public class Quiz implements Serializable{
 	private long date_long;
 	private String category;
 	private ArrayList<String> tags;
+	private boolean one_per_page;
+	private boolean immediate_feedback;
+	
+	private static final int ID_LEN = 8;
+	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	static Random rnd = new Random();
 
 	
-	public Quiz(String name, boolean random, String creator) {
+	public Quiz(String name, boolean random, boolean one_per_page, boolean immediate_feedback, String creator) {
 		this.questions = new ArrayList<Question>();
 		this.name = name;
 		this.random = random;
+		this.one_per_page = one_per_page;
+		this.immediate_feedback = immediate_feedback;
 		this.creator = creator;
 		Date dateObj = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
@@ -36,6 +46,7 @@ public class Quiz implements Serializable{
 		date_long = Long.parseLong(dateFormat.format(dateObj));
 		category = "";
 		tags = new ArrayList<String>();
+		generateQuizID();
 	}
 	
 	public void addQuestion(Question q) {
@@ -166,8 +177,24 @@ public class Quiz implements Serializable{
 		return random;
 	}
 	
+	public boolean isOnePerPage() {
+		return one_per_page;
+	}
+	
+	public boolean isImmediateFeedback() {
+		return immediate_feedback;
+	}
+	
 	public void shuffleQuiz() {
 		Collections.shuffle(questions);
+	}
+	
+	public void generateQuizID() {
+		StringBuilder sb = new StringBuilder(ID_LEN);
+		for (int i = 0; i < ID_LEN; i++) {
+			sb.append(AB.charAt(rnd.nextInt(AB.length())));
+		}
+		this.id = sb.toString();
 	}
 	
 }

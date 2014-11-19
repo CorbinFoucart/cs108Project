@@ -39,7 +39,7 @@ public class Performance implements Serializable {
 	 * @param score
 	 * @param date
 	 */
-	public Performance(String quiz_name, String quiz_id, String user, double score, String date_string, int date_long) {
+	public Performance(String quiz_name, String quiz_id, String user, double score, String date_string, long date_long) {
 		this.quiz_name = quiz_name;
 		this.quiz_id = quiz_id;
 		this.user = user;

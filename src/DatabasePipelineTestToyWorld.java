@@ -14,7 +14,7 @@ public class DatabasePipelineTestToyWorld {
 		
 		pipeline = new DatabasePipeline();
 		
-		Quiz quiz1 = new Quiz("Dog Trivia 1", false, "bo");
+		Quiz quiz1 = new Quiz("Dog Trivia 1", false, false, false, "bo");
 		QuestionResponse q1 = new QuestionResponse("Who was the best dog of all time?");
 		q1.addAcceptedAnswer("Lassie");
 		q1.addAcceptedAnswer("lassie");
@@ -33,7 +33,7 @@ public class DatabasePipelineTestToyWorld {
 		
 		Quiz quizRetrieved = pipeline.retrieveQuizFromDB(quiz_id);
 		
-		Quiz quiz2 = new Quiz("Dog Trivia 2", false, "scout");
+		Quiz quiz2 = new Quiz("Dog Trivia 2", false, false, false, "scout");
 		QuestionResponse q21 = new QuestionResponse("What color are Dalmations when they are born?");
 		q21.addAcceptedAnswer("white");
 		q21.addAcceptedAnswer("WHITE");
