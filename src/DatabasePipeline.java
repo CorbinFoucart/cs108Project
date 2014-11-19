@@ -379,8 +379,8 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME =  "ccs108cfoucart";  //"ccs108rdeubler";
-		public static final String MYSQL_PASSWORD =  "aigookue";  //"vohhaegh";
+		public static final String MYSQL_USERNAME =  "ccs108rdeubler"; // "ccs108cfoucart";  //
+		public static final String MYSQL_PASSWORD =  "vohhaegh"; // "aigookue";  //
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
 		public static final String MYSQL_DATABASE_NAME = "c_cs108_cfoucart";
 		

@@ -2,8 +2,8 @@
 
 USE c_cs108_cfoucart;
 
-DROP TABLE IF EXISTS user_table, friends_table, message_table,
-performance_table, quizzes_table, question_table, questions_table;
+DROP TABLE IF EXISTS user_table, friends_table, message_table, categories_table,
+performance_table, quizzes_table, question_table, achievement_table, questions_table;
  -- remove tables if they already exist and start from scratch
 
 CREATE TABLE user_table (
@@ -49,6 +49,16 @@ CREATE TABLE quizzes_table (
        tag_string VARCHAR(1000)
 );
 
+CREATE TABLE achievement_table (
+       username CHAR(64),
+       amateur_author BOOLEAN,
+       prolific_author BOOLEAN,
+       prodigious_author BOOLEAN,
+       quiz_machine BOOLEAN,
+       i_am_the_greatest BOOLEAN,
+       practice_makes_perfect BOOLEAN      
+);
+
 CREATE TABLE question_table (
        question_bit_dump BLOB,
        question_string VARCHAR(64),
@@ -86,12 +96,7 @@ INSERT INTO friends_table VALUES
 
 INSERT INTO achievement_table VALUES
        ("bo", true, false, false, false, false,true),
-       ("sarge", true, true, true, true, true, true),
-       ("scout", "scoutscout", 1, false),
-       ("beethoven", "beethovenbeethoven", 0, false),
-       ("air bud", "air budair bud", 0, false ),
-       ("maggie", false, ),
-       ("oski", "oskioski", 2, false);
+       ("sarge", true, true, true, true, true, true);
 
 -- Add some sample messages for the dogs
 -- As of now, contain no messages where quiz object is not null
