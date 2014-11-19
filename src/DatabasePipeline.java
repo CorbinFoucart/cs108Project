@@ -441,7 +441,8 @@ public class DatabasePipeline {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + user + "\"");
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -453,9 +454,11 @@ public class DatabasePipeline {
 	public ArrayList<Performance> getRecentPerformances(String user) {
 		ArrayList<Performance> retrieved = new ArrayList<Performance>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + user + "\" ORDER BY date_long DESC LIMIT " + NUM_RECENT);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
+							+ user + "\" ORDER BY date_long DESC LIMIT " + NUM_RECENT);
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -467,9 +470,11 @@ public class DatabasePipeline {
 	public ArrayList<Performance> getQuizPerformances(String user, String quiz_id) {
 		ArrayList<Performance> retrieved = new ArrayList<Performance>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\"" + quiz_id + "\" AND taken_by_user=\"" + user + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
+												+ quiz_id + "\" AND taken_by_user=\"" + user + "\"");
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
