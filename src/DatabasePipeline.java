@@ -3,9 +3,7 @@ package project;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-
 import javax.sql.rowset.serial.SerialBlob;
-
 import project.*;
 
 
@@ -77,7 +75,7 @@ public class DatabasePipeline {
 			pstmt.setString(3, perf.getUser());
 			pstmt.setDouble(4, perf.getScore());
 			pstmt.setString(5, perf.getDateAsString());
-			pstmt.setInt(6, perf.getDateAsInt());
+			pstmt.setLong(6, perf.getDateAsLong());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -131,7 +129,9 @@ public class DatabasePipeline {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + "\" AND message_type !=\"announcement\"");
 			while (rs.next()) {
-				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("was_read"), rs.getString("quiz_id") );
+				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
+						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
 				messages.add(msg);
 			}
 		} catch (SQLException e) {
@@ -144,7 +144,7 @@ public class DatabasePipeline {
 		try {
 			PreparedStatement pstmt = 
 				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?, ?, ?, ?)");
-			pstmt.setString(1, msg.getRecipientTo());
+			pstmt.setString(1, msg.getTo());
 			pstmt.setString(2, msg.getFrom());
 			pstmt.setString(3, msg.getMessage());
 			pstmt.setString(4, msg.getDateAsString());
@@ -167,7 +167,9 @@ public class DatabasePipeline {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + "\" AND message_type =\"announcement\"");
 			while (rs.next()) {
-				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"), rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("was_read"), rs.getString("quiz_id") );
+				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
+						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
 				announcements.add(announcement);
 			}
 		} catch (SQLException e) {
@@ -194,7 +196,7 @@ public class DatabasePipeline {
 		return user;
 	}
 	
-	public User addUser(User user) {
+	public void addUser(User user) {
 		try {
 			PreparedStatement pstmt = 
 				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?)");
@@ -317,7 +319,9 @@ public class DatabasePipeline {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT TOP " + NUM_RECENT + " FROM message_table WHERE recipient=\"" + user + "\" AND message_type !=\"announcement\" ORDER BY date_long desc");
 			while (rs.next()) {
-				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("was_read"), rs.getString("quiz_id") );
+				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
+						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
 				messages.add(msg);
 			}
 		} catch (SQLException e) {
@@ -375,10 +379,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME = "ccs108rdeubler";
-		public static final String MYSQL_PASSWORD = "vohhaegh";
+		public static final String MYSQL_USERNAME =  "ccs108cfoucart";  //"ccs108rdeubler";
+		public static final String MYSQL_PASSWORD =  "aigookue";  //"vohhaegh";
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler";
+		public static final String MYSQL_DATABASE_NAME = "c_cs108_cfoucart";
 		
 		public DBConnection() {
 			try {
