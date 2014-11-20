@@ -43,6 +43,19 @@ public class QuestionResponse implements Question, Serializable {
 		return question;
 	}
 	
+		/*
+		 * These two methods are so that the PictureQuestion
+		 * can access the question that is initialized to ""
+		 * and set it as an optional text question.
+		 */
+		protected String getSuperQuestion() {
+			return question;
+		}
+		
+		protected void setSuperQuestion(String childQuestion) {
+			this.question = childQuestion;
+		}
+	
 	
 	// db
 	

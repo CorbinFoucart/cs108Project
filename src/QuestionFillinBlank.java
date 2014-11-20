@@ -6,6 +6,11 @@ public class QuestionFillinBlank extends QuestionResponse{
 		super(question);
 	}
 	
+	@Override 
+	public String getClassName() {
+		return "QuestionFillinBlank";
+	}
+	
 	// Mostly implemented, need Front end feedback
 	
 }

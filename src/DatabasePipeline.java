@@ -122,7 +122,7 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM friends_table WHERE friend_one=\"" + user + "\"");
 			while (rs.next()) {
 				String friend = rs.getString("friend_two");
-				friends.add(friend);
+				if (friend != null) friends.add(friend);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -330,6 +330,8 @@ public class DatabasePipeline {
 		}
 	}
 	
+	
+	// NEEDS TEST
 	public void updatePrivacySetting(String user, int privacy) {
 		try {
 			stmt.executeUpdate("UPDATE user_table SET privacy=\"" + privacy + "\" WHERE username=\"" + user + "\"");
@@ -529,6 +531,7 @@ public class DatabasePipeline {
 				con = DriverManager.getConnection( "jdbc:mysql://" + MYSQL_DATABASE_SERVER, MYSQL_USERNAME ,MYSQL_PASSWORD);
 				stmt = con.createStatement();
 				stmt.executeQuery("USE " + MYSQL_DATABASE_NAME);
+				//stmt.executeQuery("SOURCE dog_tables.sql");
 			} catch (SQLException e) {
 				 e.printStackTrace();
 			}
