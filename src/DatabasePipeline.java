@@ -35,7 +35,9 @@ public class DatabasePipeline {
 		stmt = db_con.getStatement();
 	}
 	
-	// ----------------------------------------------   ADDING TO THE DATABASE  ---------------------------------------- //
+	// -------------------------------------------------   ADDING TO THE DATABASE  ------------------------------------------- //
+	
+	// ------------------------ User Data Methods ---------------------- //
 	
 	/**
 	 * Adds a user's information into the user_table of the database.
@@ -56,11 +58,62 @@ public class DatabasePipeline {
 		}
 	}
 	
+	/**
+	 * Changes a user's admin boolean to 1 in the database; 
+	 * @param user - string username of the user to be promoted to admin
+	 */
+	public void promoteToAdmin(String user) {
+		try {
+			stmt.executeUpdate("UPDATE user_table SET admin_status=1 WHERE username=\"" + user + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	//-------------------------------------------   RETRIEVING FROM THE DATABASE  ---------------------------------------- //
+	/**
+	 * Changes a user's admin boolean to 0 in the database
+	 * @param user - string username of user to have admin status removed
+	 */
+	public void demoteFromAdmin(String user) {
+		try {
+			stmt.executeUpdate("UPDATE user_table SET admin_status=0 WHERE username=\"" + user + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	/**
+	 * Adds a single friend pairing to the database in the form of a link
+	 * from friend1 to friend2 and from friend2 to friend1
+	 * @param friend1 - user object of first friend
+	 * @param friend2 - user object of second friend
+	 */
+	public void addFriendshipToDB(User friend1, User friend2) {
+		try {
+			stmt.executeUpdate("INSERT INTO friends_table VALUES(\"" + friend1.getUsername() + "\", \"" + friend2.getUsername() + "\")");
+			stmt.executeUpdate("INSERT INTO friends_table VALUES(\"" + friend2.getUsername() + "\", \"" + friend1.getUsername() + "\")");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	//-----------------------------------------------------   UNTESTED  ------------------------------------------------ //
+	/**
+	 * Changes the integer that deontes a privacy setting in the database
+	 * for a specified user.
+	 * 
+	 * @param user - user whose privacy setting is to be updated
+	 * @param privacy - the integer specifying privacy level
+	 */
+	public void updatePrivacySetting(String user, int privacy) {
+		try {
+			stmt.executeUpdate("UPDATE user_table SET privacy=\"" 
+								+ privacy + "\" WHERE username=\"" + user + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// ---------------------- Quiz / Performance / Question Data Methods ----------------------- // 
 	
 	/**
 	 * Adds a quiz object to the quizzes database. Enters in both
@@ -104,19 +157,32 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 	}
+			/**
+			 * Helper method to addQuizToDB
+			 * Adds a question to the questions table of database
+			 * 
+			 * can be called by itself; perhaps for edit mode
+			 * @param ques - question object to be added to database
+			 */
+			public void addQuestionToDB(Question ques) {
+				Blob quesBlob = blobify(ques);
+				try {
+					PreparedStatement pstmt = 
+						con.prepareStatement("INSERT INTO question_table VALUES(?, ?, ?)");
+					pstmt.setBlob(1, quesBlob);
+					pstmt.setString(2, ques.getQuestion());
+					pstmt.setString(3, ques.getQuizID());
+					pstmt.executeUpdate();
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 	
-	public Quiz retrieveQuizFromDB(String quiz_id) {
-		Quiz retrieved = null;
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE quiz_id=\"" + quiz_id + "\"");
-			retrieved = (Quiz) deBlob(rs, 6);
-			if (retrieved != null && retrieved.isRandom()) retrieved.shuffleQuiz();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retrieved;
-	}
-	
+	/**
+	 * Method to add a performance object to the database
+	 * @param perf - performance object to be added
+	 */
 	public void addPerformanceToDB(Performance perf) {
 		try {
 			PreparedStatement pstmt = 
@@ -134,21 +200,52 @@ public class DatabasePipeline {
 		}
 	}
 	
+	// ---------------------------- Message Data Methods ------------------------------- //
 	
-	public void addQuestionToDB(Question ques) {
-		Blob quesBlob = blobify(ques);
+	/**
+	 * Adds a message object to the messages table of the database
+	 * @param msg - the message object to be added to the database
+	 */
+	public void addMessage(Message msg) {
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO question_table VALUES(?, ?, ?)");
-			pstmt.setBlob(1, quesBlob);
-			pstmt.setString(2, ques.getQuestion());
-			pstmt.setString(3, ques.getQuizID());
+				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, msg.getTo());
+			pstmt.setString(2, msg.getFrom());
+			pstmt.setString(3, msg.getMessage());
+			pstmt.setString(4, msg.getDateAsString());
+			pstmt.setLong(5, msg.getDateAsLong());
+			pstmt.setBoolean(6, false);
+			pstmt.setString(7, msg.getQuizID());
+			pstmt.setString(8, msg.getType());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	//-------------------------------------------   RETRIEVING FROM THE DATABASE  ---------------------------------------- //
+	
+	
+	//-----------------------------------------------------   UNTESTED  ------------------------------------------------ //
+	
+	
+	
+	public Quiz retrieveQuizFromDB(String quiz_id) {
+		Quiz retrieved = null;
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE quiz_id=\"" + quiz_id + "\"");
+			retrieved = (Quiz) deBlob(rs, 6);
+			if (retrieved != null && retrieved.isRandom()) retrieved.shuffleQuiz();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+
+	
 	
 	public Question retrieveQuestionFromDB(String question) {
 		Question retrieved = null;
@@ -227,24 +324,7 @@ public class DatabasePipeline {
 	}
 	
 	
-	public void addMessage(Message msg) {
-		try {
-			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
-			pstmt.setString(1, msg.getTo());
-			pstmt.setString(2, msg.getFrom());
-			pstmt.setString(3, msg.getMessage());
-			pstmt.setString(4, msg.getDateAsString());
-			pstmt.setLong(5, msg.getDateAsLong());
-			pstmt.setBoolean(6, false);
-			pstmt.setString(7, msg.getQuizID());
-			pstmt.setString(8, msg.getType());
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
 	
 	public void addAnnouncement(Message announcement) {
 		addMessage(announcement);
@@ -335,23 +415,6 @@ public class DatabasePipeline {
 		return setting;
 	}
 	
-	
-	public void promoteToAdmin(String user) {
-		try {
-			stmt.executeUpdate("UPDATE user_table SET admin_status=1 WHERE username=\"" + user + "\"");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void demoteFromAdmin(String user) {
-		try {
-			stmt.executeUpdate("UPDATE user_table SET admin_status=0 WHERE username=\"" + user + "\"");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public String getPasswordFromDB(String user) {
 		String password = null;
 		try {
@@ -363,25 +426,7 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 		return password;
-	}
-	
-	public void addFriendshipToDB(User friend1, User friend2) {
-		try {
-			stmt.executeUpdate("INSERT INTO friends_table VALUES(\"" + friend1.getUsername() + "\", \"" + friend2.getUsername() + "\")");
-			stmt.executeUpdate("INSERT INTO friends_table VALUES(\"" + friend2.getUsername() + "\", \"" + friend1.getUsername() + "\")");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public void updatePrivacySetting(String user, int privacy) {
-		try {
-			stmt.executeUpdate("UPDATE user_table SET privacy=\"" + privacy + "\" WHERE username=\"" + user + "\"");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	}	
 	
 	public void clearQuizHistory(Quiz quiz) {
 		try {
@@ -403,8 +448,7 @@ public class DatabasePipeline {
 		}
 		return quizNum;
 	}
-	
-	
+
 	
 	public int totalNumberOfUsers() {
 		int usersNum = 0;
@@ -532,7 +576,7 @@ public class DatabasePipeline {
 	}
 	
 	
-	
+	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
 	private Blob blobify(Object obj) {
 		try {
