@@ -12,6 +12,7 @@ public class MultiAnswerQuestion implements Question, Serializable{
 	public int numCorrect;
 	public int numPossibleCorrect;
 	public String quiz_id;
+	public String id;
 	
 	/**
 	 * Constructor for multi-answer question.
@@ -27,6 +28,7 @@ public class MultiAnswerQuestion implements Question, Serializable{
 		this.numCorrect = 0;
 		this.numPossibleCorrect = numPossibleCorrect;
 		this.weight = 1;
+		generateID();
 	}
 	
 	public void addAcceptedAnswer(String ans) {
@@ -108,6 +110,14 @@ public class MultiAnswerQuestion implements Question, Serializable{
 		return quiz_id;
 	}
 	
+	public void generateID() {
+		IDGenerator generator = new IDGenerator();
+		id = generator.generateID();
+	}
+	
+	public String getID() {
+		return id;
+	}
 	
 	// ---- answer inner array ----- //
 	

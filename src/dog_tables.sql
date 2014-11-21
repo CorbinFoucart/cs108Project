@@ -26,7 +26,8 @@ CREATE TABLE message_table (
        date_long BIGINT,
        was_read BOOLEAN,
        quiz_id CHAR(64),
-       message_type CHAR(64)
+       message_type CHAR(64),
+       message_id CHAR(64)
 );
 
 CREATE TABLE performance_table (

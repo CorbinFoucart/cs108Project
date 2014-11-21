@@ -9,12 +9,14 @@ public class QuestionMultipleChoice implements Question, Serializable {
 	private ArrayList<Choice> choices;
 	private double weight;
 	private String quiz_id;
+	private String id;
 	
 	
 	public QuestionMultipleChoice(String question) {
 		this.question = question;
 		this.choices = new ArrayList<Choice>();
 		this.weight = 1;
+		generateID();
 	}
 	
 	public boolean isCorrect() {
@@ -89,6 +91,15 @@ public class QuestionMultipleChoice implements Question, Serializable {
 	
 	public String getQuizID() {
 		return quiz_id;
+	}
+	
+	public void generateID() {
+		IDGenerator generator = new IDGenerator();
+		id = generator.generateID();
+	}
+	
+	public String getID() {
+		return id;
 	}
 	
 	private class Choice implements Serializable {

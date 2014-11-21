@@ -26,10 +26,8 @@ public class Quiz implements Serializable{
 	private ArrayList<String> tags;
 	private boolean one_per_page;
 	private boolean immediate_feedback;
+	private String description;
 	
-	private static final int ID_LEN = 8;
-	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	static Random rnd = new Random();
 
 	
 	public Quiz(String name, boolean random, boolean one_per_page, boolean immediate_feedback, String creator) {
@@ -39,6 +37,7 @@ public class Quiz implements Serializable{
 		this.one_per_page = one_per_page;
 		this.immediate_feedback = immediate_feedback;
 		this.creator = creator;
+		this.description = null;
 		Date dateObj = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
 		date_string = dateFormat.format(dateObj);
@@ -46,7 +45,15 @@ public class Quiz implements Serializable{
 		date_long = Long.parseLong(dateFormat.format(dateObj));
 		category = "";
 		tags = new ArrayList<String>();
-		generateQuizID();
+		generateID();
+	}
+	
+	public void addDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	public void addQuestion(Question q) {
@@ -189,12 +196,13 @@ public class Quiz implements Serializable{
 		Collections.shuffle(questions);
 	}
 	
-	public void generateQuizID() {
-		StringBuilder sb = new StringBuilder(ID_LEN);
-		for (int i = 0; i < ID_LEN; i++) {
-			sb.append(AB.charAt(rnd.nextInt(AB.length())));
-		}
-		this.id = sb.toString();
+	public void generateID() {
+		IDGenerator generator = new IDGenerator();
+		id = generator.generateID();
+	}
+	
+	public String getID() {
+		return id;
 	}
 	
 }

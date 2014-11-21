@@ -10,12 +10,14 @@ public class QuestionResponse implements Question, Serializable {
 	private Answer userAnswer;
 	private double weight;
 	private String quiz_id;
+	private String id;
 	
 	public QuestionResponse(String question) {
 		this.question = question;
 		this.acceptedAnswers = new ArrayList<Answer>();
 		this.weight = 1;
 		this.userAnswer = new Answer("");
+		generateID();
 	}
 	
 	public void addAcceptedAnswer(String str) {
@@ -92,6 +94,15 @@ public class QuestionResponse implements Question, Serializable {
 	
 	public String getQuizID() {
 		return quiz_id;
+	}
+	
+	public void generateID() {
+		IDGenerator generator = new IDGenerator();
+		id = generator.generateID();
+	}
+	
+	public String getID() {
+		return id;
 	}
 	
 	// ----------------------- Answer Inner Class ----------------- //

@@ -11,6 +11,7 @@ public class Performance implements Serializable {
 	private double score;
 	private String date_string;
 	private long date_long;
+	private String id;
 
 	
 	/**
@@ -24,6 +25,7 @@ public class Performance implements Serializable {
 		this.quiz_id = q.getQuizID();
 		this.user = user;
 		this.score = score;
+		generateID();
 		Date dateObj = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
 		date_string = dateFormat.format(dateObj);
@@ -39,13 +41,14 @@ public class Performance implements Serializable {
 	 * @param score
 	 * @param date
 	 */
-	public Performance(String quiz_name, String quiz_id, String user, double score, String date_string, long date_long) {
+	public Performance(String quiz_name, String quiz_id, String user, double score, String date_string, long date_long, String id) {
 		this.quiz_name = quiz_name;
 		this.quiz_id = quiz_id;
 		this.user = user;
 		this.score = score;
 		this.date_string = date_string;
 		this.date_long = date_long;
+		this.id = id;
 	}
 	
 	/**
@@ -78,6 +81,15 @@ public class Performance implements Serializable {
 
 	public String getQuizID() {
 		return quiz_id;
+	}
+	
+	public void generateID() {
+		IDGenerator generator = new IDGenerator();
+		id = generator.generateID();
+	}
+	
+	public String getID() {
+		return id;
 	}
 	
 }

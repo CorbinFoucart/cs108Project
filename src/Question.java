@@ -37,4 +37,8 @@ public interface Question {
 	
 	public void setQuizID(String id);
 	
+	public String getID();
+	
+	public void generateID();
+	
 }

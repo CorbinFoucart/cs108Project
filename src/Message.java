@@ -11,6 +11,7 @@ public class Message {
 	private long date_long;
 	private String quiz_id;
 	private boolean was_read;
+	private String msg_id;
 
 	//types are: message, announcement, challenge, friend request
 	
@@ -22,6 +23,7 @@ public class Message {
 		this.type = type;
 		this.quiz_id = quiz_id;
 		this.was_read = was_read;
+		generateID();
 		Date dateObj = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
 		date_string = dateFormat.format(dateObj);
@@ -30,7 +32,7 @@ public class Message {
 	}
 	
 	//To reconstruct message from database
-	public Message(String to, String from, String text, String date_string, long date_long, boolean was_read, String quiz_id, String type){
+	public Message(String to, String from, String text, String date_string, long date_long, boolean was_read, String quiz_id, String type, String msg_id){
 		this.to = to;
 		this.from = from;
 		this.text = text;
@@ -39,6 +41,7 @@ public class Message {
 		this.date_long = date_long;
 		this.quiz_id = quiz_id;
 		this.was_read = was_read;
+		this.msg_id = msg_id;
 	}
 	
 	public void setToRead(){
@@ -75,5 +78,14 @@ public class Message {
 	
 	public String getQuizID(){
 		return quiz_id;
+	}
+	
+	public void generateID() {
+		IDGenerator id_generator = new IDGenerator();
+		msg_id = id_generator.generateID();
+	}
+	
+	public String getID() {
+		return msg_id;
 	}
 }
