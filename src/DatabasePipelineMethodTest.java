@@ -170,6 +170,21 @@ public class DatabasePipelineMethodTest {
 		Announcement an2 = new Announcement("Sarge", "Remember to tune into FM 106.3 WOOF tonight!");
 		pipeline.addAnnouncement(an1);
 		pipeline.addAnnouncement(an2);
+		
+		// creates friend requests
+		// tests friend request class, addFriendRequest()
+		FriendRequest fr1 = new FriendRequest("Maggie", "Bo");
+		FriendRequest fr2 = new FriendRequest("Oksi", "Bo");
+		FriendRequest bogus = new FriendRequest("jancjkna", "asckjbasc");
+		FriendRequest bogus2 = new FriendRequest("Beethoven", "Bo");
+		pipeline.addFriendRequest(fr1);
+		pipeline.addFriendRequest(fr2);
+		pipeline.addFriendRequest(bogus);	
+		pipeline.removeMessage(bogus.getID());
+		pipeline.removeMessage(bogus2.getID());
+		pipeline.addFriendRequest(bogus2);	
+		pipeline.removeMessage(bogus2.getID());
+		
 
 			
 			

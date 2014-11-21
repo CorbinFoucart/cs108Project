@@ -22,8 +22,7 @@ public class DatabasePipeline {
 	private Connection con;
 	private Statement stmt;
 	
-	
-	private static final int NUM_RECENT = 10;
+
 
 	/**
 	 * Constructor; creates a new DatabasePipeline Object
@@ -143,7 +142,7 @@ public class DatabasePipeline {
 		}
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO quiz_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				con.prepareStatement("INSERT INTO quiz_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, quiz.getName());
 			pstmt.setString(2, quiz.getQuizID());
 			pstmt.setString(3, quiz.getDateAsString());
@@ -153,6 +152,7 @@ public class DatabasePipeline {
 			pstmt.setString(7, quiz.getCategory());
 			pstmt.setString(8, quiz.getTagsString());
 			pstmt.setString(9, quiz.getDescription());
+			pstmt.setLong(10, 0);
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -193,11 +193,15 @@ public class DatabasePipeline {
 	/**
 	 * Method to add a performance object to the database
 	 * checks to make sure that the ID is not already in use
+	 * 
+	 * 
+	 * 
 	 * @param perf - performance object to be added
 	 */
 	public void addPerformanceToDB(Performance perf) {
 		try {
 			
+			// generate a unique performance ID
 			while (true) {
 				String id = perf.getID();
 				ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE performance_id=\"" + id + "\"");
@@ -205,6 +209,7 @@ public class DatabasePipeline {
 				perf.generateID();
 			}
 			
+			// add the performance into the performances table
 			PreparedStatement pstmt = 
 				con.prepareStatement("INSERT INTO performance_table VALUES(?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, perf.getQuizName());
@@ -216,6 +221,9 @@ public class DatabasePipeline {
 			pstmt.setString(7, perf.getID());
 			pstmt.executeUpdate();
 			pstmt.close();
+			
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -247,9 +255,63 @@ public class DatabasePipeline {
 		}
 	}
 	
+				/**
+				 * Adds a note to the database by creating a 
+				 * note object and pass in the message
+				 * @param cnote
+				 */
+				public void addNote(Note note) {
+					addMessage(note);
+				}
+				
+				/**
+				 * Adds an announcement message to the messages database
+				 * @param announcement - announcement message type
+				 */
+				public void addAnnouncement(Announcement announcement) {
+					ArrayList<String> usernames = getAllUsernames();
+					for (int i = 0; i < usernames.size(); i++){
+						String currUsername = usernames.get(i);
+						announcement.generateID();
+						announcement.setRecipient(currUsername);
+						addMessage(announcement);
+					}
+				}
+				
+				/**
+				 * Adds a friend request to the database
+				 * @param request
+				 */
+				public void addFriendRequest(FriendRequest request) {
+					addMessage(request);
+				}
+				
+				/**
+				 * Adds a challenge to the user database
+				 * @param challenge
+				 */
+				public void addChallenge(Challenge challenge) {
+					addMessage(challenge);
+				}
+	
+	/**
+	 * Removes any type of message from the database by using its 
+	 * message_id, which is unique to each message.
+	 * 
+	 * @param message_id - the unique message id of the message to 
+	 * be removed
+	 */
+	public void removeMessage(String message_id) {
+		try {
+			stmt.executeUpdate("DELETE FROM message_table WHERE message_id =\"" + message_id + "\"");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	
-	//-------------------------------------------   RETRIEVING FROM THE DATABASE  ---------------------------------------- //
+	//-------------------------------------------------   RETRIEVING FROM THE DATABASE  --------------------------------------------- //
 	
 		// ---------------------------------- User Data Retrieval ------------------------------------ //
 		
@@ -309,8 +371,6 @@ public class DatabasePipeline {
 		
 		
 		// write 
-		// TODO all retrieval by ID
-		// TODO DELETE MESSAGE
 		// TODO ifUserExists boolean
 		// TODO add announcement method that takes in an announcement obj and puts the message in for each user
 		// TODO quiz nTimesTaken entry
@@ -318,67 +378,57 @@ public class DatabasePipeline {
 		
 		// do we need more specificity here? Assumptions
 		
-		/**
-		 * Adds a note to the database by creating a 
-		 * note object and pass in the message
-		 * @param cnote
-		 */
-		public void addNote(Note note) {
-			addMessage(note);
-		}
 		
-		/**
-		 * Adds an announcement message to the messages database
-		 * @param announcement - announcement message type
-		 */
-		public void addAnnouncement(Announcement announcement) {
-			ArrayList<String> usernames = getAllUsernames();
-			for (int i = 0; i < usernames.size(); i++){
-				String currUsername = usernames.get(i);
-				announcement.setRecipient(currUsername);
-				addMessage(announcement);
-			}
-		}
-		
-		/**
-		 * Adds a friend request to the database
-		 * @param request
-		 */
-		public void addFriendRequest(FriendRequest request) {
-			addMessage(request);
-		}
-		
-		/**
-		 * Adds a challenge to the user database
-		 * @param challenge
-		 */
-		public void addChallenge(Challenge challenge) {
-			addMessage(challenge);
-		}
-
+	/**
+	 * Retrieves the number of times a quiz has been taken and increments
+	 * the value by 1, saving the result in the database.
+	 * @param quiz_id - the unique quiz id of the quiz taken
+	 */
+	public void incrementQuizTaken(String quiz_id) {
+//		try {
+//			while (true) {
+//				String id = achievement.getID();
+//				ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE achievement_id=\"" + id + "\"");
+//				if (!rs.next()) break;
+//				achievement.generateID();
+//			} 
+//			PreparedStatement pstmt = 
+//				con.prepareStatement("INSERT INTO achievement_table VALUES(?, ?, ?, ?, ?, ?)");
+//			pstmt.setString(1, achievement.getUsername());
+//			pstmt.setString(2, achievement.getAchievementType());
+//			pstmt.setString(3, achievement.getDateAsString());
+//			pstmt.setLong(4, achievement.getDateAsLong());
+//			pstmt.setBoolean(5, achievement.isAnnounced());
+//			pstmt.setString(6, achievement.getID());
+//			pstmt.executeUpdate();
+//			pstmt.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+	}
 	
-		private void addAchievementToDB(Achievement achievement) {
-			try {
-				while (true) {
-					String id = achievement.getID();
-					ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE achievement_id=\"" + id + "\"");
-					if (!rs.next()) break;
-					achievement.generateID();
-				} 
-				PreparedStatement pstmt = 
-					con.prepareStatement("INSERT INTO achievement_table VALUES(?, ?, ?, ?, ?, ?)");
-				pstmt.setString(1, achievement.getUsername());
-				pstmt.setString(2, achievement.getAchievementType());
-				pstmt.setString(3, achievement.getDateAsString());
-				pstmt.setLong(4, achievement.getDateAsLong());
-				pstmt.setBoolean(5, achievement.isAnnounced());
-				pstmt.setString(6, achievement.getID());
-				pstmt.executeUpdate();
-				pstmt.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	private void addAchievementToDB(Achievement achievement) {
+		try {
+			while (true) {
+				String id = achievement.getID();
+				ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE achievement_id=\"" + id + "\"");
+				if (!rs.next()) break;
+				achievement.generateID();
+			} 
+			PreparedStatement pstmt = 
+				con.prepareStatement("INSERT INTO achievement_table VALUES(?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, achievement.getUsername());
+			pstmt.setString(2, achievement.getAchievementType());
+			pstmt.setString(3, achievement.getDateAsString());
+			pstmt.setLong(4, achievement.getDateAsLong());
+			pstmt.setBoolean(5, achievement.isAnnounced());
+			pstmt.setString(6, achievement.getID());
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
 
 	
 	public ArrayList<String> getFriends(String user) {
@@ -632,12 +682,12 @@ public class DatabasePipeline {
 	}
 	
 	
-	public ArrayList<Message> getRecentMessages(String user, String type) {
+	public ArrayList<Message> getNRecentMessages(String user, String type, int num_recent) {
 		ArrayList<Message> messages = new ArrayList<Message>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + 
 												"\" AND message_type=\"" + type + 
-												"\" AND was_read=0 ORDER BY date_long DESC LIMIT " + NUM_RECENT);
+												"\" AND was_read=0 ORDER BY date_long DESC LIMIT " + num_recent);
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
@@ -685,11 +735,11 @@ public class DatabasePipeline {
 		return retrieved;
 	}
 	
-	public ArrayList<Performance> getRecentPerformances(String user) {
+	public ArrayList<Performance> getNRecentPerformances(String user, int num_recent) {
 		ArrayList<Performance> retrieved = new ArrayList<Performance>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
-							+ user + "\" ORDER BY date_long DESC LIMIT " + NUM_RECENT);
+							+ user + "\" ORDER BY date_long DESC LIMIT " + num_recent);
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
@@ -831,7 +881,8 @@ public class DatabasePipeline {
 						       " quiz_bit_dump BLOB," +
 						       " category CHAR(64)," +
 						       " tag_string VARCHAR(1000)," +
-						       " description VARCHAR(1000)" +
+						       " description VARCHAR(1000)," +
+						       " n_times_taken BIGINT" + 
 						       ");";
 		
 		String AddQuizTables6 = "CREATE TABLE achievement_table (" +
@@ -886,10 +937,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME =  "ccs108cfoucart";  //"ccs108rdeubler"; // "ccs108cfoucart";  //
-		public static final String MYSQL_PASSWORD =  "aigookue"; //"vohhaegh"; // "aigookue";  //
+		public static final String MYSQL_USERNAME =  "ccs108rdeubler"; // "ccs108cfoucart";  //
+		public static final String MYSQL_PASSWORD =  "vohhaegh"; // "aigookue";  //
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME =  "c_cs108_cfoucart"; //"c_cs108_rdeubler";
+		public static final String MYSQL_DATABASE_NAME =  "c_cs108_rdeubler";
 		
 		public DBConnection() {
 			try {
