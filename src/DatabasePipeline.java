@@ -131,7 +131,7 @@ public class DatabasePipeline {
 				String id = quiz.getQuizID();
 				ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE quiz_id=\"" + id + "\"");
 				if (!rs.next()) break;
-				quiz.generateQuizID();
+				quiz.generateID();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -142,7 +142,7 @@ public class DatabasePipeline {
 		}
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO quizzes_table VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+				con.prepareStatement("INSERT INTO quizzes_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, quiz.getName());
 			pstmt.setString(2, quiz.getQuizID());
 			pstmt.setString(3, quiz.getDateAsString());
@@ -151,6 +151,7 @@ public class DatabasePipeline {
 			pstmt.setBlob(6, quizBlob);
 			pstmt.setString(7, quiz.getCategory());
 			pstmt.setString(8, quiz.getTagsString());
+			pstmt.setString(9, quiz.getDescription());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -167,11 +168,20 @@ public class DatabasePipeline {
 			public void addQuestionToDB(Question ques) {
 				Blob quesBlob = blobify(ques);
 				try {
+					
+					while (true) {
+						String id = ques.getID();
+						ResultSet rs = stmt.executeQuery("SELECT * FROM question_table WHERE question_id=\"" + id + "\"");
+						if (!rs.next()) break;
+						ques.generateID();
+					} 
+					
 					PreparedStatement pstmt = 
-						con.prepareStatement("INSERT INTO question_table VALUES(?, ?, ?)");
+						con.prepareStatement("INSERT INTO question_table VALUES(?, ?, ?, ?)");
 					pstmt.setBlob(1, quesBlob);
 					pstmt.setString(2, ques.getQuestion());
 					pstmt.setString(3, ques.getQuizID());
+					pstmt.setString(4, ques.getID());
 					pstmt.executeUpdate();
 					pstmt.close();
 				} catch (Exception e) {
@@ -181,18 +191,28 @@ public class DatabasePipeline {
 	
 	/**
 	 * Method to add a performance object to the database
+	 * checks to make sure that the ID is not already in use
 	 * @param perf - performance object to be added
 	 */
 	public void addPerformanceToDB(Performance perf) {
 		try {
+			
+			while (true) {
+				String id = perf.getID();
+				ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE performance_id=\"" + id + "\"");
+				if (!rs.next()) break;
+				perf.generateID();
+			}
+			
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO performance_table VALUES(?, ?, ?, ?, ?, ?)");
+				con.prepareStatement("INSERT INTO performance_table VALUES(?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, perf.getQuizName());
 			pstmt.setString(2, perf.getQuizID());
 			pstmt.setString(3, perf.getUser());
 			pstmt.setDouble(4, perf.getScore());
 			pstmt.setString(5, perf.getDateAsString());
 			pstmt.setLong(6, perf.getDateAsLong());
+			pstmt.setString(7, perf.getID());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -209,7 +229,7 @@ public class DatabasePipeline {
 	public void addMessage(Message msg) {
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, msg.getTo());
 			pstmt.setString(2, msg.getFrom());
 			pstmt.setString(3, msg.getMessage());
@@ -218,6 +238,7 @@ public class DatabasePipeline {
 			pstmt.setBoolean(6, false);
 			pstmt.setString(7, msg.getQuizID());
 			pstmt.setString(8, msg.getType());
+			pstmt.setString(9, msg.getID());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -309,7 +330,28 @@ public class DatabasePipeline {
 	
 
 	
-	
+		private void addAchievementToDB(Achievement achievement) {
+			try {
+				while (true) {
+					String id = achievement.getID();
+					ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE achievement_id=\"" + id + "\"");
+					if (!rs.next()) break;
+					achievement.generateID();
+				} 
+				PreparedStatement pstmt = 
+					con.prepareStatement("INSERT INTO achievement_table VALUES(?, ?, ?, ?, ?, ?)");
+				pstmt.setString(1, achievement.getUsername());
+				pstmt.setString(2, achievement.getAchievementType());
+				pstmt.setString(3, achievement.getDateAsString());
+				pstmt.setLong(4, achievement.getDateAsLong());
+				pstmt.setBoolean(5, achievement.isAnnounced());
+				pstmt.setString(6, achievement.getID());
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 	
 	public ArrayList<String> getFriends(String user) {
@@ -334,13 +376,22 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getString("message_id"));
 				messages.add(msg);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return messages;
+	}
+	
+	public void markAsRead(String message_id) {
+		try {
+			stmt.executeUpdate("UPDATE message_table SET was_read=\"true\" WHERE message_id=\"" + message_id + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public ArrayList<Message> getFriendRequests(String user) {
@@ -351,7 +402,8 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getString("message_id"));
 				requests.add(msg);
 			}
 		} catch (SQLException e) {
@@ -368,7 +420,8 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getString("message_id"));
 				challenges.add(msg);
 			}
 		} catch (SQLException e) {
@@ -387,7 +440,25 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getString("message_id"));
+				announcements.add(announcement);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return announcements;
+	}
+	
+	public ArrayList<Message> getNewAnnouncements(String user) {
+		ArrayList<Message> announcements = new ArrayList<Message>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
+											 + user + "\" AND message_type =\"announcement\" AND was_read=0");
+			while (rs.next()) {
+				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
+						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"), rs.getString("message_id"));
 				announcements.add(announcement);
 			}
 		} catch (SQLException e) {
@@ -534,15 +605,17 @@ public class DatabasePipeline {
 	}
 	
 	
-	public ArrayList<Message> getRecentMessages(String user) {
+	public ArrayList<Message> getRecentMessages(String user, String type) {
 		ArrayList<Message> messages = new ArrayList<Message>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + 
-								"\" AND message_type=\"note\" ORDER BY date_long DESC LIMIT " + NUM_RECENT);
+												"\" AND message_type=\"" + type + 
+												"\" AND was_read=0 ORDER BY date_long DESC LIMIT " + NUM_RECENT);
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"));
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getString("message_id"));
 				messages.add(msg);
 			}
 		} catch (SQLException e) {
@@ -575,7 +648,8 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + user + "\"");
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -591,7 +665,8 @@ public class DatabasePipeline {
 							+ user + "\" ORDER BY date_long DESC LIMIT " + NUM_RECENT);
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -607,13 +682,35 @@ public class DatabasePipeline {
 												+ quiz_id + "\" AND taken_by_user=\"" + user + "\"");
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"), rs.getLong("date_long"));
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return retrieved;
+	}
+	
+	public ArrayList<String> getCategories() {
+		ArrayList<String> categories = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM category_table");
+			while (rs.next()) {
+				categories.add(rs.getString("category_name"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return categories;
+	}
+	
+	public void addCategory(String newCat) {
+		try {
+			stmt.executeUpdate("INSERT INTO category_table VALUES(" + newCat + ")");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -661,66 +758,73 @@ public class DatabasePipeline {
 	// clears the quiz database and resets the tables
 	public void clearDatabase() {
 		// drop existing tables
-		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, categories_table,"
+		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, category_table,"
 					+ "performance_table, quizzes_table, question_table, achievement_table, questions_table;";
 		
 		String AddQuizTables1 = "CREATE TABLE user_table (" +
-								" username CHAR(64)," +
-								" password CHAR(64), " +
-							    " privacy INT," +  
-							    " admin_status BOOLEAN" +
-							    ");";
-							    
+				" username CHAR(64)," +
+				" password CHAR(64), " +
+			    " privacy INT," +  
+			    " admin_status BOOLEAN" +
+			    ");";
+			    
 		String AddQuizTables2 = "CREATE TABLE friends_table (" +
-									       " friend_one CHAR(64)," +
-									       " friend_two CHAR(64) " +
-								");";
-
+							       " friend_one CHAR(64)," +
+							       " friend_two CHAR(64) " +
+							       ");";
+		
 		String AddQuizTables3 = "CREATE TABLE message_table (" +
-								       " recipient CHAR(64)," +
-								       " sender CHAR(64)," +
-									   " message VARCHAR(1000)," +
-									   " date_string CHAR(64)," +
-									   " date_long BIGINT," +
-									   " was_read BOOLEAN," +
-									   " quiz_id CHAR(64)," +
-									   " message_type CHAR(64)" +
-								");";
-
+						       " recipient CHAR(64)," +
+						       " sender CHAR(64)," +
+							   " message VARCHAR(1000)," +
+							   " date_string CHAR(64)," +
+							   " date_long BIGINT," +
+							   " was_read BOOLEAN," +
+							   " quiz_id CHAR(64)," +
+							   " message_type CHAR(64)" +
+							   " message_id CHAR(64)" +
+							  ");";
+		
 		String AddQuizTables4 = "CREATE TABLE performance_table (" +
-								       " quiz_name CHAR(64)," +
-								       " quiz_id CHAR(64)," +
-								       " taken_by_user CHAR(64)," +
-								       " score DECIMAL(5,4)," +
-								       " date_string CHAR(64)," +
-								       " date_long BIGINT" +
-								");";
-
+						       " quiz_name CHAR(64)," +
+						       " quiz_id CHAR(64)," +
+						       " taken_by_user CHAR(64)," +
+						       " score DECIMAL(5,4)," +
+						       " date_string CHAR(64)," +
+						       " date_long BIGINT" +
+						       " performance_id CHAR(64)" +
+						       ");";
+		
 		String AddQuizTables5 = "CREATE TABLE quizzes_table (" +
-								       " quiz_name CHAR(64)," +
-								       " quiz_id CHAR(64)," +
-								       " date_string CHAR(64)," +
-								       " date_long BIGINT," +
-								       " creator CHAR(64)," +
-								       " quiz_bit_dump BLOB," +
-								       " category CHAR(64)," +
-								       " tag_string VARCHAR(1000)" +
-								");";
-
+						       " quiz_name CHAR(64)," +
+						       " quiz_id CHAR(64)," +
+						       " date_string CHAR(64)," +
+						       " date_long BIGINT," +
+						       " creator CHAR(64)," +
+						       " quiz_bit_dump BLOB," +
+						       " category CHAR(64)," +
+						       " tag_string VARCHAR(1000)" +
+						       " description VARCHAR(1000)" +
+						       ");";
+		
 		String AddQuizTables6 = "CREATE TABLE achievement_table (" +
-								       " username CHAR(64)," +
-								       " amateur_author BOOLEAN," +
-								       " prolific_author BOOLEAN," +
-								       " prodigious_author BOOLEAN," +
-								       " quiz_machine BOOLEAN," +
-								       " i_am_the_greatest BOOLEAN," +
-								       " practice_makes_perfect BOOLEAN" +      
-								");";
-
+						       " username CHAR(64)," +
+						       " achievement_type CHAR(64), " + 
+						       " date_string CHAR(64), " +
+						       " date_long BIGINT," +
+						       " announced BOOLEAN" +
+						       " achievement_id CHAR(64)" +
+						       ");";
+		
 		String AddQuizTables7 = "CREATE TABLE question_table (" +
-								       " question_bit_dump BLOB," +
-								       " question_string VARCHAR(64)," +
-								       " quiz_id CHAR(64)" +
+						       " question_bit_dump BLOB," +
+						       " question_string VARCHAR(64)," +
+						       " quiz_id CHAR(64)," +
+						       " question_id CHAR(64)" +
+						       ");";
+		
+		String AddQuizTables8 = "CREATE TABLE category_table (" +
+								" category CHAR(64)" +
 								");";
 		
 		try {
@@ -732,6 +836,8 @@ public class DatabasePipeline {
 			stmt.executeUpdate(AddQuizTables5);
 			stmt.executeUpdate(AddQuizTables6);
 			stmt.executeUpdate(AddQuizTables7);
+			stmt.executeUpdate(AddQuizTables8);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
