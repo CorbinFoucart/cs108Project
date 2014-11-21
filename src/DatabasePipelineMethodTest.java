@@ -119,6 +119,16 @@ public class DatabasePipelineMethodTest {
 		pipeline.addQuizToDB(quiz1);
 		pipeline.addQuizToDB(quiz2);
 		
+		// quiz incrementation
+		// tests incrementQuizTaken(), clearquizPerformace()
+		
+		//works
+		pipeline.incrementQuizTaken(quiz1.getQuizID());
+		pipeline.incrementQuizTaken(quiz1.getQuizID());
+		pipeline.incrementQuizTaken(quiz1.getQuizID());
+
+		
+		
 		// add doggy performances 
 		// tests addPerformanceToDB()
 		Performance per1 = new Performance(quiz1, "Maggie", 0.95);
@@ -185,9 +195,7 @@ public class DatabasePipelineMethodTest {
 		pipeline.addFriendRequest(bogus2);	
 		pipeline.removeMessage(bogus2.getID());
 		
-
-			
-			
+		
 		// General testing observations
 		// message input type pretty shady, consider subclassing it?
 		

@@ -385,26 +385,28 @@ public class DatabasePipeline {
 	 * @param quiz_id - the unique quiz id of the quiz taken
 	 */
 	public void incrementQuizTaken(String quiz_id) {
-//		try {
-//			while (true) {
-//				String id = achievement.getID();
-//				ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE achievement_id=\"" + id + "\"");
-//				if (!rs.next()) break;
-//				achievement.generateID();
-//			} 
-//			PreparedStatement pstmt = 
-//				con.prepareStatement("INSERT INTO achievement_table VALUES(?, ?, ?, ?, ?, ?)");
-//			pstmt.setString(1, achievement.getUsername());
-//			pstmt.setString(2, achievement.getAchievementType());
-//			pstmt.setString(3, achievement.getDateAsString());
-//			pstmt.setLong(4, achievement.getDateAsLong());
-//			pstmt.setBoolean(5, achievement.isAnnounced());
-//			pstmt.setString(6, achievement.getID());
-//			pstmt.executeUpdate();
-//			pstmt.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id= \"" + quiz_id + "\"");
+			
+			if (rs.next()) {
+			long nTimesTaken = rs.getLong("n_times_taken");
+			nTimesTaken++;
+			stmt.executeUpdate("UPDATE quiz_table SET n_times_taken = \"" + nTimesTaken + 
+								"\" WHERE quiz_id = \"" + quiz_id + "\";" );
+			}
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void clearQuizHistory(Quiz quiz) {
+		try {
+			stmt.executeUpdate("DELETE FROM performance_table WHERE quiz_id=\"" + quiz.getQuizID() + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void addAchievementToDB(Achievement achievement) {
@@ -617,13 +619,7 @@ public class DatabasePipeline {
 		return password;
 	}	
 	
-	public void clearQuizHistory(Quiz quiz) {
-		try {
-			stmt.executeUpdate("DELETE FROM performance_table WHERE quiz_id=\"" + quiz.getQuizID() + "\"");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+
 	
 	public int totalNumberOfQuizzes() {
 		int quizNum = 0;

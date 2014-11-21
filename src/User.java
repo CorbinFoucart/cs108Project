@@ -47,12 +47,13 @@ public class User {
 		this.hashedPassword = hashedPassword;
 		this.admin = false; 
 		this.privacySetting = privacySetting; 
-		this.friends = db.getFriends(username); 
+		
+
 	}
 	
 	public void setUserDBPipeline(DatabasePipeline dbpl) {
 		this.db = dbpl;
-	}
+	} 
 	
 	// updates the user
 	public void updateUser(){
