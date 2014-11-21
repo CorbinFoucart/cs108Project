@@ -12,17 +12,22 @@ public class Message {
 	private String quiz_id;
 	private boolean was_read;
 	private String msg_id;
+	
+	public static final String NOTE = "note";
+	public static final String CHALLENGE = "challenge";
+	public static final String REQUEST = "friend_request";
+	public static final String ANNOUNCEMENT = "announcement";
 
 	//types are: message, announcement, challenge, friend request
 	
 	//To create a new message
-	public Message(String to, String from, String text, boolean was_read, String quiz_id, String type){
+	public Message(String to, String from, String text, String quiz_id, String type){
 		this.to = to;
 		this.from = from;
 		this.text = text;
 		this.type = type;
 		this.quiz_id = quiz_id;
-		this.was_read = was_read;
+		this.was_read = false;
 		generateID();
 		Date dateObj = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
@@ -42,6 +47,10 @@ public class Message {
 		this.quiz_id = quiz_id;
 		this.was_read = was_read;
 		this.msg_id = msg_id;
+	}
+	
+	public void setRecipient(String username) {
+		this.to = username;
 	}
 	
 	public void setToRead(){

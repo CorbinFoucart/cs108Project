@@ -201,8 +201,4 @@ public class Quiz implements Serializable{
 		id = generator.generateID();
 	}
 	
-	public String getID() {
-		return id;
-	}
-	
 }

@@ -129,7 +129,7 @@ public class DatabasePipeline {
 		try {
 			while (true) {
 				String id = quiz.getQuizID();
-				ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE quiz_id=\"" + id + "\"");
+				ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id=\"" + id + "\"");
 				if (!rs.next()) break;
 				quiz.generateID();
 			}
@@ -138,11 +138,12 @@ public class DatabasePipeline {
 		}
 		for (int i = 0; i < quiz.getNumQuestions(); i++) {
 			Question q = quiz.getQuestion(i);
+			q.setQuizID(quiz.getQuizID());
 			addQuestionToDB(q);
 		}
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO quizzes_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				con.prepareStatement("INSERT INTO quiz_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, quiz.getName());
 			pstmt.setString(2, quiz.getQuizID());
 			pstmt.setString(3, quiz.getDateAsString());
@@ -246,31 +247,7 @@ public class DatabasePipeline {
 		}
 	}
 	
-	// do we need more specificity here? Assumptions
-	
-		/**
-		 * Adds an announcement message to the messages database
-		 * @param announcement - announcement message type
-		 */
-		public void addAnnouncement(Message announcement) {
-			addMessage(announcement);
-		}
-		
-		/**
-		 * Adds a friend request to the database
-		 * @param request
-		 */
-		public void addFriendRequest(Message request) {
-			addMessage(request);
-		}
-		
-		/**
-		 * Adds a challenge to the user database
-		 * @param challenge
-		 */
-		public void addChallenge(Message challenge) {
-			addMessage(challenge);
-		}
+
 	
 	//-------------------------------------------   RETRIEVING FROM THE DATABASE  ---------------------------------------- //
 	
@@ -286,7 +263,7 @@ public class DatabasePipeline {
 		public Quiz retrieveQuizFromDB(String quiz_id) {
 			Quiz retrieved = null;
 			try {
-				ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE quiz_id=\"" + quiz_id + "\"");
+				ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id=\"" + quiz_id + "\"");
 				retrieved = (Quiz) deBlob(rs, 6);
 				if (retrieved != null && retrieved.isRandom()) retrieved.shuffleQuiz();
 			} catch (SQLException e) {
@@ -296,19 +273,16 @@ public class DatabasePipeline {
 		}
 		
 		/**
-		 * Retrieves a question from the database by using its question string as a 
+		 * Retrieves a question from the database by using its question ID as a 
 		 * search parameter. 
-		 * 
-		 * TODO COULD RETURN MORE THAN ONE QUESTION IF 2 QUESTIONS ARE THE SAME. 
-		 * SHOULD USE QUESTION ID INSTEAD!!!
 		 * 
 		 * @param question
 		 * @return
 		 */
-		public Question retrieveQuestionFromDB(String question) {
+		public Question retrieveQuestionFromDB(String question_ID) {
 			Question retrieved = null;
 			try {
-				ResultSet rs = stmt.executeQuery("SELECT * FROM question_table WHERE question_string=\"" + question + "\"");
+				ResultSet rs = stmt.executeQuery("SELECT * FROM question_table WHERE question_id=\"" + question_ID + "\"");
 				retrieved = (Question) deBlob(rs, 1);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -322,12 +296,64 @@ public class DatabasePipeline {
 	
 	
 	
-		// TODO question retrieval by ID
+		// TODO inform front end that usernames are case insensitive
+		// TODO Challenges can be made between non existent users; need fix?
+		// TODO case where both have friended each other, and one accepts, need request remove
+		// TODO general message check where checks if both users exist before message is sent
+		// TODO do friend requests need a read boolean?
+		// TODO user can only send an announcement if admin
+		// TODO add announcement method 
+		// TODO ask front end to never pass in empty string for username; password.
+		// TODO inform front end of name change quiz
+		
+		
+		// write 
 		// TODO all retrieval by ID
 		// TODO DELETE MESSAGE
 		// TODO ifUserExists boolean
 		// TODO add announcement method that takes in an announcement obj and puts the message in for each user
-	
+		// TODO CHECK USER ASK FRONT END
+		
+		
+		// do we need more specificity here? Assumptions
+		
+		/**
+		 * Adds a note to the database by creating a 
+		 * note object and pass in the message
+		 * @param cnote
+		 */
+		public void addNote(Note note) {
+			addMessage(note);
+		}
+		
+		/**
+		 * Adds an announcement message to the messages database
+		 * @param announcement - announcement message type
+		 */
+		public void addAnnouncement(Announcement announcement) {
+			ArrayList<String> usernames = getAllUsernames();
+			for (int i = 0; i < usernames.size(); i++){
+				String currUsername = usernames.get(i);
+				announcement.setRecipient(currUsername);
+				addMessage(announcement);
+			}
+		}
+		
+		/**
+		 * Adds a friend request to the database
+		 * @param request
+		 */
+		public void addFriendRequest(FriendRequest request) {
+			addMessage(request);
+		}
+		
+		/**
+		 * Adds a challenge to the user database
+		 * @param challenge
+		 */
+		public void addChallenge(Challenge challenge) {
+			addMessage(challenge);
+		}
 
 	
 		private void addAchievementToDB(Achievement achievement) {
@@ -551,7 +577,7 @@ public class DatabasePipeline {
 	public int totalNumberOfQuizzes() {
 		int quizNum = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count FROM quizzes_table");
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count FROM quiz_table");
 			if (rs.next()) {
 				quizNum = rs.getInt("row_count");
 			}
@@ -594,7 +620,7 @@ public class DatabasePipeline {
 		int quizNum = 0;
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count " +
-					"FROM quizzes_table WHERE creator=\"" + user + "\"");
+					"FROM quiz_table WHERE creator=\"" + user + "\"");
 			if (rs.next()) {
 				quizNum = rs.getInt("row_count");
 			}
@@ -628,7 +654,7 @@ public class DatabasePipeline {
 	public ArrayList<Quiz> getQuizzesCreated(String user) {
 		ArrayList<Quiz> retrieved = new ArrayList<Quiz>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE creator=\"" + user + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE creator=\"" + user + "\"");
 			Quiz retrievedQuiz;
 			while (true) {
 				retrievedQuiz = (Quiz) deBlob(rs, 6);
@@ -759,7 +785,7 @@ public class DatabasePipeline {
 	public void clearDatabase() {
 		// drop existing tables
 		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, category_table,"
-					+ "performance_table, quizzes_table, question_table, achievement_table, questions_table;";
+					+ "performance_table, quiz_table, question_table, achievement_table, questions_table;";
 		
 		String AddQuizTables1 = "CREATE TABLE user_table (" +
 				" username CHAR(64)," +
@@ -781,7 +807,7 @@ public class DatabasePipeline {
 							   " date_long BIGINT," +
 							   " was_read BOOLEAN," +
 							   " quiz_id CHAR(64)," +
-							   " message_type CHAR(64)" +
+							   " message_type CHAR(64)," +
 							   " message_id CHAR(64)" +
 							  ");";
 		
@@ -791,11 +817,11 @@ public class DatabasePipeline {
 						       " taken_by_user CHAR(64)," +
 						       " score DECIMAL(5,4)," +
 						       " date_string CHAR(64)," +
-						       " date_long BIGINT" +
+						       " date_long BIGINT," +
 						       " performance_id CHAR(64)" +
 						       ");";
 		
-		String AddQuizTables5 = "CREATE TABLE quizzes_table (" +
+		String AddQuizTables5 = "CREATE TABLE quiz_table (" +
 						       " quiz_name CHAR(64)," +
 						       " quiz_id CHAR(64)," +
 						       " date_string CHAR(64)," +
@@ -803,7 +829,7 @@ public class DatabasePipeline {
 						       " creator CHAR(64)," +
 						       " quiz_bit_dump BLOB," +
 						       " category CHAR(64)," +
-						       " tag_string VARCHAR(1000)" +
+						       " tag_string VARCHAR(1000)," +
 						       " description VARCHAR(1000)" +
 						       ");";
 		
@@ -812,7 +838,7 @@ public class DatabasePipeline {
 						       " achievement_type CHAR(64), " + 
 						       " date_string CHAR(64), " +
 						       " date_long BIGINT," +
-						       " announced BOOLEAN" +
+						       " announced BOOLEAN, " +
 						       " achievement_id CHAR(64)" +
 						       ");";
 		

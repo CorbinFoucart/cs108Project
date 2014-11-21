@@ -13,7 +13,7 @@ public class HomePage {
 	private ArrayList<Message> recentFriendRequests;
 	private ArrayList<Message> recentChallenges;
 	private ArrayList<Message> recentNotes;
-	private ArrayList<Activity> getRecentFriendActivity;
+	//private ArrayList<Activity> getRecentFriendActivity;
 	
 	public HomePage(String username) {
 		DatabasePipeline pipeline = new DatabasePipeline();

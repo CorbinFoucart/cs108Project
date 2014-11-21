@@ -57,7 +57,6 @@ public class User {
 	// updates the user
 	public void updateUser(){
 		friends = db.getFriends(username); 
-		recentMessages = db.getRecentMessages(username); 	
 		messages = db.getMessages(username); 
 		admin = db.checkIfAdmin(username); // check if it is an admin
 		privacySetting = db.checkPrivacySettings(username); 
@@ -81,6 +80,8 @@ public class User {
 			return "Anonymous"; 
 		}
 	}
+	
+	// TODO ASK FRONT END WHAT THEY NEED HERE
 	
 	public int numFriends(){
 		return friends.size(); 
