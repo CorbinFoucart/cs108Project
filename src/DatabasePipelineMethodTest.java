@@ -145,7 +145,6 @@ public class DatabasePipelineMethodTest {
 		
 		// creates notes
 		// tests note class, addNote()
-		
 		Note n1 = new Note("Sarge", "Bo", "I was just diagnosed with irritable bowel syndrome.");
 		Note n2 = new Note("Sarge", "Bo", "I'm sorry to hear that, bo.");
 		Note n3 = new Note("Air Bud", "Beethoven", "My 90s movies were better than yours.");
@@ -155,7 +154,22 @@ public class DatabasePipelineMethodTest {
 		pipeline.addNote(n3);
 		pipeline.addNote(n4);
 		
+		// creates challenges
+		// tests challenge class, addChallenges()
+		Challenge challenge1 = new Challenge("Air Bud", "Beethoven", "Let's find out who's the better 90s dog!", quiz1.getQuizID());
+		Challenge challenge2 = new Challenge("Sarge", "Bo", "They should call you cat-face meowmers.", quiz1.getQuizID());
+		Challenge challenge3 = new Challenge("ascascd", "snssrgser", "Proof that non-users can create challenges.", quiz2.getQuizID());
+		Challenge challenge4 = new Challenge("Maggie", "Beethoven", "Proof that non-friends can create challenges", quiz2.getQuizID());
+		pipeline.addChallenge(challenge1);
+		pipeline.addChallenge(challenge2);
+		pipeline.addChallenge(challenge3);
+		pipeline.addChallenge(challenge4);
 		
+		// creates announcements
+		Announcement an1 = new Announcement("Sarge", "Note: All cat-related content will be flagged and removed!");
+		Announcement an2 = new Announcement("Sarge", "Remember to tune into FM 106.3 WOOF tonight!");
+		pipeline.addAnnouncement(an1);
+		pipeline.addAnnouncement(an2);
 
 			
 			

@@ -294,8 +294,8 @@ public class DatabasePipeline {
 	
 	//-----------------------------------------------------   UNTESTED  ------------------------------------------------ //
 	
-	
-	
+		
+		// stuff for front end to mull over; things we need
 		// TODO inform front end that usernames are case insensitive
 		// TODO Challenges can be made between non existent users; need fix?
 		// TODO case where both have friended each other, and one accepts, need request remove
@@ -305,6 +305,7 @@ public class DatabasePipeline {
 		// TODO add announcement method 
 		// TODO ask front end to never pass in empty string for username; password.
 		// TODO inform front end of name change quiz
+		// TODO CHECK USER ASK FRONT END
 		
 		
 		// write 
@@ -312,7 +313,7 @@ public class DatabasePipeline {
 		// TODO DELETE MESSAGE
 		// TODO ifUserExists boolean
 		// TODO add announcement method that takes in an announcement obj and puts the message in for each user
-		// TODO CHECK USER ASK FRONT END
+		// TODO quiz nTimesTaken entry
 		
 		
 		// do we need more specificity here? Assumptions
@@ -885,10 +886,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME =  "ccs108rdeubler"; // "ccs108cfoucart";  //
-		public static final String MYSQL_PASSWORD =  "vohhaegh"; // "aigookue";  //
+		public static final String MYSQL_USERNAME =  "ccs108cfoucart";  //"ccs108rdeubler"; // "ccs108cfoucart";  //
+		public static final String MYSQL_PASSWORD =  "aigookue"; //"vohhaegh"; // "aigookue";  //
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler";
+		public static final String MYSQL_DATABASE_NAME =  "c_cs108_cfoucart"; //"c_cs108_rdeubler";
 		
 		public DBConnection() {
 			try {
