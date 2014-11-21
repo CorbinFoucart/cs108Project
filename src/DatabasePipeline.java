@@ -6,6 +6,16 @@ import java.util.*;
 import javax.sql.rowset.serial.SerialBlob;
 import project.*;
 
+ // testing
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
 
 public class DatabasePipeline {
 	private DBConnection db_con;
@@ -15,17 +25,52 @@ public class DatabasePipeline {
 	
 	private static final int NUM_RECENT = 10;
 
-
+	/**
+	 * Constructor; creates a new DatabasePipeline Object
+	 * Uses DBConnection inner class
+	 */
 	public DatabasePipeline() {
 		db_con = new DBConnection();
 		con = db_con.getConnection();
 		stmt = db_con.getStatement();
 	}
 	
-	public void closePipeline() {
-		db_con.closeConnection();
+	// ----------------------------------------------   ADDING TO THE DATABASE  ---------------------------------------- //
+	
+	/**
+	 * Adds a user's information into the user_table of the database.
+	 * @param user- user object to be added to the quiz database
+	 */
+	public void addUser(User user) {
+		try {
+			PreparedStatement pstmt = 
+				con.prepareStatement("INSERT INTO user_table VALUES(?, ?, ?, ?);");
+			pstmt.setString(1, user.getUsername());
+			pstmt.setString(2, user.getPassword());
+			pstmt.setInt(3, user.getPrivacy());
+			pstmt.setBoolean(4, user.isAdmin());
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
+	
+	//-------------------------------------------   RETRIEVING FROM THE DATABASE  ---------------------------------------- //
+	
+	
+	//-----------------------------------------------------   UNTESTED  ------------------------------------------------ //
+	
+	/**
+	 * Adds a quiz object to the quizzes database. Enters in both
+	 * a bit dump SQL blob as well as quiz table parameters.
+	 * 
+	 * Note that this method also adds every question in the 
+	 * quiz to the datbase as well.
+	 * 
+	 * @param quiz - quiz object to be entered into the database 
+	 */
 	public void addQuizToDB(Quiz quiz) {
 		Blob quizBlob = blobify(quiz);
 		try {
@@ -133,7 +178,8 @@ public class DatabasePipeline {
 	public ArrayList<Message> getMessages(String user) {
 		ArrayList<Message> messages = new ArrayList<Message>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + "\" AND message_type=\"note\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
+											 + user + "\" AND message_type=\"note\"");
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
@@ -149,7 +195,8 @@ public class DatabasePipeline {
 	public ArrayList<Message> getFriendRequests(String user) {
 		ArrayList<Message> requests = new ArrayList<Message>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + "\" AND message_type=\"friend_request\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\""
+											+ user + "\" AND message_type=\"friend_request\"");
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
@@ -165,7 +212,8 @@ public class DatabasePipeline {
 	public ArrayList<Message> getChallenges(String user) {
 		ArrayList<Message> challenges = new ArrayList<Message>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + "\" AND message_type=\"challenge\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
+											  + user + "\" AND message_type=\"challenge\"");
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
@@ -213,7 +261,8 @@ public class DatabasePipeline {
 	public ArrayList<Message> getAnnouncements(String user) {
 		ArrayList<Message> announcements = new ArrayList<Message>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + "\" AND message_type =\"announcement\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
+											 + user + "\" AND message_type =\"announcement\"");
 			while (rs.next()) {
 				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
@@ -244,20 +293,7 @@ public class DatabasePipeline {
 		return user;
 	}
 	
-	public void addUser(User user) {
-		try {
-			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO user_table VALUES(?, ?, ?, ?)");
-			pstmt.setString(1, user.getUsername());
-			pstmt.setString(2, user.getPassword());
-			pstmt.setInt(3, user.getPrivacy());
-			pstmt.setBoolean(4, user.isAdmin());
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
 	
 	public ArrayList<String> getAllUsernames() {
 		ArrayList<String> usernames = new ArrayList<String>();
@@ -308,6 +344,14 @@ public class DatabasePipeline {
 		}
 	}
 	
+	public void demoteFromAdmin(String user) {
+		try {
+			stmt.executeUpdate("UPDATE user_table SET admin_status=0 WHERE username=\"" + user + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String getPasswordFromDB(String user) {
 		String password = null;
 		try {
@@ -331,7 +375,6 @@ public class DatabasePipeline {
 	}
 	
 	
-	// NEEDS TEST
 	public void updatePrivacySetting(String user, int privacy) {
 		try {
 			stmt.executeUpdate("UPDATE user_table SET privacy=\"" + privacy + "\" WHERE username=\"" + user + "\"");
@@ -379,7 +422,8 @@ public class DatabasePipeline {
 	public int getNumberQuizzesTaken(String user) {
 		int quizNum = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count FROM performance_table WHERE taken_by_user=\"" + user + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count " +
+					"FROM performance_table WHERE taken_by_user=\"" + user + "\"");
 			if (rs.next()) {
 				quizNum = rs.getInt("row_count");
 			}
@@ -393,7 +437,8 @@ public class DatabasePipeline {
 	public int getNumberQuizzesCreated(String user) {
 		int quizNum = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count FROM quizzes_table WHERE creator=\"" + user + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count " +
+					"FROM quizzes_table WHERE creator=\"" + user + "\"");
 			if (rs.next()) {
 				quizNum = rs.getInt("row_count");
 			}
@@ -407,7 +452,8 @@ public class DatabasePipeline {
 	public ArrayList<Message> getRecentMessages(String user) {
 		ArrayList<Message> messages = new ArrayList<Message>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + "\" AND message_type=\"note\" ORDER BY date_long DESC LIMIT " + NUM_RECENT);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" + user + 
+								"\" AND message_type=\"note\" ORDER BY date_long DESC LIMIT " + NUM_RECENT);
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
@@ -516,6 +562,108 @@ public class DatabasePipeline {
 		return null;
 	}
 	
+	/**
+	 * Closes the DatabasePipeline connection;
+	 * i.e. closes the sql connection;
+	 */
+	public void closePipeline() {
+		db_con.closeConnection();
+	}
+	
+	
+	// -------------------------------------------------- Debugging methods   --------------------------------------------------- // 
+	
+	// clears the quiz database and resets the tables
+	public void clearDatabase() {
+		// drop existing tables
+		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, categories_table,"
+					+ "performance_table, quizzes_table, question_table, achievement_table, questions_table;";
+		
+		String AddQuizTables1 = "CREATE TABLE user_table (" +
+								" username CHAR(64)," +
+								" password CHAR(64), " +
+							    " privacy INT," +  
+							    " admin_status BOOLEAN" +
+							    ");";
+							    
+		String AddQuizTables2 = "CREATE TABLE friends_table (" +
+									       " friend_one CHAR(64)," +
+									       " friend_two CHAR(64) " +
+								");";
+
+		String AddQuizTables3 = "CREATE TABLE message_table (" +
+								       " recipient CHAR(64)," +
+								       " sender CHAR(64)," +
+									   " message VARCHAR(1000)," +
+									   " date_string CHAR(64)," +
+									   " date_long BIGINT," +
+									   " was_read BOOLEAN," +
+									   " quiz_id CHAR(64)," +
+									   " message_type CHAR(64)" +
+								");";
+
+		String AddQuizTables4 = "CREATE TABLE performance_table (" +
+								       " quiz_name CHAR(64)," +
+								       " quiz_id CHAR(64)," +
+								       " taken_by_user CHAR(64)," +
+								       " score DECIMAL(5,4)," +
+								       " date_string CHAR(64)," +
+								       " date_long BIGINT" +
+								");";
+
+		String AddQuizTables5 = "CREATE TABLE quizzes_table (" +
+								       " quiz_name CHAR(64)," +
+								       " quiz_id CHAR(64)," +
+								       " date_string CHAR(64)," +
+								       " date_long BIGINT," +
+								       " creator CHAR(64)," +
+								       " quiz_bit_dump BLOB," +
+								       " category CHAR(64)," +
+								       " tag_string VARCHAR(1000)" +
+								");";
+
+		String AddQuizTables6 = "CREATE TABLE achievement_table (" +
+								       " username CHAR(64)," +
+								       " amateur_author BOOLEAN," +
+								       " prolific_author BOOLEAN," +
+								       " prodigious_author BOOLEAN," +
+								       " quiz_machine BOOLEAN," +
+								       " i_am_the_greatest BOOLEAN," +
+								       " practice_makes_perfect BOOLEAN" +      
+								");";
+
+		String AddQuizTables7 = "CREATE TABLE question_table (" +
+								       " question_bit_dump BLOB," +
+								       " question_string VARCHAR(64)," +
+								       " quiz_id CHAR(64)" +
+								");";
+		
+		try {
+			stmt.executeUpdate(dropTables);
+			stmt.executeUpdate(AddQuizTables1);
+			stmt.executeUpdate(AddQuizTables2);
+			stmt.executeUpdate(AddQuizTables3);
+			stmt.executeUpdate(AddQuizTables4);
+			stmt.executeUpdate(AddQuizTables5);
+			stmt.executeUpdate(AddQuizTables6);
+			stmt.executeUpdate(AddQuizTables7);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// recreate tables
+		
+	}
+	
+	// --------------------------------- DBConnection inner class --------------------------------- //  
+	
+	/**
+	 * Inner class that sets up a mySQL database connection.
+	 * This is useful because it isolates the JDBC code here.
+	 * The complexity of forming this connection is hidden, 
+	 * since other methods create a connection when necessary. 
+	 */	
 	private class DBConnection {
 		private Statement stmt;
 		private Connection con;
@@ -530,8 +678,9 @@ public class DatabasePipeline {
 				Class.forName("com.mysql.jdbc.Driver"); 
 				con = DriverManager.getConnection( "jdbc:mysql://" + MYSQL_DATABASE_SERVER, MYSQL_USERNAME ,MYSQL_PASSWORD);
 				stmt = con.createStatement();
-				stmt.executeQuery("USE " + MYSQL_DATABASE_NAME);
-				//stmt.executeQuery("SOURCE dog_tables.sql");
+				stmt.executeQuery("USE " + MYSQL_DATABASE_NAME);			
+				
+				
 			} catch (SQLException e) {
 				 e.printStackTrace();
 			}

@@ -86,6 +86,9 @@ public class DatabasePipelineTestToyWorld {
 		pipeline.addPerformanceToDB(p11);
 		Performance p12 = new Performance(quiz2, "maggie", 0.92);
 		pipeline.addPerformanceToDB(p12);
+		
+		//int boPrivacyResult = pipeline.checkPrivacySettings("bo");
+		//System.out.println(boPrivacyResult);
 
 		
 		

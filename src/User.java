@@ -22,10 +22,17 @@ public class User {
 	private int SEMI_PRIVATE = 0; 
 	private int ANON = 0; 
 	
-	// creating a brand new user upon account creation etc. 
-	public User(String username, String hashedPassword){
+	/**
+	 * 
+	 * @param username - the username of the user being created
+	 * @param password - the plaintext password of the user
+	 */
+	public User(String username, String password){
 		this.username = username;
-		this.hashedPassword = hashedPassword;
+		
+		HashCracker hc = new HashCracker();	
+		this.hashedPassword = hc.getHexString(password);
+		
 		admin = false; // default to not admin
 		privacySetting = 0; //default to public 
 		messages = new ArrayList<project.Message>(); 

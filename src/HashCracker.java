@@ -19,6 +19,10 @@ public class HashCracker {
 		}
 	}
 	
+	/*
+	 Given a string of an plaintext password, hashes it and returns the 
+	 hash string. USE THIS METHOD.
+	 */
 	public String getHexString(String englishPassword){
 		byte[] byteArray = englishPassword.getBytes();
 		byte[] byteArrayDigest = digestConverter.digest(byteArray);
@@ -55,22 +59,4 @@ public class HashCracker {
 		}
 		return result;
 	}
-	
-	// possible test values:
-	// a 86f7e437faa5a7fce15d1ddcb9eaeaea377667b8
-	// fm adeb6f2a18fe33af368d91b09587b68e3abcb9a7
-	// a! 34800e15707fae815d7c90d49de44aca97e2d759
-	// xyz 66b27417d37e024c46526c2f6d358a754fc552f3
-
-	
-	//DONT NEED MAIN METHOD...?
-	/*public static void main(String[] args){
-		if(args.length == 1){
-			HashCracker generator = new HashCracker(args[0]);
-		} else {
-			HashCracker passwordCracker = new HashCracker(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-			passwordCracker.checkLatch();
-			System.out.println("All done."); 
-		}
-	}*/
 }
