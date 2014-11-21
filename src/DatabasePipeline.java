@@ -225,38 +225,92 @@ public class DatabasePipeline {
 		}
 	}
 	
+	// do we need more specificity here? Assumptions
+	
+		/**
+		 * Adds an announcement message to the messages database
+		 * @param announcement - announcement message type
+		 */
+		public void addAnnouncement(Message announcement) {
+			addMessage(announcement);
+		}
+		
+		/**
+		 * Adds a friend request to the database
+		 * @param request
+		 */
+		public void addFriendRequest(Message request) {
+			addMessage(request);
+		}
+		
+		/**
+		 * Adds a challenge to the user database
+		 * @param challenge
+		 */
+		public void addChallenge(Message challenge) {
+			addMessage(challenge);
+		}
+	
 	//-------------------------------------------   RETRIEVING FROM THE DATABASE  ---------------------------------------- //
 	
+		// ---------------------------------- User Data Retrieval ------------------------------------ //
+		
+		// ----------------------- Quiz / Performance / Question Retrieval --------------------------- //
+		
+		/**
+		 * Returns the quiz object of a quiz stored in the database
+		 * @param quiz_id - quiz identity string 
+		 * @return
+		 */
+		public Quiz retrieveQuizFromDB(String quiz_id) {
+			Quiz retrieved = null;
+			try {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE quiz_id=\"" + quiz_id + "\"");
+				retrieved = (Quiz) deBlob(rs, 6);
+				if (retrieved != null && retrieved.isRandom()) retrieved.shuffleQuiz();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return retrieved;
+		}
+		
+		/**
+		 * Retrieves a question from the database by using its question string as a 
+		 * search parameter. 
+		 * 
+		 * TODO COULD RETURN MORE THAN ONE QUESTION IF 2 QUESTIONS ARE THE SAME. 
+		 * SHOULD USE QUESTION ID INSTEAD!!!
+		 * 
+		 * @param question
+		 * @return
+		 */
+		public Question retrieveQuestionFromDB(String question) {
+			Question retrieved = null;
+			try {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM question_table WHERE question_string=\"" + question + "\"");
+				retrieved = (Question) deBlob(rs, 1);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return retrieved;
+		}
+		
+		// ------------------------------- Message Data Retrieval ------------------------------------ //
 	
 	//-----------------------------------------------------   UNTESTED  ------------------------------------------------ //
 	
 	
 	
-	public Quiz retrieveQuizFromDB(String quiz_id) {
-		Quiz retrieved = null;
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes_table WHERE quiz_id=\"" + quiz_id + "\"");
-			retrieved = (Quiz) deBlob(rs, 6);
-			if (retrieved != null && retrieved.isRandom()) retrieved.shuffleQuiz();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retrieved;
-	}
+		// TODO question retrieval by ID
+		// TODO all retrieval by ID
+		// TODO DELETE MESSAGE
+		// TODO ifUserExists boolean
+		// TODO add announcement method that takes in an announcement obj and puts the message in for each user
 	
 
 	
 	
-	public Question retrieveQuestionFromDB(String question) {
-		Question retrieved = null;
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM question_table WHERE question_string=\"" + question + "\"");
-			retrieved = (Question) deBlob(rs, 1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retrieved;
-	}
+
 	
 	public ArrayList<String> getFriends(String user) {
 		ArrayList<String> friends = new ArrayList<String>();
@@ -323,20 +377,7 @@ public class DatabasePipeline {
 		return challenges;
 	}
 	
-	
 
-	
-	public void addAnnouncement(Message announcement) {
-		addMessage(announcement);
-	}
-	
-	public void addFriendRequest(Message request) {
-		addMessage(request);
-	}
-	
-	public void addChallenge(Message challenge) {
-		addMessage(challenge);
-	}
 	
 	public ArrayList<Message> getAnnouncements(String user) {
 		ArrayList<Message> announcements = new ArrayList<Message>();
