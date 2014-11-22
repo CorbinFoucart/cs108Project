@@ -24,4 +24,32 @@ public class QuizSummary {
 		avg = pipeline.getQuizAverage(quiz_id);
 	}
 	
+	public String getQuizDescription() {
+		return description;
+	}
+	
+	public String getQuizCreator() {
+		return creator;
+	}
+	
+	public ArrayList<Performance> getUsersPastQuizPerformance() {
+		return usersPastPerformance;
+	}
+	
+	public ArrayList<Performance> getHighestUniqueQuizPerformances() {
+		return highestUniquePerformances;
+	}
+	
+	public ArrayList<Performance> getTodaysHighestUniqueQuizPerformances() {
+		return todaysHighestUniquePerformances;
+	}
+	
+	public int getNumTimesQuizTaken() {
+		return numTimesTaken;
+	}
+	
+	public double getQuizAverage() {
+		return avg;
+	}
+	
 }
