@@ -3,6 +3,8 @@ package project;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
+
 import javax.sql.rowset.serial.SerialBlob;
 import project.*;
 
@@ -14,6 +16,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 
 
 
@@ -529,11 +532,11 @@ public class DatabasePipeline {
 		return announcements;
 	}
 	
-	public ArrayList<Message> getNewAnnouncements(String user) {
+	public ArrayList<Message> getNNewAnnouncements(String user, int numLimit) {
 		ArrayList<Message> announcements = new ArrayList<Message>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
-											 + user + "\" AND message_type =\"announcement\" AND was_read=0");
+											 + user + "\" AND message_type =\"announcement\" AND was_read=0 ORDER BY date_long DESC LIMIT " + numLimit);
 			while (rs.next()) {
 				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
@@ -698,15 +701,18 @@ public class DatabasePipeline {
 	}
 	
 	
-	public ArrayList<Quiz> getQuizzesCreated(String user) {
-		ArrayList<Quiz> retrieved = new ArrayList<Quiz>();
+	
+	
+	
+	
+	public ArrayList<String> getQuizzesCreated(String user) {
+		ArrayList<String> retrieved = new ArrayList<String>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE creator=\"" + user + "\"");
-			Quiz retrievedQuiz;
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table WHERE creator=\"" + user + "\"");
+			String retrievedQuiz;
 			while (true) {
-				retrievedQuiz = (Quiz) deBlob(rs, 6);
+				retrievedQuiz = rs.getString("quiz_id");
 				if (retrievedQuiz == null) break;
-				if (retrievedQuiz.isRandom()) retrievedQuiz.shuffleQuiz();
 				retrieved.add(retrievedQuiz);
 			}
 		} catch (SQLException e) {
@@ -785,6 +791,235 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public String getQuizNameFromID(String id) {
+		String name = null;
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quiz_name FROM quiz_table WHERE quiz_id=" + id);
+			if (rs.next()) name = rs.getString("quiz_name");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
+	}
+	
+	
+	public ArrayList<String> getNMostPopularQuizzes(int num_recent) {
+		ArrayList<String> popular = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table ORDER BY n_times_taken DESC LIMIT " + num_recent);
+			while (rs.next()) {
+				String id = rs.getString("quiz_id");
+				popular.add(id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return popular;
+	}
+	
+	public ArrayList<String> getNOwnRecentlyCreatedQuizzes(String username, int num_recent) {
+		ArrayList<String> recent = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table WHERE creator=\"" + username + "\" ORDER BY date_long DESC LIMIT " + num_recent);
+			while (rs.next()) {
+				String id = rs.getString("quiz_id");
+				recent.add(id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return recent;
+	}
+	
+	
+	public ArrayList<String> getNRecentlyCreatedQuizzes(int num_recent) {
+		ArrayList<String> recent = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table ORDER BY date_long DESC LIMIT " + num_recent);
+			while (rs.next()) {
+				String id = rs.getString("quiz_id");
+				recent.add(id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return recent;
+	}
+	
+	
+	public ArrayList<Performance> getNRecentQuizPerformances(String quiz_id, int num_recent) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
+												+ quiz_id + "\" ORDER BY date_long DESC LIMIT " + num_recent);
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"));
+				retrieved.add(perf);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	
+	public ArrayList<Performance> getNOwnRecentPerformances(String username, int num_recent) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + username + 
+					"\" ORDER BY date_long DESC LIMIT " + num_recent);
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"));
+				retrieved.add(perf);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	
+	public ArrayList<String> getAllQuizzes() {
+		ArrayList<String> all = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table");
+			while (rs.next()) {
+				String id = rs.getString("quiz_id");
+				all.add(id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return all;
+	}
+	
+	public ArrayList<Achievement> getNewAchievements(String username) {
+		ArrayList<Achievement> retrieved = new ArrayList<Achievement>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE taken_by_user=\"" + username + "\" AND announced=0");
+			while (rs.next()) {
+				Achievement ach = new Achievement(rs.getString("username"), rs.getString("achievement_type"), 
+						rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("announced"), rs.getString("achievement_id"));
+				retrieved.add(ach);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	
+	public ArrayList<Activity> getRecentFriendActivity(String username, int num_recent) {
+		ArrayList<Activity> recent = new ArrayList<Activity>();
+		try {
+			String input_str = "SELECT * FROM activity_table WHERE ";
+			ArrayList<String> friends = getFriends(username);
+			for (int i = 0; i < friends.size(); i++) {
+				if (i != 0) input_str += "OR ";
+				input_str += ("username=\"" + friends.get(i) + "\" ");
+			}
+			ResultSet rs = stmt.executeQuery(input_str);
+			while (rs.next()) {
+				Activity act = new Activity(rs.getString("username"), 
+						rs.getString("activity_type"), rs.getString("relevant_id"),
+						rs.getString("date_string"), rs.getLong("date_long"));
+				recent.add(act);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return recent;
+	}
+	
+	
+	public String getQuizDescription(String quiz_id) {
+		String description = "";
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT description FROM quiz_table WHERE quiz_id=\"" + quiz_id + "\"");
+			if (rs.next()) description = rs.getString("description");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return description;
+	}
+	
+	public String getCreator(String quiz_id) {
+		String creator = "";
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT creator FROM quiz_table WHERE quiz_id=\"" + quiz_id + "\"");
+			if (rs.next()) creator = rs.getString("creator");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return creator;
+	}
+	
+	public ArrayList<Performance> getHighestUniquePerformances(String quiz_id, int num_performers) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table GROUP BY username WHERE quiz_id=\"" + quiz_id + 
+					"\" ORDER BY score DESC LIMIT " + num_performers);
+			Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+					rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+					rs.getLong("date_long"), rs.getString("performance_id"));
+			retrieved.add(perf);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	public ArrayList<Performance> getTodaysHighestUniquePerformances(String quiz_id,  int num_performers) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		Date dateObj = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		long date_long = Long.parseLong(dateFormat.format(dateObj));
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table GROUP BY username WHERE quiz_id=\"" + quiz_id + 
+					"\" AND date_long > " + date_long + " ORDER BY score DESC LIMIT " + num_performers);
+			Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+					rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+					rs.getLong("date_long"), rs.getString("performance_id"));
+			retrieved.add(perf);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+
+	
+	public int getNumTimesQuizTaken(String quiz_id) {
+		int num = 0;
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count FROM quiz_table WHERE quiz_id = \"" + quiz_id + "\"");
+			if (rs.next()) num = rs.getInt("row_count");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num;
+	}
+	
+	public double getQuizAverage(String quiz_id) {
+		double total = 0;
+		double num_taken = 0;
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id=\"" + "\"");
+			while (rs.next()) {
+				total += Integer.getInteger(rs.getString("score"));
+				num_taken++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return (total / num_taken);
+	}
+	
 	
 	
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
