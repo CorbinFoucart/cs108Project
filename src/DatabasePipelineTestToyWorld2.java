@@ -146,7 +146,7 @@ public class DatabasePipelineTestToyWorld2 {
 	@Test
 	public void testPerformancesAndQuizzesCreated() {
 		DatabasePipeline pipeline = new DatabasePipeline();
-		ArrayList<Quiz> quizzesCreated = pipeline.getQuizzesCreated("bo");
+		ArrayList<String> quizzesCreated = pipeline.getQuizzesCreated("bo");
 		assertEquals(quizzesCreated.size(), 1);
 		quizzesCreated = pipeline.getQuizzesCreated("maggie");
 		assertEquals(quizzesCreated.size(), 0);
