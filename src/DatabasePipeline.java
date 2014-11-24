@@ -927,21 +927,6 @@ public class DatabasePipeline {
 		return retrieved;
 	}
 	
-	
-	public ArrayList<String> getAllQuizzes() {
-		ArrayList<String> all = new ArrayList<String>();
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table");
-			while (rs.next()) {
-				String id = rs.getString("quiz_id");
-				all.add(id);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return all;
-	}
-	
 	public ArrayList<Achievement> getNewAchievements(String username) {
 		ArrayList<Achievement> retrieved = new ArrayList<Achievement>();
 		try {
