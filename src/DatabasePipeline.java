@@ -419,7 +419,7 @@ public class DatabasePipeline {
 		 */
 		public Message getMessage(String message_id) {
 			try {
-				ResultSet rs = stmt.executeQuery("SELECT FROM message_table WHERE message_id =\"" + message_id + "\"");
+				ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE message_id =\"" + message_id + "\"");
 				Message retrieved = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
 						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
