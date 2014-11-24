@@ -192,6 +192,60 @@ public class DatabasePipeline {
 					e.printStackTrace();
 				}
 			}
+			
+			
+	/**
+	 * Retrieves the number of times a quiz has been taken and increments
+	 * the value by 1, saving the result in the database.
+	 * @param quiz_id - the unique quiz id of the quiz taken
+	 */
+	public void incrementQuizTaken(String quiz_id) {
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id= \"" + quiz_id + "\"");
+			if (rs.next()) {
+			long nTimesTaken = rs.getLong("n_times_taken");
+			nTimesTaken++;
+			stmt.executeUpdate("UPDATE quiz_table SET n_times_taken = \"" + nTimesTaken + 
+								"\" WHERE quiz_id = \"" + quiz_id + "\";" );
+			}
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Sets the number of times a quiz has been taken to 0 in the database.
+	 */
+	public void resetTimesQuizTaken(String quiz_id) {
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id= \"" + quiz_id + "\"");
+			if (rs.next()) {
+			long nTimesTaken = rs.getLong("n_times_taken");
+			nTimesTaken = 0;
+			stmt.executeUpdate("UPDATE quiz_table SET n_times_taken = \"" + nTimesTaken + 
+								"\" WHERE quiz_id = \"" + quiz_id + "\";" );
+			}
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Just totally nukes the quiz that the admin wants. Wipes all performances,
+	 * questions, the quiz itself, everything.
+	 * @param quiz_id - id of the quiz that should be wiped from the site
+	 */
+	public void clearQuizHistory(String quiz_id) {
+		try {
+			stmt.executeUpdate("DELETE FROM performance_table WHERE quiz_id=\"" + quiz_id + "\"");
+			stmt.executeUpdate("DELETE FROM quiz_table WHERE quiz_id=\"" + quiz_id + "\"");
+			stmt.executeUpdate("DELETE FROM question_table WHERE quiz_id=\"" + quiz_id + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Method to add a performance object to the database
@@ -225,7 +279,7 @@ public class DatabasePipeline {
 			pstmt.executeUpdate();
 			pstmt.close();
 			
-			
+			incrementQuizTaken(perf.getQuizID());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -330,7 +384,6 @@ public class DatabasePipeline {
 			try {
 				ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id=\"" + quiz_id + "\"");
 				retrieved = (Quiz) deBlob(rs, 6);
-				if (retrieved != null && retrieved.isRandom()) retrieved.shuffleQuiz();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -375,42 +428,14 @@ public class DatabasePipeline {
 		
 		// write 
 		// TODO ifUserExists boolean
-		// TODO add announcement method that takes in an announcement obj and puts the message in for each user
-		// TODO quiz nTimesTaken entry
+
 		
 		
 		// do we need more specificity here? Assumptions
 		
 		
-	/**
-	 * Retrieves the number of times a quiz has been taken and increments
-	 * the value by 1, saving the result in the database.
-	 * @param quiz_id - the unique quiz id of the quiz taken
-	 */
-	public void incrementQuizTaken(String quiz_id) {
-		try {
-			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id= \"" + quiz_id + "\"");
-			
-			if (rs.next()) {
-			long nTimesTaken = rs.getLong("n_times_taken");
-			nTimesTaken++;
-			stmt.executeUpdate("UPDATE quiz_table SET n_times_taken = \"" + nTimesTaken + 
-								"\" WHERE quiz_id = \"" + quiz_id + "\";" );
-			}
-					
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void clearQuizHistory(Quiz quiz) {
-		try {
-			stmt.executeUpdate("DELETE FROM performance_table WHERE quiz_id=\"" + quiz.getQuizID() + "\"");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+
+
 	
 	private void addAchievementToDB(Achievement achievement) {
 		try {
@@ -466,6 +491,29 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 		return messages;
+	}
+	
+	/**
+	 * Reads the quiz_ids in from the databse and returns
+	 * the entire list as a string array.
+	 * 
+	 * @return - returns an array list of String quiz_id
+	 */
+	public ArrayList<String> getAllQuizzes() {
+		ArrayList<String> quizzesList = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table ");
+			while (rs.next()) {
+				String qID = rs.getString("quiz_id");
+				quizzesList.add(qID);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return quizzesList;
+		
+		
 	}
 	
 	public void markAsRead(String message_id) {
@@ -699,11 +747,6 @@ public class DatabasePipeline {
 		}
 		return messages;
 	}
-	
-	
-	
-	
-	
 	
 	public ArrayList<String> getQuizzesCreated(String user) {
 		ArrayList<String> retrieved = new ArrayList<String>();
@@ -1168,10 +1211,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME =  "ccs108rdeubler"; // "ccs108cfoucart";  //
-		public static final String MYSQL_PASSWORD =  "vohhaegh"; // "aigookue";  //
+		public static final String MYSQL_USERNAME =  "ccs108rdeubler"; // // "ccs108cfoucart";  // //
+		public static final String MYSQL_PASSWORD =    "vohhaegh"; // // "aigookue";  // //
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME =  "c_cs108_rdeubler";
+		public static final String MYSQL_DATABASE_NAME =   "c_cs108_rdeubler"; // "c_cs108_cfoucart"; //
 		
 		public DBConnection() {
 			try {
