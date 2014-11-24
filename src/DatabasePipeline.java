@@ -490,6 +490,29 @@ public class DatabasePipeline {
 		return messages;
 	}
 	
+	/**
+	 * Reads the quiz_ids in from the databse and returns
+	 * the entire list as a string array.
+	 * 
+	 * @return - returns an array list of String quiz_id
+	 */
+	public ArrayList<String> getAllQuizzes() {
+		ArrayList<String> quizzesList = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table ");
+			while (rs.next()) {
+				String qID = rs.getString("quiz_id");
+				quizzesList.add(qID);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return quizzesList;
+		
+		
+	}
+	
 	public void markAsRead(String message_id) {
 		try {
 			stmt.executeUpdate("UPDATE message_table SET was_read=\"true\" WHERE message_id=\"" + message_id + "\"");
@@ -957,10 +980,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME =  "ccs108cfoucart";  // //"ccs108rdeubler"; //
-		public static final String MYSQL_PASSWORD =   "aigookue";  // // "vohhaegh"; //
+		public static final String MYSQL_USERNAME =  "ccs108rdeubler"; // // "ccs108cfoucart";  // //
+		public static final String MYSQL_PASSWORD =    "vohhaegh"; // // "aigookue";  // //
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME =  "c_cs108_cfoucart"; // "c_cs108_rdeubler";
+		public static final String MYSQL_DATABASE_NAME =   "c_cs108_rdeubler"; // "c_cs108_cfoucart"; //
 		
 		public DBConnection() {
 			try {
