@@ -69,6 +69,7 @@ public class DatabasePipelineMethodTest {
 		pipeline.addUser(scout);
 		pipeline.addUser(beethoven);
 		pipeline.addUser(airBud);
+		pipeline.addUser(oski);
 		pipeline.addUser(maggie);
 		pipeline.addUser(teddy);
 		pipeline.addUser(marley);
@@ -198,6 +199,26 @@ public class DatabasePipelineMethodTest {
 		Performance per8 = new Performance(quiz2, "Sarge", 0.82);
 		Performance per9 = new Performance(quiz2, "Bo", 0.41);
 		Performance per10 = new Performance(quiz2, "Maggie", 0.95);
+		Performance per11 = new Performance(quiz2, "Clifford", 0.45);
+		Performance per12 = new Performance(quiz2, "Oski", 0.85);
+		Performance per13 = new Performance(quiz2, "Beethoven", 0.55);
+		Performance per14 = new Performance(quiz2, "Spike", 0.65);
+		Performance per15 = new Performance(quiz2, "Spot", 0.75);
+		per1.setTimeTaken(12302);
+		per2.setTimeTaken(14502);
+		per3.setTimeTaken(124302);
+		per4.setTimeTaken(123602);
+		per5.setTimeTaken(142302);
+		per6.setTimeTaken(112302);
+		per7.setTimeTaken(123402);
+		per8.setTimeTaken(123452);
+		per9.setTimeTaken(12382);
+		per10.setTimeTaken(12692);
+		per11.setTimeTaken(246702);
+		per12.setTimeTaken(266702);
+		per13.setTimeTaken(166702);
+		per14.setTimeTaken(566702);
+		per15.setTimeTaken(286702);
 		pipeline.addPerformanceToDB(per1);
 		pipeline.addPerformanceToDB(per2);
 		pipeline.addPerformanceToDB(per3);
@@ -213,7 +234,7 @@ public class DatabasePipelineMethodTest {
 		// creates notes
 		// tests note class, addNote()
 		Note n1 = new Note("Sarge", "Bo", "I was just diagnosed with irritable bowel syndrome.");
-		Note n2 = new Note("Sarge", "Bo", "I'm sorry to hear that, bo.");
+		Note n2 = new Note("Bo", "Sarge", "I'm sorry to hear that, bo.");
 		Note n3 = new Note("Air Bud", "Beethoven", "My 90s movies were better than yours.");
 		Note n4 = new Note("Beethoven", "Air Bud", "Factual. Want to grab slushies later?");
 		pipeline.addNote(n1);

@@ -271,7 +271,7 @@ public class DatabasePipeline {
 			
 			// add the performance into the performances table
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO performance_table VALUES(?, ?, ?, ?, ?, ?, ?)");
+				con.prepareStatement("INSERT INTO performance_table VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, perf.getQuizName());
 			pstmt.setString(2, perf.getQuizID());
 			pstmt.setString(3, perf.getUser());
@@ -279,6 +279,7 @@ public class DatabasePipeline {
 			pstmt.setString(5, perf.getDateAsString());
 			pstmt.setLong(6, perf.getDateAsLong());
 			pstmt.setString(7, perf.getID());
+			pstmt.setLong(8, perf.getTimeTaken());
 			pstmt.executeUpdate();
 			pstmt.close();
 			Activity act = new Activity(perf.getUser(), Activity.QUIZ_TAKEN, 
@@ -799,7 +800,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"));
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -816,7 +817,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"));
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -833,7 +834,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"));
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -928,7 +929,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"));
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -946,7 +947,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"));
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1042,7 +1043,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"));
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1066,7 +1067,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
 						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"));
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}		
 		} catch (SQLException e) {
@@ -1149,7 +1150,7 @@ public class DatabasePipeline {
 	public void clearDatabase() {
 		// drop existing tables
 		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, category_table,"
-					+ "performance_table, quiz_table, question_table, achievement_table, questions_table;";
+			+ "activity_table, performance_table, quiz_table, question_table, achievement_table, questions_table;";
 		
 		String AddQuizTables1 = "CREATE TABLE user_table (" +
 				" username CHAR(64)," +
@@ -1182,7 +1183,8 @@ public class DatabasePipeline {
 						       " score DECIMAL(5,4)," +
 						       " date_string CHAR(64)," +
 						       " date_long BIGINT," +
-						       " performance_id CHAR(64)" +
+						       " performance_id CHAR(64)," +
+						       " time_taken BIGINT" +
 						       ");";
 		
 		String AddQuizTables5 = "CREATE TABLE quiz_table (" +
@@ -1258,10 +1260,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME =  "ccs108rdeubler"; // // "ccs108cfoucart";  // //
-		public static final String MYSQL_PASSWORD =    "vohhaegh"; // // "aigookue";  // //
+		public static final String MYSQL_USERNAME = "ccs108rdeubler"; // //"ccs108cfoucart";  // //     
+		public static final String MYSQL_PASSWORD =  "vohhaegh"; // // "aigookue";  // //    
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME =   "c_cs108_rdeubler"; // "c_cs108_cfoucart"; //
+		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler"; // "c_cs108_cfoucart"; //     
 		
 		public DBConnection() {
 			try {
