@@ -82,6 +82,10 @@ public class User {
 		}
 	}
 	
+	public String getUsernamePrivate() {
+		return username;
+	}
+	
 	// TODO ASK FRONT END WHAT THEY NEED HERE
 	
 	public int numFriends(){
