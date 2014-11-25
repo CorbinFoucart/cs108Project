@@ -142,11 +142,12 @@ public class DatabasePipelineTestToyWorld2 {
 //	}
 	
 	
+<<<<<<< HEAD
 	// MUST BE RUN SEPARATELY; otherwise sarge's scores below get copied.
 	@Test
 	public void testPerformancesAndQuizzesCreated() {
 		DatabasePipeline pipeline = new DatabasePipeline();
-		ArrayList<Quiz> quizzesCreated = pipeline.getQuizzesCreated("bo");
+		ArrayList<String> quizzesCreated = pipeline.getQuizzesCreated("bo");
 		assertEquals(quizzesCreated.size(), 1);
 		quizzesCreated = pipeline.getQuizzesCreated("maggie");
 		assertEquals(quizzesCreated.size(), 0);
@@ -177,6 +178,43 @@ public class DatabasePipelineTestToyWorld2 {
 		pipeline.closePipeline();
 	}
 	
+=======
+//	// MUST BE RUN SEPARATELY; otherwise sarge's scores below get copied.
+//	@Test
+//	public void testPerformancesAndQuizzesCreated() {
+//		DatabasePipeline pipeline = new DatabasePipeline();
+//		ArrayList<Quiz> quizzesCreated = pipeline.getQuizzesCreated("bo");
+//		assertEquals(quizzesCreated.size(), 1);
+//		quizzesCreated = pipeline.getQuizzesCreated("maggie");
+//		assertEquals(quizzesCreated.size(), 0);
+//		
+//		
+//		ArrayList<Performance> performances = pipeline.getPerformances("sarge");
+//		assertEquals(3, performances.size());
+//		assertTrue(performances.get(0).getQuizName().equals("Dog Trivia 1"));
+//		assertTrue(performances.get(1).getQuizName().equals("Dog Trivia 2"));
+//		assertTrue(performances.get(0).getScore() == 0.4);
+//		assertTrue(performances.get(1).getScore() == 0.88);
+//		performances = pipeline.getPerformances("doggies");
+//		assertEquals(performances.size(), 0);
+//		
+//		pipeline.updatePrivacySetting("sarge", 0);
+//		
+//		/** Can do only if you have a quiz ID - so check.
+//		 * performances = pipeline.getQuizPerformances("sarge", "");
+//		 * assertEquals(performances.size(), 2);
+//		assertTrue(performances.get(0).getQuizName().equals("Dog Trivia 2"));
+//		assertTrue(performances.get(1).getQuizName().equals("Dog Trivia 2"));
+//		assertTrue(performances.get(0).getScore() == 0.88);
+//		assertTrue(performances.get(1).getScore() == 0.4);
+//		performances = pipeline.getQuizPerformances("doggies", "");
+//		assertEquals(performances.size(), 0);
+//		
+//		 */
+//		pipeline.closePipeline();
+//	}
+//	
+>>>>>>> master
 	
 	
 //	@Test

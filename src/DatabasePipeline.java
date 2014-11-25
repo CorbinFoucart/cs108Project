@@ -412,7 +412,29 @@ public class DatabasePipeline {
 			return retrieved;
 		}
 		
-		// ------------------------------- Message Data Retrieval ------------------------------------ //
+	// ------------------------------- Message Data Retrieval ------------------------------------ //
+		
+		/**
+		 * Removes any type of message from the database by using its 
+		 * message_id, which is unique to each message.
+		 * 
+		 * @param message_id - the unique message id of the message to 
+		 * be removed
+		 */
+		public Message getMessage(String message_id) {
+			try {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE message_id =\"" + message_id + "\"");
+				Message retrieved = new Message(rs.getString("recipient"), rs.getString("sender"), 
+						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
+						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getString("message_id"));
+				return retrieved;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return null;
+		}
 	
 	//-----------------------------------------------------   UNTESTED  ------------------------------------------------ //
 	
@@ -933,7 +955,6 @@ public class DatabasePipeline {
 		return retrieved;
 	}
 	
-	
 	public ArrayList<Achievement> getNewAchievements(String username) {
 		ArrayList<Achievement> retrieved = new ArrayList<Achievement>();
 		try {
@@ -964,7 +985,6 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 	}
-	
 	
 	public ArrayList<Activity> getRecentFriendActivity(String username, int num_recent) {
 		ArrayList<Activity> recent = new ArrayList<Activity>();

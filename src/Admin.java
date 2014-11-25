@@ -14,8 +14,8 @@ public class Admin extends User {
 		admin = true; 
 	}
 	
-	public void clearQuizHistory(Quiz quiz){
-		db.clearQuizHistory(quiz); 
+	public void clearQuizHistory(String quiz_id){
+		db.clearQuizHistory(quiz_id); 
 	}
 	
 	public int getNumQuizzesTaken(){

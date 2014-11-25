@@ -84,7 +84,7 @@ public class DatabasePipelineMethodTest {
 		
 		// add 2 quizzes
 		// tests addQuizToDB()
-		Quiz quiz1 = new Quiz("Dog Trivia 1", false, false, false, "bo");
+		Quiz quiz1 = new Quiz("Dog Trivia 1", false, false, false, "Bo");
 		QuestionResponse q1 = new QuestionResponse("Who was the best dog of all time?");
 		q1.addAcceptedAnswer("Lassie");
 		q1.addAcceptedAnswer("lassie");
@@ -97,7 +97,7 @@ public class DatabasePipelineMethodTest {
 		q2.addAcceptedAnswer("BEGGIN STRIPS");
 		quiz1.addQuestion(q2);
 		
-		Quiz quiz2 = new Quiz("Dog Trivia 2", false, false, false, "scout");
+		Quiz quiz2 = new Quiz("Dog Trivia 2", false, false, false, "Scout");
 		QuestionResponse q21 = new QuestionResponse("What color are Dalmations when they are born?");
 		q21.addAcceptedAnswer("white");
 		q21.addAcceptedAnswer("WHITE");
@@ -126,6 +126,7 @@ public class DatabasePipelineMethodTest {
 		pipeline.incrementQuizTaken(quiz1.getQuizID());
 		pipeline.incrementQuizTaken(quiz1.getQuizID());
 		pipeline.incrementQuizTaken(quiz1.getQuizID());
+		pipeline.resetTimesQuizTaken(quiz1.getQuizID());
 
 		
 		
@@ -196,15 +197,37 @@ public class DatabasePipelineMethodTest {
 		pipeline.removeMessage(bogus2.getID());
 		
 		
-		// General testing observations
-		// message input type pretty shady, consider subclassing it?
+		// UH OH, BAD QUIZ THAT DESERVES TO BE NUKED
+		// tests clearQuizHistory();
+		Quiz ohNoBadQuiz = new Quiz("CAT QUIZ!", true, true, true, "Air Bud");
+		QuestionResponse badq1 = new QuestionResponse("What is the best brand of cat food?");
+		badq1.addAcceptedAnswer("Fancy Feast");
+		badq1.addAcceptedAnswer("Meow Mix");
+		badq1.addAcceptedAnswer("fancy feast");
+		quiz1.addQuestion(badq1);
+		
+		QuestionResponse badq2 = new QuestionResponse("Who was the most famous cat?");
+		badq2.addAcceptedAnswer("Garfield");
+		badq2.addAcceptedAnswer("garfield");
+		badq2.addAcceptedAnswer("GARFIELD");
+		quiz1.addQuestion(badq2);
+		
+		pipeline.addQuizToDB(ohNoBadQuiz);
+		pipeline.clearQuizHistory(ohNoBadQuiz.getQuizID()); 
 		
 		
+		// ------------------------------------------------ Retrieval Tests ---------------------------------------------- //
+		
+		Quiz retrievedQuiz1 = pipeline.retrieveQuizFromDB(quiz1.getQuizID());
+		Quiz retrievedQuiz2 = pipeline.retrieveQuizFromDB(ohNoBadQuiz.getQuizID());
+		
+		for (int i = 0; i < 3; i++) {
+			// meow meow meow
+			int j = 0;
+		}
 		
 		
-		
-		
-		
+	
 		
 		
 		
