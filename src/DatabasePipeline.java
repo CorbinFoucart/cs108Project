@@ -158,6 +158,9 @@ public class DatabasePipeline {
 			pstmt.setLong(10, 0);
 			pstmt.executeUpdate();
 			pstmt.close();
+			Activity act = new Activity(quiz.getCreator(), Activity.QUIZ_CREATED, 
+					quiz.getQuizID(), quiz.getDateAsString(), quiz.getDateAsLong());
+			addActivity(act);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -278,9 +281,10 @@ public class DatabasePipeline {
 			pstmt.setString(7, perf.getID());
 			pstmt.executeUpdate();
 			pstmt.close();
-			
+			Activity act = new Activity(perf.getUser(), Activity.QUIZ_TAKEN, 
+					perf.getID(), perf.getDateAsString(), perf.getDateAsLong());
+			addActivity(act);
 			incrementQuizTaken(perf.getQuizID());
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -476,6 +480,9 @@ public class DatabasePipeline {
 			pstmt.setBoolean(5, achievement.isAnnounced());
 			pstmt.setString(6, achievement.getID());
 			pstmt.executeUpdate();
+			Activity act = new Activity(achievement.getUsername(), Activity.ACHIEVEMENT_EARNED, 
+					achievement.getID(), achievement.getDateAsString(), achievement.getDateAsLong());
+			addActivity(act);
 			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -532,7 +539,6 @@ public class DatabasePipeline {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return quizzesList;
 		
 		
@@ -540,7 +546,7 @@ public class DatabasePipeline {
 	
 	public void markAsRead(String message_id) {
 		try {
-			stmt.executeUpdate("UPDATE message_table SET was_read=\"true\" WHERE message_id=\"" + message_id + "\"");
+			stmt.executeUpdate("UPDATE message_table SET was_read=1 WHERE message_id=\"" + message_id + "\"");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -964,6 +970,21 @@ public class DatabasePipeline {
 		return retrieved;
 	}
 	
+	public void addActivity(Activity act) {
+		try {
+			PreparedStatement pstmt = 
+				con.prepareStatement("INSERT INTO activity_table VALUES(?, ?, ?, ?, ?);");
+			pstmt.setString(1, act.getUsername());
+			pstmt.setString(2, act.getActivityType());
+			pstmt.setString(3, act.getRelevantID());
+			pstmt.setString(4, act.getDateAsString());
+			pstmt.setLong(5, act.getDateAsLong());
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public ArrayList<Activity> getRecentFriendActivity(String username, int num_recent) {
 		ArrayList<Activity> recent = new ArrayList<Activity>();
@@ -1013,12 +1034,17 @@ public class DatabasePipeline {
 	public ArrayList<Performance> getHighestUniquePerformances(String quiz_id, int num_performers) {
 		ArrayList<Performance> retrieved = new ArrayList<Performance>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table GROUP BY username WHERE quiz_id=\"" + quiz_id + 
-					"\" ORDER BY score DESC LIMIT " + num_performers);
-			Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-					rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-					rs.getLong("date_long"), rs.getString("performance_id"));
-			retrieved.add(perf);
+			ResultSet rs = stmt.executeQuery("SELECT f.* FROM (SELECT taken_by_user, MAX(score) as " +
+					"max_score FROM performance_table GROUP BY taken_by_user) AS x INNER JOIN " +
+					"performance_table AS f ON f.taken_by_user = x.taken_by_user AND f.score = " +
+					"x.max_score WHERE quiz_id=\"" + quiz_id + "\" ORDER BY score DESC LIMIT " + 
+					num_performers);
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"));
+				retrieved.add(perf);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1028,15 +1054,21 @@ public class DatabasePipeline {
 	public ArrayList<Performance> getTodaysHighestUniquePerformances(String quiz_id,  int num_performers) {
 		ArrayList<Performance> retrieved = new ArrayList<Performance>();
 		Date dateObj = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-		long date_long = Long.parseLong(dateFormat.format(dateObj));
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		long this_date_long = Long.parseLong(dateFormat.format(dateObj));
+		this_date_long *= 1000000;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table GROUP BY username WHERE quiz_id=\"" + quiz_id + 
-					"\" AND date_long > " + date_long + " ORDER BY score DESC LIMIT " + num_performers);
-			Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-					rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-					rs.getLong("date_long"), rs.getString("performance_id"));
-			retrieved.add(perf);
+			ResultSet rs = stmt.executeQuery("SELECT f.* FROM (SELECT taken_by_user, MAX(score) as " +
+					"max_score FROM performance_table GROUP BY taken_by_user) AS x INNER JOIN " +
+					"performance_table AS f ON f.taken_by_user = x.taken_by_user AND f.score = " +
+					"x.max_score WHERE quiz_id=\"" + quiz_id + "\" AND date_long >=" + this_date_long + " ORDER BY score DESC LIMIT " + 
+					num_performers);
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"));
+				retrieved.add(perf);
+			}		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1047,7 +1079,7 @@ public class DatabasePipeline {
 	public int getNumTimesQuizTaken(String quiz_id) {
 		int num = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count FROM quiz_table WHERE quiz_id = \"" + quiz_id + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS row_count FROM performance_table WHERE quiz_id = \"" + quiz_id + "\"");
 			if (rs.next()) num = rs.getInt("row_count");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1057,11 +1089,11 @@ public class DatabasePipeline {
 	
 	public double getQuizAverage(String quiz_id) {
 		double total = 0;
-		double num_taken = 0;
+		int num_taken = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_table WHERE quiz_id=\"" + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\"" + quiz_id + "\"");
 			while (rs.next()) {
-				total += Integer.getInteger(rs.getString("score"));
+				total += rs.getDouble("score");
 				num_taken++;
 			}
 		} catch (SQLException e) {
@@ -1186,6 +1218,13 @@ public class DatabasePipeline {
 								" category CHAR(64)" +
 								");";
 		
+		String AddQuizTables9 = "CREATE TABLE activity_table (" +
+								"username CHAR(64), " +
+								"activity_type CHAR(64), " +
+								"relevant_id CHAR(64), " +
+								"date_string CHAR(64), " +
+								"date_long BIGINT);";
+		
 		try {
 			stmt.executeUpdate(dropTables);
 			stmt.executeUpdate(AddQuizTables1);
@@ -1196,6 +1235,7 @@ public class DatabasePipeline {
 			stmt.executeUpdate(AddQuizTables6);
 			stmt.executeUpdate(AddQuizTables7);
 			stmt.executeUpdate(AddQuizTables8);
+			stmt.executeUpdate(AddQuizTables9);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
