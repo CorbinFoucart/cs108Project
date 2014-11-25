@@ -17,16 +17,16 @@ public class DatabasePipelineMethodTest {
 	public static final String ANNOUNCEMENT = "announcement";
 	
 	
-	@Test
-	public void clearDB() {
-//		pipeline.clearDatabase();
-		
-//		// create users
-//		User bo = new User("bo", "bobo");
-//		pipeline.addUser(bo);
-		
-		
-	}
+//	@Test
+//	public void clearDB() {
+////		pipeline.clearDatabase();
+//		
+////		// create users
+////		User bo = new User("bo", "bobo");
+////		pipeline.addUser(bo);
+//		
+//		
+//	}
 
 	
 	@Test
@@ -43,15 +43,54 @@ public class DatabasePipelineMethodTest {
 		User airBud = new User("Air Bud", "airbudairbud");
 		User maggie = new User("Maggie", "maggiemaggie");
 		User oski = new User("Oski", "oskioski");
-		User noNameTest = new User("", ""); // handle this?
+		User teddy = new User("Teddy", "teddyteddy");
+		User marley = new User("Marley", "marleymarley");
+		User rocky = new User("Rocky", "rockyrocky");
+		User rover = new User("Rover", "roverrover");
+		User spike = new User("Spike", "spikespike");
+		User randy = new User("Randy", "randyrandy");
+		User rex = new User("Rex", "rexrex");
+		User duke = new User("Duke", "dukeduke");
+		User zeus = new User("Zeus", "zeuszeus");
+		User hunter = new User("Hunter", "hunterhunter");
+		User toto = new User("Toto", "totototo");
+		User boomer = new User("Boomer", "boomerboomer");
+		User winnDixie = new User("WinnDixie", "winndixiewinndixie");
+		User bailey = new User("Bailey", "baileybailey");
+		User clifford = new User("Clifford", "cliffordclifford");
+		User cookie = new User("Cookie", "cookiecookie");
+		User spot = new User("Spot", "spotspot");
+		User cliff = new User("Cliff", "cliffcliff");
+		User pluto = new User("Pluto", "plutopluto");
+		User oreo = new User("Oreo", "oreooreo");
+		User ollie = new User("Ollie", "ollieollie");
 		pipeline.addUser(bo);
 		pipeline.addUser(sarge);
 		pipeline.addUser(scout);
 		pipeline.addUser(beethoven);
 		pipeline.addUser(airBud);
 		pipeline.addUser(maggie);
-		pipeline.addUser(oski);
-		pipeline.addUser(noNameTest);
+		pipeline.addUser(teddy);
+		pipeline.addUser(marley);
+		pipeline.addUser(rocky);
+		pipeline.addUser(rover);
+		pipeline.addUser(spike);
+		pipeline.addUser(randy);
+		pipeline.addUser(rex);
+		pipeline.addUser(duke);
+		pipeline.addUser(zeus);
+		pipeline.addUser(hunter);
+		pipeline.addUser(toto);
+		pipeline.addUser(boomer);
+		pipeline.addUser(winnDixie);
+		pipeline.addUser(bailey);
+		pipeline.addUser(clifford);
+		pipeline.addUser(cookie);
+		pipeline.addUser(spot);
+		pipeline.addUser(cliff);
+		pipeline.addUser(pluto);
+		pipeline.addUser(oreo);
+		pipeline.addUser(ollie);
 		
 		// promote sarge to admin
 		// tests romoteToAdmin(), demoteFromAdmin()
@@ -72,6 +111,23 @@ public class DatabasePipelineMethodTest {
 		pipeline.addFriendshipToDB(beethoven, sarge);
 		pipeline.addFriendshipToDB(beethoven, airBud);
 		pipeline.addFriendshipToDB(maggie, oski);
+		pipeline.addFriendshipToDB(maggie, rocky);
+		pipeline.addFriendshipToDB(rocky, rover);
+		pipeline.addFriendshipToDB(rover, spike);
+		pipeline.addFriendshipToDB(spike, randy);
+		pipeline.addFriendshipToDB(randy, rex);
+		pipeline.addFriendshipToDB(rex, duke);
+		pipeline.addFriendshipToDB(rex, spot);
+		pipeline.addFriendshipToDB(duke, zeus);
+		pipeline.addFriendshipToDB(zeus, hunter);
+		pipeline.addFriendshipToDB(boomer, toto);
+		pipeline.addFriendshipToDB(spot, cookie);
+		pipeline.addFriendshipToDB(cookie, clifford);
+		pipeline.addFriendshipToDB(bailey, clifford);
+		pipeline.addFriendshipToDB(bailey, winnDixie);
+		pipeline.addFriendshipToDB(winnDixie, clifford);
+		pipeline.addFriendshipToDB(pluto, cliff);
+		
 		
 		// update privacy settings for dogs
 		// tests updatePrivacySetting()
@@ -171,10 +227,38 @@ public class DatabasePipelineMethodTest {
 		Challenge challenge2 = new Challenge("Sarge", "Bo", "They should call you cat-face meowmers.", quiz1.getQuizID());
 		Challenge challenge3 = new Challenge("ascascd", "snssrgser", "Proof that non-users can create challenges.", quiz2.getQuizID());
 		Challenge challenge4 = new Challenge("Maggie", "Beethoven", "Proof that non-friends can create challenges", quiz2.getQuizID());
+		Challenge challenge5 = new Challenge("Spot", "Sarge", "", quiz2.getQuizID());
+		Challenge challenge6 = new Challenge("Duke", "Bo", "", quiz2.getQuizID());
+		Challenge challenge7 = new Challenge("Hunter", "Oski", "", quiz2.getQuizID());
+		Challenge challenge8 = new Challenge("Zeus", "Maggie", "", quiz2.getQuizID());
+		Challenge challenge9 = new Challenge("Winn Dixie", "Zeus", "", quiz2.getQuizID());
+		Challenge challenge10 = new Challenge("Clifford", "Spot", "", quiz2.getQuizID());
+		Challenge challenge11 = new Challenge("Bailey", "Cliff", "", quiz2.getQuizID());
+		Challenge challenge12 = new Challenge("Ollie", "Beethoven", "", quiz2.getQuizID());
+		Challenge challenge13 = new Challenge("Spike", "Duke", "", quiz2.getQuizID());
+		Challenge challenge14 = new Challenge("Rocky", "Rover", "", quiz2.getQuizID());
+		Challenge challenge15 = new Challenge("Rover", "Teddy", "", quiz2.getQuizID());
+		Challenge challenge16 = new Challenge("Cookie", "Ollie", "", quiz2.getQuizID());
+		Challenge challenge17 = new Challenge("Pluto", "Air Bud", "", quiz2.getQuizID());
+		Challenge challenge18 = new Challenge("Marley", "Spike", "", quiz2.getQuizID());
 		pipeline.addChallenge(challenge1);
 		pipeline.addChallenge(challenge2);
 		pipeline.addChallenge(challenge3);
 		pipeline.addChallenge(challenge4);
+		pipeline.addChallenge(challenge5);
+		pipeline.addChallenge(challenge6);
+		pipeline.addChallenge(challenge7);
+		pipeline.addChallenge(challenge8);
+		pipeline.addChallenge(challenge9);
+		pipeline.addChallenge(challenge10);
+		pipeline.addChallenge(challenge11);
+		pipeline.addChallenge(challenge12);
+		pipeline.addChallenge(challenge13);
+		pipeline.addChallenge(challenge14);
+		pipeline.addChallenge(challenge15);
+		pipeline.addChallenge(challenge16);
+		pipeline.addChallenge(challenge17);
+		pipeline.addChallenge(challenge18);
 		
 		// creates announcements
 		Announcement an1 = new Announcement("Sarge", "Note: All cat-related content will be flagged and removed!");
@@ -243,10 +327,10 @@ public class DatabasePipelineMethodTest {
 //	}
 	
 	
-	// closePipeLine()
-	@Test
-	public void closePipelineTest() {
-		pipeline.closePipeline();
-	}
+//	// closePipeLine()
+//	@Test
+//	public void closePipelineTest() {
+//		pipeline.closePipeline();
+//	}
 	
 }
