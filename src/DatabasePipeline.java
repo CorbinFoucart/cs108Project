@@ -759,9 +759,8 @@ public class DatabasePipeline {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table WHERE creator=\"" + user + "\"");
 			String retrievedQuiz;
-			while (true) {
+			while (rs.next()) {
 				retrievedQuiz = rs.getString("quiz_id");
-				if (retrievedQuiz == null) break;
 				retrieved.add(retrievedQuiz);
 			}
 		} catch (SQLException e) {
