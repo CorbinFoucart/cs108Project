@@ -844,7 +844,7 @@ public class DatabasePipeline {
 	public String getQuizNameFromID(String id) {
 		String name = null;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quiz_name FROM quiz_table WHERE quiz_id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT quiz_name FROM quiz_table WHERE quiz_id=\"" + id + "\"");
 			if (rs.next()) name = rs.getString("quiz_name");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -946,6 +946,34 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 		return retrieved;
+	}
+	
+	public ArrayList<Achievement> getAllAchievements(String username) {
+		ArrayList<Achievement> retrieved = new ArrayList<Achievement>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE taken_by_user=\"" + username + "\"");
+			while (rs.next()) {
+				Achievement ach = new Achievement(rs.getString("username"), rs.getString("achievement_type"), 
+						rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("announced"), rs.getString("achievement_id"));
+				retrieved.add(ach);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	
+	
+	public String getAchievementTitle(String id) {
+		String name = "";
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT achievement_type FROM achievement_table WHERE achievement_id=\"" + id + "\"");
+			if (rs.next()) name = rs.getString("achievement_type");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
 	}
 	
 	public void addActivity(Activity act) {
