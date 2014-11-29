@@ -936,7 +936,7 @@ public class DatabasePipeline {
 	public ArrayList<Achievement> getNewAchievements(String username) {
 		ArrayList<Achievement> retrieved = new ArrayList<Achievement>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE taken_by_user=\"" + username + "\" AND announced=0");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE username=\"" + username + "\" AND announced=0");
 			while (rs.next()) {
 				Achievement ach = new Achievement(rs.getString("username"), rs.getString("achievement_type"), 
 						rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("announced"), rs.getString("achievement_id"));
@@ -948,10 +948,18 @@ public class DatabasePipeline {
 		return retrieved;
 	}
 	
+	public void markAchievementDisplayed(String achievement_id) {
+		try {
+			stmt.executeUpdate("UPDATE achievement_table SET announced=1 WHERE achievement_id=\"" + achievement_id + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ArrayList<Achievement> getAllAchievements(String username) {
 		ArrayList<Achievement> retrieved = new ArrayList<Achievement>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE taken_by_user=\"" + username + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE username=\"" + username + "\"");
 			while (rs.next()) {
 				Achievement ach = new Achievement(rs.getString("username"), rs.getString("achievement_type"), 
 						rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("announced"), rs.getString("achievement_id"));
@@ -975,6 +983,39 @@ public class DatabasePipeline {
 		}
 		return name;
 	}
+	
+	
+	public void checkForAchievements(String username) {
+		checkQuizCreationAchievements(username);
+	}
+	
+	
+	private void checkQuizCreationAchievements(String username) {
+		checkCreationAchievement(username, Achievement.CREATOR, Achievement.CREATOR_NUM);
+	}
+	
+	private void checkCreationAchievement(String username, String achievement_type, int benchmark) {
+		if (getNumberQuizzesCreated(username) >= benchmark && 
+				!isAlreadyAchieved(username, achievement_type)) {
+			Achievement ach = new Achievement(username, achievement_type);
+			addAchievementToDB(ach);
+		}
+	}
+	
+	
+	
+	public boolean isAlreadyAchieved(String username, String achievement_type) {
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * WHERE achievement_type=\"" + 
+					achievement_type + "\"");
+			if (rs.next()) return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
 	
 	public void addActivity(Activity act) {
 		try {
