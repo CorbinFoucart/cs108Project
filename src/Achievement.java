@@ -11,6 +11,12 @@ public class Achievement {
 	private boolean announced;
 	private String id;
 	
+	public static final String CREATOR = "creator";
+	public static final int CREATOR_NUM = 5;
+	public static final String ACTIVE_CONTRIBUTOR = "active_contributor";
+	public static final String CREATION_LEGEND = "creation_legend";
+	public static final String QUIZ_MASTER = "quiz_master";
+	
 	public Achievement(String username, String achievement_type) {
 		this.username = username;
 		this.achievement_type = achievement_type;
