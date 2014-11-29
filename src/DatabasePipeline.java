@@ -348,13 +348,6 @@ public class DatabasePipeline {
 					addMessage(request);
 				}
 				
-				/**
-				 * Adds a challenge to the user database
-				 * @param challenge
-				 */
-				public void addChallenge(Challenge challenge) {
-					addMessage(challenge);
-				}
 	
 	/**
 	 * Removes any type of message from the database by using its 
@@ -1103,6 +1096,33 @@ public class DatabasePipeline {
 		return (total / num_taken);
 	}
 	
+	// ----------- challenge methods ---------- //
+	
+	public Challenge getChallenge(String challenge_id) {
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM challenge_table WHERE challenge_id=\"" + challenge_id + "\"");
+			while (rs.next()) {
+				Challenge ch;
+				ch = new Challenge(rs.getString("issuer"),
+								   rs.getString("recipient"),
+								   rs.getString("quiz_id"),
+								   rs.getString("message"),
+								   rs.getString("issuer_perf_id"),
+								   rs.getString("recipient_perf_id"),
+								   rs.getString("status"),
+								   rs.getBoolean("announced"),
+								   rs.getString("winner"),
+								   rs.getString("loser"),
+								   rs.getString("challenge_id"));
+				return ch;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
+	
+	
 	
 	
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
@@ -1236,7 +1256,8 @@ public class DatabasePipeline {
 								 " status CHAR(64)," +
 								 " announced BOOLEAN, " +
 								 " winner CHAR(64)," +
-								 " loser CHAR(64));";
+								 " loser CHAR(64)," +
+								 " challenge_id CHAR(64));";
 		
 		try {
 			stmt.executeUpdate(dropTables);
