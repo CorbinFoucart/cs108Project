@@ -37,9 +37,9 @@ public class DatabasePipeline {
 		stmt = db_con.getStatement();
 	}
 	
-	// -------------------------------------------------   ADDING TO THE DATABASE  ------------------------------------------- //
+    // -------------------------------------------------   ADDING TO THE DATABASE  ------------------------------------------- //
 	
-	// ------------------------ User Data Methods ---------------------- //
+    // ------------------------------ User Data Methods --------------------------------- //
 	
 	/**
 	 * Adds a user's information into the user_table of the database.
@@ -348,13 +348,6 @@ public class DatabasePipeline {
 					addMessage(request);
 				}
 				
-				/**
-				 * Adds a challenge to the user database
-				 * @param challenge
-				 */
-				public void addChallenge(Challenge challenge) {
-					addMessage(challenge);
-				}
 	
 	/**
 	 * Removes any type of message from the database by using its 
@@ -1171,6 +1164,33 @@ public class DatabasePipeline {
 		return (total / num_taken);
 	}
 	
+	// ----------- challenge methods ---------- //
+	
+	public Challenge getChallenge(String challenge_id) {
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM challenge_table WHERE challenge_id=\"" + challenge_id + "\"");
+			while (rs.next()) {
+				Challenge ch;
+				ch = new Challenge(rs.getString("issuer"),
+								   rs.getString("recipient"),
+								   rs.getString("quiz_id"),
+								   rs.getString("message"),
+								   rs.getString("issuer_perf_id"),
+								   rs.getString("recipient_perf_id"),
+								   rs.getString("status"),
+								   rs.getBoolean("announced"),
+								   rs.getString("winner"),
+								   rs.getString("loser"),
+								   rs.getString("challenge_id"));
+				return ch;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
+	
+	
 	
 	
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
@@ -1289,11 +1309,23 @@ public class DatabasePipeline {
 								");";
 		
 		String AddQuizTables9 = "CREATE TABLE activity_table (" +
-								"username CHAR(64), " +
-								"activity_type CHAR(64), " +
-								"relevant_id CHAR(64), " +
-								"date_string CHAR(64), " +
+								" username CHAR(64), " +
+								" activity_type CHAR(64), " +
+								" relevant_id CHAR(64), " +
+								" date_string CHAR(64), " +
 								"date_long BIGINT);";
+		
+		String AddQuizTables10 = "CREATE TABLE challenge_table (" +
+								 " issuer CHAR(64), " +
+								 " recipient CHAR(64), " +
+								 " message VARCHAR(1000)," +
+								 " issuer_perf_id CHAR(64), " +
+								 " recipient_perf_id CHAR(64), " +
+								 " status CHAR(64)," +
+								 " announced BOOLEAN, " +
+								 " winner CHAR(64)," +
+								 " loser CHAR(64)," +
+								 " challenge_id CHAR(64));";
 		
 		try {
 			stmt.executeUpdate(dropTables);
@@ -1306,6 +1338,7 @@ public class DatabasePipeline {
 			stmt.executeUpdate(AddQuizTables7);
 			stmt.executeUpdate(AddQuizTables8);
 			stmt.executeUpdate(AddQuizTables9);
+			stmt.executeUpdate(AddQuizTables10);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
