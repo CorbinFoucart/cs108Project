@@ -29,6 +29,9 @@ public class QuestionResponse implements Question, Serializable {
 		userAnswer = new Answer(userAns);
 	}
 
+	public String getUserAnswer() {
+		return userAnswer.toString();
+	}
 	
 	public boolean isCorrect() {
 		

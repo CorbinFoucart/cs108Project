@@ -134,6 +134,10 @@ public class MultiAnswerQuestion implements Question, Serializable{
 		return results;
 	}
 	
+	public ArrayList<String> getUserAnswers() {
+		return userAnswers;
+	}
+	
 	// ---- answer inner array ----- //
 	
 	private class Answer implements Serializable {

@@ -88,6 +88,15 @@ public class QuestionMatching implements Question, Serializable {
 		}
 	}
 	
+	public ArrayList<String> getUserAnswers() {
+		ArrayList<String> userAnswers = new ArrayList<String>();
+		for (int i = 0; i < matchings.size(); i++) {
+			userAnswers.add(matchings.get(i).getUserMatch());
+		}
+		return userAnswers;
+	}
+	
+	
 	public double getPercentage() {
 		double total = 0;
 		for (int i = 0; i < matchings.size(); i++) {
