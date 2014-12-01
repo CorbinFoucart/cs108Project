@@ -10,23 +10,26 @@ public class QuestionMultipleChoice implements Question, Serializable {
 	private double weight;
 	private String quiz_id;
 	private String id;
-	
+	private ArrayList<Boolean> results;
 	
 	public QuestionMultipleChoice(String question) {
 		this.question = question;
 		this.choices = new ArrayList<Choice>();
 		this.weight = 1;
 		generateID();
+		results = new ArrayList<Boolean>();
 	}
 	
 	public boolean isCorrect() {
+		boolean correct = true;
 		for (int i = 0; i < choices.size(); i++) {
 			Choice ch = choices.get(i);
 			if (ch.correct != ch.userSelection) {
-				return false;
-			}
+				correct = false;
+				results.add(true);
+			} else results.add(false);
 		}
-		return true;
+		return correct;
 	}
 	
 	public double getPercentage() {
@@ -100,6 +103,10 @@ public class QuestionMultipleChoice implements Question, Serializable {
 	
 	public String getID() {
 		return id;
+	}
+	
+	public ArrayList<Boolean> getResults() {
+		return results;
 	}
 	
 	private class Choice implements Serializable {

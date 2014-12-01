@@ -987,11 +987,18 @@ public class DatabasePipeline {
 	
 	public void checkForAchievements(String username) {
 		checkQuizCreationAchievements(username);
+		checkPerformanceAchievements(username);
+		checkRatingAchievements(username);
+		checkChallengeAchievements(username);
 	}
 	
 	
 	private void checkQuizCreationAchievements(String username) {
 		checkCreationAchievement(username, Achievement.CREATOR, Achievement.CREATOR_NUM);
+		checkCreationAchievement(username, Achievement.ACTIVE_CONTRIBUTOR, Achievement.ACTIVE_CONTRIBUTOR_NUM);
+		checkCreationAchievement(username, Achievement.CREATION_LEGEND, Achievement.CREATION_LEGEND_NUM);
+		checkCreationAchievement(username, Achievement.QUIZ_MASTER, Achievement.QUIZ_MASTER_NUM);
+		checkCreationAchievement(username, Achievement.PROGENITOR_DEITY, Achievement.PROGENITOR_DEITY_NUM);
 	}
 	
 	private void checkCreationAchievement(String username, String achievement_type, int benchmark) {
@@ -1002,6 +1009,38 @@ public class DatabasePipeline {
 		}
 	}
 	
+
+	private void checkPerformanceAchievements(String username) {
+		int perfects = 0;
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + username + "\"");
+			while (rs.next()) {
+				if (rs.getDouble("score") == 1.0) perfects++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if (perfects >= Achievement.SHARPSHOOTER_NUM) {
+			if (!isAlreadyAchieved(username, Achievement.SHARPSHOOTER)) {
+				Achievement ach = new Achievement(username, Achievement.SHARPSHOOTER);
+				addAchievementToDB(ach);
+			}
+		}
+		if (perfects >= Achievement.DEAD_EYE_NUM) {
+			if (!isAlreadyAchieved(username, Achievement.DEAD_EYE)) {
+				Achievement ach = new Achievement(username, Achievement.DEAD_EYE);
+				addAchievementToDB(ach);
+			}
+		}
+	}
+	
+	private void checkRatingAchievements(String username) {
+		// TO BE FILLED IN
+	}
+	
+	private void checkChallengeAchievements(String username) {
+		// TO BE FILLED IN
+	}
 	
 	
 	public boolean isAlreadyAchieved(String username, String achievement_type) {
