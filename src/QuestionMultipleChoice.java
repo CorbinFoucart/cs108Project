@@ -109,6 +109,14 @@ public class QuestionMultipleChoice implements Question, Serializable {
 		return results;
 	}
 	
+	public ArrayList<Boolean> getUserAnswers() {
+		ArrayList<Boolean> userAnswers = new ArrayList<Boolean>();
+		for (int i = 0; i < choices.size(); i++) {
+			userAnswers.add(choices.get(i).userSelection);
+		}
+		return userAnswers;
+	}
+	
 	private class Choice implements Serializable {
 		
 		private boolean correct;
