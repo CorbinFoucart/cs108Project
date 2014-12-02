@@ -165,6 +165,7 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 	}
+	
 			/**
 			 * Helper method to addQuizToDB
 			 * Adds a question to the questions table of database
@@ -1229,9 +1230,27 @@ public class DatabasePipeline {
 		return null;
 	}	
 	
-	
-	
-	
+	public void addChallengeToDB(Challenge ch) {
+		try {
+			PreparedStatement pstmt = 
+				con.prepareStatement("INSERT INTO challenge_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, ch.getIssuer());
+			pstmt.setString(2, ch.getRecipient());
+			pstmt.setString(3, ch.getMessage());
+			pstmt.setString(4, ch.getIssuerPerfID());
+			pstmt.setString(5, ch.getRecipientPerfID());
+			pstmt.setString(6, ch.getStatus());
+			pstmt.setBoolean(7, ch.getAnnounced());
+			pstmt.setString(8, ch.getWinner());
+			pstmt.setString(9, ch.getLoser());
+			pstmt.setString(10, ch.getID());
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
 	private Blob blobify(Object obj) {
@@ -1277,7 +1296,7 @@ public class DatabasePipeline {
 	public void clearDatabase() {
 		// drop existing tables
 		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, category_table,"
-			+ "activity_table, performance_table, quiz_table, question_table, achievement_table, questions_table;";
+		+ "activity_table, performance_table, quiz_table, question_table, achievement_table, questions_table, challenge_table;	";
 		
 		String AddQuizTables1 = "CREATE TABLE user_table (" +
 				" username CHAR(64)," +
@@ -1401,9 +1420,9 @@ public class DatabasePipeline {
 		private Connection con;
 		
 		public static final String MYSQL_USERNAME = "ccs108rdeubler"; // //"ccs108cfoucart";  // //     
-		public static final String MYSQL_PASSWORD =  "vohhaegh"; // // "aigookue";  // //    
+		public static final String MYSQL_PASSWORD =  "vohhaegh"; // //"aigookue";  // //     
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler"; // "c_cs108_cfoucart"; //     
+		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler"; //"c_cs108_cfoucart"; //      
 		
 		public DBConnection() {
 			try {
