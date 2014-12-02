@@ -11,11 +11,6 @@ public class DatabasePipelineMethodTest {
 	// creating doggyworld with only the DBpipeline
 	// clears the databases and resets them 
 	
-	public static final String NOTE = "note";
-	public static final String CHALLENGE = "challenge";
-	public static final String REQUEST = "friend_request";
-	public static final String ANNOUNCEMENT = "announcement";
-	
 	
 //	@Test
 //	public void clearDB() {
@@ -244,42 +239,45 @@ public class DatabasePipelineMethodTest {
 		
 		// creates challenges
 		// tests challenge class, addChallenges()
-//		Challenge challenge1 = new Challenge("Air Bud", "Beethoven", "Let's find out who's the better 90s dog!", quiz1.getQuizID());
-//		Challenge challenge2 = new Challenge("Sarge", "Bo", "They should call you cat-face meowmers.", quiz1.getQuizID());
-//		Challenge challenge3 = new Challenge("ascascd", "snssrgser", "Proof that non-users can create challenges.", quiz2.getQuizID());
-//		Challenge challenge4 = new Challenge("Maggie", "Beethoven", "Proof that non-friends can create challenges", quiz2.getQuizID());
-//		Challenge challenge5 = new Challenge("Spot", "Sarge", "", quiz2.getQuizID());
-//		Challenge challenge6 = new Challenge("Duke", "Bo", "", quiz2.getQuizID());
-//		Challenge challenge7 = new Challenge("Hunter", "Oski", "", quiz2.getQuizID());
-//		Challenge challenge8 = new Challenge("Zeus", "Maggie", "", quiz2.getQuizID());
-//		Challenge challenge9 = new Challenge("Winn Dixie", "Zeus", "", quiz2.getQuizID());
-//		Challenge challenge10 = new Challenge("Clifford", "Spot", "", quiz2.getQuizID());
-//		Challenge challenge11 = new Challenge("Bailey", "Cliff", "", quiz2.getQuizID());
-//		Challenge challenge12 = new Challenge("Ollie", "Beethoven", "", quiz2.getQuizID());
-//		Challenge challenge13 = new Challenge("Spike", "Duke", "", quiz2.getQuizID());
-//		Challenge challenge14 = new Challenge("Rocky", "Rover", "", quiz2.getQuizID());
-//		Challenge challenge15 = new Challenge("Rover", "Teddy", "", quiz2.getQuizID());
-//		Challenge challenge16 = new Challenge("Cookie", "Ollie", "", quiz2.getQuizID());
-//		Challenge challenge17 = new Challenge("Pluto", "Air Bud", "", quiz2.getQuizID());
-//		Challenge challenge18 = new Challenge("Marley", "Spike", "", quiz2.getQuizID());
-//		pipeline.addChallenge(challenge1);
-//		pipeline.addChallenge(challenge2);
-//		pipeline.addChallenge(challenge3);
-//		pipeline.addChallenge(challenge4);
-//		pipeline.addChallenge(challenge5);
-//		pipeline.addChallenge(challenge6);
-//		pipeline.addChallenge(challenge7);
-//		pipeline.addChallenge(challenge8);
-//		pipeline.addChallenge(challenge9);
-//		pipeline.addChallenge(challenge10);
-//		pipeline.addChallenge(challenge11);
-//		pipeline.addChallenge(challenge12);
-//		pipeline.addChallenge(challenge13);
-//		pipeline.addChallenge(challenge14);
-//		pipeline.addChallenge(challenge15);
-//		pipeline.addChallenge(challenge16);
-//		pipeline.addChallenge(challenge17);
-//		pipeline.addChallenge(challenge18);
+		Challenge challenge1 = new Challenge("Air Bud", "Beethoven", quiz1.getQuizID());
+		challenge1.setMessage("Let's find out who's the better 90s dog!");
+		Challenge challenge2 = new Challenge("Sarge", "Bo", quiz1.getQuizID());
+		challenge2.setMessage("They should call you cat-face meowmers.");
+		Challenge challenge3 = new Challenge("ascascd", "snssrgser", quiz2.getQuizID());
+		Challenge challenge4 = new Challenge("Maggie", "Beethoven", quiz2.getQuizID());
+		Challenge challenge5 = new Challenge("Spot", "Sarge", quiz2.getQuizID());
+		Challenge challenge6 = new Challenge("Duke", "Bo", quiz2.getQuizID());
+		Challenge challenge7 = new Challenge("Hunter", "Oski", quiz2.getQuizID());
+		Challenge challenge8 = new Challenge("Zeus", "Maggie", quiz2.getQuizID());
+		Challenge challenge9 = new Challenge("Winn Dixie", "Zeus", quiz2.getQuizID());
+		Challenge challenge10 = new Challenge("Clifford", "Spot", quiz2.getQuizID());
+		Challenge challenge11 = new Challenge("Bailey", "Cliff", quiz2.getQuizID());
+		Challenge challenge12 = new Challenge("Ollie", "Beethoven", quiz2.getQuizID());
+		Challenge challenge13 = new Challenge("Spike", "Duke", quiz2.getQuizID());
+		Challenge challenge14 = new Challenge("Rocky", "Rover", quiz2.getQuizID());
+		Challenge challenge15 = new Challenge("Rover", "Teddy", quiz2.getQuizID());
+		Challenge challenge16 = new Challenge("Cookie", "Ollie", quiz2.getQuizID());
+		Challenge challenge17 = new Challenge("Pluto", "Air Bud", quiz2.getQuizID());
+		Challenge challenge18 = new Challenge("Marley", "Spike", quiz2.getQuizID());
+		pipeline.addChallengeToDB(challenge1);
+		pipeline.addChallengeToDB(challenge2);
+		pipeline.addChallengeToDB(challenge3);
+		pipeline.addChallengeToDB(challenge4);
+		pipeline.addChallengeToDB(challenge5);
+		pipeline.addChallengeToDB(challenge6);
+		pipeline.addChallengeToDB(challenge7);
+		pipeline.addChallengeToDB(challenge8);
+		pipeline.addChallengeToDB(challenge9);
+		pipeline.addChallengeToDB(challenge10);
+		pipeline.addChallengeToDB(challenge11);
+		pipeline.addChallengeToDB(challenge12);
+		pipeline.addChallengeToDB(challenge13);
+		pipeline.addChallengeToDB(challenge14);
+		pipeline.addChallengeToDB(challenge15);
+		pipeline.addChallengeToDB(challenge16);
+		pipeline.addChallengeToDB(challenge17);
+		pipeline.addChallengeToDB(challenge18);
+
 		
 		// creates announcements
 		Announcement an1 = new Announcement("Sarge", "Note: All cat-related content will be flagged and removed!");
