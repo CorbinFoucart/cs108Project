@@ -17,6 +17,11 @@ public class PictureQuestion extends QuestionResponse{
 		this.imageFilename = imageFilename;
 	}
 	
+	public PictureQuestion(String question, String imageFilename) {
+		super(question);
+		this.imageFilename = imageFilename;
+	}
+	
 	// returns the filename of the image
 	public String getImageFilename() {
 		return imageFilename;

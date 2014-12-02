@@ -13,6 +13,7 @@ public class MultiAnswerQuestion implements Question, Serializable{
 	public int numPossibleCorrect;
 	public String quiz_id;
 	public String id;
+	private ArrayList<Boolean> results;
 	
 	/**
 	 * Constructor for multi-answer question.
@@ -29,6 +30,10 @@ public class MultiAnswerQuestion implements Question, Serializable{
 		this.numPossibleCorrect = numPossibleCorrect;
 		this.weight = 1;
 		generateID();
+		results = new ArrayList<Boolean>();
+		for (int i = 0; i < numPossibleCorrect; i++) {
+			results.add(false);
+		}
 	}
 	
 	public void addAcceptedAnswer(String ans) {
@@ -69,7 +74,8 @@ public class MultiAnswerQuestion implements Question, Serializable{
 				if (currUserAns.equals(correctAns)) {
 					numCorrect++;
 					acceptedAnswers.get(i).correct = true;
-				}
+					results.add(true);
+				} 
 			} else {
 				for (int j = 0; j < nAcceptedAnswers; j++) {
 					String correctAnswer = acceptedAnswers.get(j).answer;
@@ -77,7 +83,8 @@ public class MultiAnswerQuestion implements Question, Serializable{
 					if (currUserAns.equals(correctAnswer) && !alreadyAnswered) {
 								numCorrect++;
 								acceptedAnswers.get(j).correct = true;
-							}
+								results.add(true);
+					}
 				}
 			}
 		}
@@ -117,6 +124,14 @@ public class MultiAnswerQuestion implements Question, Serializable{
 	
 	public String getID() {
 		return id;
+	}
+	
+	public int getNumEntries() {
+		return numPossibleCorrect;
+	}
+	
+	public ArrayList<Boolean> getResults() {
+		return results;
 	}
 	
 	// ---- answer inner array ----- //

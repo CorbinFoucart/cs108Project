@@ -27,7 +27,7 @@ public class Quiz implements Serializable{
 	private boolean one_per_page;
 	private boolean immediate_feedback;
 	private String description;
-	
+	private ArrayList<Boolean> answered;
 
 	
 	public Quiz(String name, boolean random, boolean one_per_page, boolean immediate_feedback, String creator) {
@@ -46,6 +46,7 @@ public class Quiz implements Serializable{
 		category = "";
 		tags = new ArrayList<String>();
 		generateID();
+		answered = new ArrayList<Boolean>();
 	}
 	
 	public void addDescription(String description) {
@@ -58,6 +59,7 @@ public class Quiz implements Serializable{
 	
 	public void addQuestion(Question q) {
 		questions.add(q);
+		answered.add(false);
 	}
 	
 	public int getNumQuestions() {
@@ -199,6 +201,22 @@ public class Quiz implements Serializable{
 	public void generateID() {
 		IDGenerator generator = new IDGenerator();
 		id = generator.generateID();
+	}
+	
+	public void setAnswered(int i) {
+		answered.set(i, true);
+	}
+	
+	public boolean isAnswered(int i) {
+		return answered.get(i);
+	}
+	
+	public int getNumAnswered() {
+		int num = 0;
+		for (int i = 0; i < answered.size(); i++) {
+			if (answered.get(i)) num++;
+		}
+		return num;
 	}
 	
 }
