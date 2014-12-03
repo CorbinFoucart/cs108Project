@@ -20,7 +20,9 @@ public class Achievement {
 	
 	
 	// Names of achievements
-	public static final String CREATOR = "creator";
+	public static final String AMATEUR_AUTHOR = "amateur_author";
+	public static final String PROLIFIC_AUTHOR = "prolific_author";
+	public static final String PRODIGIOUS_AUTHOR = "prodigious_author";
 	public static final String ACTIVE_CONTRIBUTOR = "active_contributor";
 	public static final String CREATION_LEGEND = "creation_legend";
 	public static final String QUIZ_MASTER = "quiz_master";
@@ -31,7 +33,18 @@ public class Achievement {
 	public static final String WHITE_KNIGHT = "white_knight";
 	
 	// Relevant numbers for achievements
-	public static final int CREATOR_NUM = 5;
+	public static final String QUIZ_MACHINE = "quiz_machine";
+	public static final String I_AM_THE_GREATEST = "i_am_the_greatest";
+	public static final String PRACTICE_MAKES_PERFECT = "practice_makes_perfect";
+	public static final String BEAT_THE_MONKEY = "beat_the_monkey";
+	public static final String BEAT_THE_RAVEN = "beat_the_raven";
+	public static final String BEAT_THE_ELEPHANT = "beat_the_elephant";
+	
+	
+	// Relevant numbers for achievements
+	public static final int AMATEUR_AUTHOR_NUM = 1;
+	public static final int PROLIFIC_AUTHOR_NUM = 5;
+	public static final int PRODIGIOUS_AUTHOR_NUM = 10;
 	public static final int ACTIVE_CONTRIBUTOR_NUM = 20;
 	public static final int CREATION_LEGEND_NUM = 50;
 	public static final int QUIZ_MASTER_NUM = 100;
@@ -40,8 +53,14 @@ public class Achievement {
 	public static final int DEAD_EYE_NUM = 50;
 	public static final int BLACK_KNIGHT_NUM = 20;
 	public static final int WHITE_KNIGHT_NUM = 20;
+
+	public static final int QUIZ_MACHINE_NUM = 10;
+	public static final double BEAT_THE_MONKEY_NUM = 0.5;
+	public static final double BEAT_THE_RAVEN_NUM = 0.75;
+	public static final double BEAT_THE_ELEPHANT_NUM = 0.9;
+	public static final int NUM_THRESHOLD_BEAT_THE = 5;
 	
-	
+       
 	/**
 	 * Creates a new Achievement for the given user, of the 
 	 * specified type.  Auto-generates an ID and date.

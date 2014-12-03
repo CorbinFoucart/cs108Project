@@ -169,6 +169,7 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 	}
+	
 			/**
 			 * Helper method to addQuizToDB
 			 * Adds a question to the questions table of database
@@ -352,16 +353,15 @@ public class DatabasePipeline {
 	public void addMessage(Message msg) {
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				con.prepareStatement("INSERT INTO message_table VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setString(1, msg.getTo());
 			pstmt.setString(2, msg.getFrom());
 			pstmt.setString(3, msg.getMessage());
 			pstmt.setString(4, msg.getDateAsString());
 			pstmt.setLong(5, msg.getDateAsLong());
 			pstmt.setBoolean(6, false);
-			pstmt.setString(7, msg.getQuizID());
-			pstmt.setString(8, msg.getType());
-			pstmt.setString(9, msg.getID());
+			pstmt.setString(7, msg.getType());
+			pstmt.setString(8, msg.getID());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -472,7 +472,7 @@ public class DatabasePipeline {
 				ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE message_id =\"" + message_id + "\"");
 				Message retrieved = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getBoolean("was_read"), rs.getString("message_type"),
 						rs.getString("message_id"));
 				return retrieved;
 			} catch (Exception e) {
@@ -570,7 +570,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getBoolean("was_read"), rs.getString("message_type"),
 						rs.getString("message_id"));
 				messages.add(msg);
 			}
@@ -628,7 +628,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getBoolean("was_read"), rs.getString("message_type"),
 						rs.getString("message_id"));
 				requests.add(msg);
 			}
@@ -636,32 +636,8 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 		return requests;
-	}
-	
-	
-	/**
-	 * Returns a list of challenges for the specified user
-	 * @param user username of user
-	 * @return list of challenges
-	 */
-	public ArrayList<Message> getChallenges(String user) {
-		ArrayList<Message> challenges = new ArrayList<Message>();
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
-											  + user + "\" AND message_type=\"challenge\"");
-			while (rs.next()) {
-				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
-						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
-						rs.getString("message_id"));
-				challenges.add(msg);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return challenges;
-	}
-	
+	} 
+										       
 
 	/**
 	 * Returns list of announcements for specified user
@@ -676,7 +652,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getBoolean("was_read"), rs.getString("message_type"),
 						rs.getString("message_id"));
 				announcements.add(announcement);
 			}
@@ -702,7 +678,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"), rs.getString("message_id"));
+						rs.getBoolean("was_read"), rs.getString("message_type"), rs.getString("message_id"));
 				announcements.add(announcement);
 			}
 		} catch (SQLException e) {
@@ -909,7 +885,7 @@ public class DatabasePipeline {
 			while (rs.next()) {
 				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
 						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("quiz_id"), rs.getString("message_type"),
+						rs.getBoolean("was_read"), rs.getString("message_type"),
 						rs.getString("message_id"));
 				messages.add(msg);
 			}
@@ -1040,7 +1016,7 @@ public class DatabasePipeline {
 	 */
 	public void addCategory(String newCat) {
 		try {
-			stmt.executeUpdate("INSERT INTO category_table VALUES(" + newCat + ")");
+			stmt.executeUpdate("INSERT INTO category_table VALUES(\"" + newCat + "\")");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1263,13 +1239,51 @@ public class DatabasePipeline {
 		checkChallengeAchievements(username);
 	}
 	
+	//TODO
+	// QUIZ MACHINE -Take 10 quizzes
+	// beat the...
+	// I am the greatest - highest score on a quiz
+	
+	
+	private void checkForBeatTheAchievements(String username) {
+		checkBeatTheAchievement(username, Achievement.BEAT_THE_MONKEY, Achievement.BEAT_THE_MONKEY_NUM);
+		checkBeatTheAchievement(username, Achievement.BEAT_THE_RAVEN, Achievement.BEAT_THE_RAVEN_NUM);
+		checkBeatTheAchievement(username, Achievement.BEAT_THE_ELEPHANT, Achievement.BEAT_THE_ELEPHANT_NUM);
+	}
+	
+		// helper method to ^ that checks for specific cases of "Beat the..." achievements
+		private void checkBeatTheAchievement(String username, String achievement_type, double benchMark) {
+			if (getNumberQuizzesTaken(username) > Achievement.NUM_THRESHOLD_BEAT_THE &&
+				getUserQuizAverage(username) > benchMark) {
+				Achievement ach = new Achievement(username, achievement_type);
+				addAchievementToDB(ach);
+			}
+		}
+		
+		private double getUserQuizAverage(String username) {
+			double average = 0;
+			double total = 0;
+			int numQuizzes = 0;
+			try {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + username + "\"");
+				while (rs.next()) {
+					double quizScore = rs.getDouble("score");
+					total += quizScore;
+					numQuizzes++;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			average = total / numQuizzes;
+			return average;
+		}
 	
 	/**
 	 * Checks for achievements associated with creating quizzes
 	 * @param username username of user
 	 */
 	private void checkQuizCreationAchievements(String username) {
-		checkCreationAchievement(username, Achievement.CREATOR, Achievement.CREATOR_NUM);
+		checkCreationAchievement(username, Achievement.PROLIFIC_AUTHOR, Achievement.PROLIFIC_AUTHOR_NUM);
 		checkCreationAchievement(username, Achievement.ACTIVE_CONTRIBUTOR, Achievement.ACTIVE_CONTRIBUTOR_NUM);
 		checkCreationAchievement(username, Achievement.CREATION_LEGEND, Achievement.CREATION_LEGEND_NUM);
 		checkCreationAchievement(username, Achievement.QUIZ_MASTER, Achievement.QUIZ_MASTER_NUM);
@@ -1514,9 +1528,28 @@ public class DatabasePipeline {
 		return null;
 	}	
 	
-	
-	
-	
+	public void addChallengeToDB(Challenge ch) {
+		try {
+			PreparedStatement pstmt = 
+				con.prepareStatement("INSERT INTO challenge_table VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, ch.getIssuer());
+			pstmt.setString(2, ch.getRecipient());
+			pstmt.setString(3, ch.getQuizID());
+			pstmt.setString(4, ch.getMessage());
+			pstmt.setString(5, ch.getIssuerPerfID());
+			pstmt.setString(6, ch.getRecipientPerfID());
+			pstmt.setString(7, ch.getStatus());
+			pstmt.setBoolean(8, ch.getAnnounced());
+			pstmt.setString(9, ch.getWinner());
+			pstmt.setString(10, ch.getLoser());
+			pstmt.setString(11, ch.getID());
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
 	private Blob blobify(Object obj) {
@@ -1562,7 +1595,7 @@ public class DatabasePipeline {
 	public void clearDatabase() {
 		// drop existing tables
 		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, category_table,"
-			+ "activity_table, performance_table, quiz_table, question_table, achievement_table, questions_table;";
+		+ "activity_table, performance_table, quiz_table, question_table, achievement_table, questions_table, challenge_table;	";
 		
 		String AddQuizTables1 = "CREATE TABLE user_table (" +
 				" username CHAR(64)," +
@@ -1583,7 +1616,6 @@ public class DatabasePipeline {
 							   " date_string CHAR(64)," +
 							   " date_long BIGINT," +
 							   " was_read BOOLEAN," +
-							   " quiz_id CHAR(64)," +
 							   " message_type CHAR(64)," +
 							   " message_id CHAR(64)" +
 							  ");";
@@ -1642,6 +1674,7 @@ public class DatabasePipeline {
 		String AddQuizTables10 = "CREATE TABLE challenge_table (" +
 								 " issuer CHAR(64), " +
 								 " recipient CHAR(64), " +
+								 " quiz_id CHAR(64)," +
 								 " message VARCHAR(1000)," +
 								 " issuer_perf_id CHAR(64), " +
 								 " recipient_perf_id CHAR(64), " +
@@ -1685,10 +1718,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME = "ccs108rdeubler"; // //"ccs108cfoucart";  // //     
-		public static final String MYSQL_PASSWORD =  "vohhaegh"; // // "aigookue";  // //    
+		public static final String MYSQL_USERNAME = "ccs108cfoucart";  // //  "ccs108rdeubler"; // //   
+		public static final String MYSQL_PASSWORD =  "aigookue";  // //     "vohhaegh"; // //
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler"; // "c_cs108_cfoucart"; //     
+		public static final String MYSQL_DATABASE_NAME = "c_cs108_cfoucart"; //"c_cs108_rdeubler"; //      
 		
 		public DBConnection() {
 			try {

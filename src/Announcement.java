@@ -11,6 +11,6 @@ public class Announcement extends Message{
 	
 
 	public Announcement(String from, String text) {
-		super(null, from, text, null, ANNOUNCEMENT);
+		super(null, from, text, ANNOUNCEMENT);
 	}
 }

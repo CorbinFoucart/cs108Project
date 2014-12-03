@@ -7,7 +7,7 @@ public class Note extends Message{
 	 * to from and text; the rest is handled by the superclass
 	 */
 	public Note(String to, String from, String text) {
-		super(to, from , text, null, NOTE);
+		super(to, from , text, NOTE);
 	}
 
 }
