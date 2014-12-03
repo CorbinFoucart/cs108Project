@@ -62,7 +62,14 @@ public class QuestionResponse implements Question, Serializable {
 		}
 	
 	
-	// db
+	public String getCorrectAnswer() {
+		String correctAns = null;
+		if (acceptedAnswers.size() > 0) {
+			Answer ans = acceptedAnswers.get(0);
+			correctAns = ans.toString();
+		}
+		return correctAns;
+	}
 	
 	public void printPossible() {
 		for (int i = 0; i < acceptedAnswers.size(); i++) {

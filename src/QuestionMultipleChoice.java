@@ -76,6 +76,15 @@ public class QuestionMultipleChoice implements Question, Serializable {
 		}
 	}
 	
+	public ArrayList<Boolean> getCorrectAnswers() {
+		ArrayList<Boolean> correctAnswers = new ArrayList<Boolean>();
+		for (int i = 0; i < choices.size(); i++) {
+			Choice ch = choices.get(i);
+			correctAnswers.add(ch.correct);
+		}
+		return correctAnswers;
+	}
+	
 	public String getClassName() {
 		return "QuestionMultipleChoice";
 	}
