@@ -73,12 +73,12 @@ public class QuestionFillinBlank implements Question, Serializable {
 		acceptedAnswers = new ArrayList<Answer>();
 	}
 	
-	public String getCorrectAnswer() {
-		if (acceptedAnswers.size() >= 1) {
-			Answer ans = acceptedAnswers.get(0);
-			return ans.toString();
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> correctAnswers = new ArrayList<String>();
+		for (int i = 0; i < acceptedAnswers.size(); i++) {
+			correctAnswers.add(acceptedAnswers.get(i).toString());
 		}
-		return null;
+		return correctAnswers;
 	}
 	
 	public double getPercentage() {

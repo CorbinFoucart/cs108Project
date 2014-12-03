@@ -1,6 +1,7 @@
 package project;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public interface Question {
 
@@ -40,5 +41,5 @@ public interface Question {
 	public String getID();
 	
 	public void generateID();
-	
+
 }
