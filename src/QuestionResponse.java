@@ -33,6 +33,14 @@ public class QuestionResponse implements Question, Serializable {
 		return userAnswer.toString();
 	}
 	
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> correctAnswers = new ArrayList<String>();
+		for (int i = 0; i < acceptedAnswers.size(); i++) {
+			correctAnswers.add(acceptedAnswers.get(i).toString());
+		}
+		return correctAnswers;
+	}
+	
 	public boolean isCorrect() {
 		
 		// need more error stuff later

@@ -29,7 +29,7 @@ public class AutoQuestionSubtractionTest {
 			
 			String ti = aqsDisplay.getTopInt();
 			String bi = aqsDisplay.getBottomInt();
-			String answer = aqsDisplay.getAnswer();
+			String answer = aqsDisplay.getCorrectAnswer();
 			
 			int numSpaces = ti.length() - bi.length();
 			char[] chars = new char[numSpaces];
