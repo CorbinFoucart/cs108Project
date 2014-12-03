@@ -9,8 +9,8 @@ public class Admin extends User {
 	}
 	
 	// To reconstruct from the database
-	public Admin(String username, String hashedPassword, int privacySetting){
-		super(username, hashedPassword, privacySetting);
+	public Admin(String username, String hashedPassword, int privacySetting, long rating){
+		super(username, hashedPassword, privacySetting, rating);
 		admin = true; 
 	}
 	

@@ -11,6 +11,7 @@ public class User {
 	private int privacySetting;
 	private ArrayList<project.Message> messages;
 	private ArrayList<project.Message> recentMessages;
+	private long rating;
 	
 	// can be accessed by admin subclasses
 	protected boolean admin;
@@ -39,14 +40,16 @@ public class User {
 		recentMessages = new ArrayList<project.Message>(); 
 		friends = new ArrayList<String>(); 
 		achievements = new ArrayList<String>();
+		this.rating = 1200;
 	}
 	
 	// creating a User Object for a database entry (a user that already exists in the table)
-	public User(String username, String hashedPassword, int privacySetting){
+	public User(String username, String hashedPassword, int privacySetting, long rating){
 		this.username = username;
 		this.hashedPassword = hashedPassword;
 		this.admin = false; 
-		this.privacySetting = privacySetting; 
+		this.privacySetting = privacySetting;
+		this.rating = rating;
 		
 
 	}
@@ -109,6 +112,14 @@ public class User {
 	
 	public int getPrivacy() {
 		return privacySetting;
+	}
+	
+	public long getRating() {
+		return rating;
+	}
+	
+	public void setRating(long newRating) {
+		this.rating = newRating;
 	}
 	
 }
