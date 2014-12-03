@@ -125,7 +125,7 @@ public class AutoQuestionAddition implements Question{
 		return bottomInt;
 	}
 	
-	public String getAnswer() {
+	public String getCorrectAnswer() {
 		return answer;
 	}
 	
