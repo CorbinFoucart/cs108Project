@@ -9,7 +9,6 @@ public class Message {
 	private String type;
 	private String date_string;
 	private long date_long;
-	private String quiz_id;
 	private boolean was_read;
 	private String msg_id;
 	
@@ -21,12 +20,11 @@ public class Message {
 	//types are: message, announcement, challenge, friend request
 	
 	//To create a new message
-	public Message(String to, String from, String text, String quiz_id, String type){
+	public Message(String to, String from, String text, String type){
 		this.to = to;
 		this.from = from;
 		this.text = text;
 		this.type = type;
-		this.quiz_id = quiz_id;
 		this.was_read = false;
 		generateID();
 		Date dateObj = new Date();
@@ -37,14 +35,13 @@ public class Message {
 	}
 	
 	//To reconstruct message from database
-	public Message(String to, String from, String text, String date_string, long date_long, boolean was_read, String quiz_id, String type, String msg_id){
+	public Message(String to, String from, String text, String date_string, long date_long, boolean was_read, String type, String msg_id){
 		this.to = to;
 		this.from = from;
 		this.text = text;
 		this.type = type;
 		this.date_string = date_string;
 		this.date_long = date_long;
-		this.quiz_id = quiz_id;
 		this.was_read = was_read;
 		this.msg_id = msg_id;
 	}
@@ -83,10 +80,6 @@ public class Message {
 	
 	public boolean getStatus(){
 		return was_read;
-	}
-	
-	public String getQuizID(){
-		return quiz_id;
 	}
 	
 	public void generateID() {

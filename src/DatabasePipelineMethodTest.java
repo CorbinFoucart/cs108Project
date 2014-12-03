@@ -224,6 +224,24 @@ public class DatabasePipelineMethodTest {
 		pipeline.addPerformanceToDB(per8);
 		pipeline.addPerformanceToDB(per9);
 		pipeline.addPerformanceToDB(per10);
+		
+		pipeline.addCategory("Art");
+		pipeline.addCategory("Entertainment");
+		pipeline.addCategory("Geography");
+		pipeline.addCategory("History");
+		pipeline.addCategory("Holiday");
+		pipeline.addCategory("Language");
+		pipeline.addCategory("Literature");
+		pipeline.addCategory("Math");
+		pipeline.addCategory("Miscellaneous");
+		pipeline.addCategory("Movies");
+		pipeline.addCategory("Music");
+		pipeline.addCategory("Nature");
+		pipeline.addCategory("Religion");
+		pipeline.addCategory("Science");
+		pipeline.addCategory("Sports");
+		pipeline.addCategory("Television");
+		pipeline.addCategory("Vocabulary");
 
 		
 		// creates notes
@@ -231,11 +249,18 @@ public class DatabasePipelineMethodTest {
 		Note n1 = new Note("Sarge", "Bo", "I was just diagnosed with irritable bowel syndrome.");
 		Note n2 = new Note("Bo", "Sarge", "I'm sorry to hear that, bo.");
 		Note n3 = new Note("Air Bud", "Beethoven", "My 90s movies were better than yours.");
-		Note n4 = new Note("Beethoven", "Air Bud", "Factual. Want to grab slushies later?");
+		Note n4 = new Note("Beethoven", "Maggie", "You're slobbering on me.");
+		Note n5 = new Note("Maggie", "Beethoven", "Sorry.");
+		Note n6 = new Note("Clifford", "Maggie", "I love your program.");
+		Note n7 = new Note("Oski", "Maggie", "Don't forget your lunch money tomorrow!");
+		
 		pipeline.addNote(n1);
 		pipeline.addNote(n2);
 		pipeline.addNote(n3);
 		pipeline.addNote(n4);
+		pipeline.addNote(n5);
+		pipeline.addNote(n6);
+		pipeline.addNote(n7);
 		
 		// creates challenges
 		// tests challenge class, addChallenges()
@@ -251,7 +276,7 @@ public class DatabasePipelineMethodTest {
 		Challenge challenge8 = new Challenge("Zeus", "Maggie", quiz2.getQuizID());
 		Challenge challenge9 = new Challenge("Winn Dixie", "Zeus", quiz2.getQuizID());
 		Challenge challenge10 = new Challenge("Clifford", "Spot", quiz2.getQuizID());
-		Challenge challenge11 = new Challenge("Bailey", "Cliff", quiz2.getQuizID());
+		Challenge challenge11 = new Challenge("Maggie", "Cliff", quiz2.getQuizID());
 		Challenge challenge12 = new Challenge("Ollie", "Beethoven", quiz2.getQuizID());
 		Challenge challenge13 = new Challenge("Spike", "Duke", quiz2.getQuizID());
 		Challenge challenge14 = new Challenge("Rocky", "Rover", quiz2.getQuizID());
@@ -323,18 +348,7 @@ public class DatabasePipelineMethodTest {
 		
 		Quiz retrievedQuiz1 = pipeline.retrieveQuizFromDB(quiz1.getQuizID());
 		Quiz retrievedQuiz2 = pipeline.retrieveQuizFromDB(ohNoBadQuiz.getQuizID());
-		
-		for (int i = 0; i < 3; i++) {
-			// meow meow meow
-			int j = 0;
-		}
-		
-		
-	
-		
-		
-		
-		
+				
 		
 	}
 	
