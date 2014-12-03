@@ -59,6 +59,7 @@ public class DatabasePipelineMethodTest {
 		User pluto = new User("Pluto", "plutopluto");
 		User oreo = new User("Oreo", "oreooreo");
 		User ollie = new User("Ollie", "ollieollie");
+		User garfield = new User("Garfield", "garfieldgarfield");
 		pipeline.addUser(bo);
 		pipeline.addUser(sarge);
 		pipeline.addUser(scout);
@@ -87,6 +88,7 @@ public class DatabasePipelineMethodTest {
 		pipeline.addUser(pluto);
 		pipeline.addUser(oreo);
 		pipeline.addUser(ollie);
+		pipeline.addUser(garfield);
 		
 		// promote sarge to admin
 		// tests romoteToAdmin(), demoteFromAdmin()
@@ -341,7 +343,24 @@ public class DatabasePipelineMethodTest {
 		quiz1.addQuestion(badq2);
 		
 		pipeline.addQuizToDB(ohNoBadQuiz);
-		pipeline.clearQuizHistory(ohNoBadQuiz.getQuizID()); 
+		
+		// UH OH, BAD QUIZ THAT DESERVES TO BE NUKED
+		// tests clearQuizHistory();
+		Quiz ohNoBadQuiz2 = new Quiz("CAT QUIZ! Part II", true, true, true, "Air Bud");
+		QuestionResponse badq4 = new QuestionResponse("What is the best brand of cat food?");
+		badq1.addAcceptedAnswer("Fancy Feast");
+		badq1.addAcceptedAnswer("Meow Mix");
+		badq1.addAcceptedAnswer("fancy feast");
+		quiz1.addQuestion(badq2);
+		
+		QuestionResponse badq5 = new QuestionResponse("Who was the most famous cat?");
+		badq2.addAcceptedAnswer("Garfield");
+		badq2.addAcceptedAnswer("garfield");
+		badq2.addAcceptedAnswer("GARFIELD");
+		quiz1.addQuestion(badq5);
+		
+		pipeline.addQuizToDB(ohNoBadQuiz2);
+		
 		
 		
 		// ------------------------------------------------ Retrieval Tests ---------------------------------------------- //

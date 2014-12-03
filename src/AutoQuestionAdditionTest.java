@@ -30,7 +30,7 @@ public class AutoQuestionAdditionTest {
 			
 			String ti = aqaDisplay.getTopInt();
 			String bi = aqaDisplay.getBottomInt();
-			String answer = aqaDisplay.getCorrectAnswer();
+			String answer = aqaDisplay.getAnswer();
 			
 			int numSpaces = ti.length() - bi.length();
 			char[] chars = new char[numSpaces];

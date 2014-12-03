@@ -30,7 +30,7 @@ public class AutoQuestionMultiplicationTest {
 			
 			String ti = aqmDisplay.getTopInt();
 			String bi = aqmDisplay.getBottomInt();
-			String answer = aqmDisplay.getCorrectAnswer();
+			String answer = aqmDisplay.getAnswer();
 			
 			int numSpaces = ti.length() - bi.length();
 			char[] chars = new char[numSpaces];

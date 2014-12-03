@@ -108,7 +108,7 @@ public class Quiz implements Serializable{
 	 * @param i
 	 * @return
 	 */
-	public double getQuestionPoints(int i) {
+	public double getQuestionScore(int i) {
 		if (i >= 0 && i < questions.size()) {
 			Question q = questions.get(i);
 			return q.getPercentage()*q.getWeight();
@@ -116,7 +116,7 @@ public class Quiz implements Serializable{
 		return 0;
 	}
 	
-	public double getQuizPoints() {
+	public double getQuizScore() {
 		double total = 0;
 		for (int i = 0; i < questions.size(); i++) {
 			Question q = questions.get(i);
@@ -126,7 +126,7 @@ public class Quiz implements Serializable{
 	}
 	
 	public double getQuizPercentage() {
-		return getQuizPoints()/getPointsPossible();
+		return getQuizScore()/getPointsPossible();
 	}
 	
 	public String getName() {
