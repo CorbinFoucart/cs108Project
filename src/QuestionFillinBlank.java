@@ -49,7 +49,10 @@ public class QuestionFillinBlank implements Question, Serializable {
 	}
 
 	public String getQuestion() {
-		return (question_part1 + "_" + question_part2);
+		String result = question_part1;
+		result += "_";
+		result += question_part2;
+		return result;
 	}
 	
 	public String getQuestionPart1() {
@@ -68,6 +71,14 @@ public class QuestionFillinBlank implements Question, Serializable {
 	
 	public void clearAcceptedAnswers() {
 		acceptedAnswers = new ArrayList<Answer>();
+	}
+	
+	public String getCorrectAnswer() {
+		if (acceptedAnswers.size() >= 1) {
+			Answer ans = acceptedAnswers.get(0);
+			return ans.toString();
+		}
+		return null;
 	}
 	
 	public double getPercentage() {

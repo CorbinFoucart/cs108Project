@@ -51,6 +51,11 @@ public class Admin extends User {
 		return db.totalNumberOfQuizzes(); 
 	}
 	
+
+	public int getNumQuizzesTaken() {
+		return db.getNumberQuizzesTaken();
+	}
+	
 	
 	/**
 	 * Returns the number of site users

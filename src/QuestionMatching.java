@@ -96,6 +96,14 @@ public class QuestionMatching implements Question, Serializable {
 		return userAnswers;
 	}
 	
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> correctAnswers = new ArrayList<String>();
+		for (int i = 0; i < matchings.size(); i++) {
+			correctAnswers.add(matchings.get(i).getRightOption());
+		}
+		return correctAnswers;
+	}
+	
 	
 	public double getPercentage() {
 		double total = 0;

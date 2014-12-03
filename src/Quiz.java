@@ -172,6 +172,7 @@ public class Quiz implements Serializable{
 	public String getTagsString() {
 		String str = "";
 		for (int i = 0; i < tags.size(); i++) {
+			str += "/";
 			str += tags.get(i);
 			str += "/";
 		}
