@@ -265,7 +265,7 @@ public class DatabasePipeline {
 			stmt.executeUpdate("DELETE FROM question_table WHERE quiz_id=\"" + quiz_id + "\"");
 			stmt.executeUpdate("DELETE FROM challenge_table WHERE quiz_id=\"" + quiz_id + "\"");
 			stmt.executeUpdate("DELETE FROM activity_table WHERE relevant_id=\"" + quiz_id + "\" " +
-					"AND (type=\"" + Activity.QUIZ_TAKEN + "\" OR type=\"" + 
+					"AND (activity_type=\"" + Activity.QUIZ_TAKEN + "\" OR activity_type=\"" + 
 					Activity.QUIZ_CREATED + "\")");
 			stmt.executeUpdate("DELETE FROM review_table WHERE quiz_id=\"" + quiz_id + "\"");
 			stmt.executeUpdate("DELETE FROM quiz_rating_table WHERE quiz_id=\"" + quiz_id + "\"");
@@ -286,7 +286,7 @@ public class DatabasePipeline {
 			stmt.executeUpdate("DELETE FROM review_table WHERE quiz_id=\"" + quiz_id + "\"");
 			stmt.executeUpdate("DELETE FROM quiz_rating_table WHERE quiz_id=\"" + quiz_id + "\"");
 			stmt.executeUpdate("DELETE FROM activity_table WHERE relevant_id=\"" + quiz_id + "\" " +
-					"AND (type=\"" + Activity.QUIZ_TAKEN + "\" OR type=\"" + 
+					"AND (activity_type=\"" + Activity.QUIZ_TAKEN + "\" OR activity_type=\"" + 
 					Activity.QUIZ_CREATED + "\")");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1838,8 +1838,9 @@ public class DatabasePipeline {
 	// clears the quiz database and resets the tables
 	public void clearDatabase() {
 		// drop existing tables
-		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, category_table,"
-		+ "activity_table, performance_table, quiz_table, question_table, achievement_table, questions_table, challenge_table;	";
+		String dropTables = "DROP TABLE IF EXISTS user_table, friends_table, message_table, category_table, quiz_rating_table, "
+		+ "activity_table, performance_table, quiz_table, question_table, achievement_table, questions_table, challenge_table, " 
+		+ "review_table;";
 		
 		String AddQuizTables1 = "CREATE TABLE user_table (" +
 				" username CHAR(64)," +
@@ -1937,7 +1938,7 @@ public class DatabasePipeline {
 		String AddQuizTables12 = "CREATE TABLE review_table (" +
 								 " quiz_id CHAR(64), " +
 								 " username CHAR(64), " +
-								 " review_text VARCHAR(1000);";
+								 " review_text VARCHAR(1000));";
 		
 		try {
 			stmt.executeUpdate(dropTables);
