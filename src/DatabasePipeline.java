@@ -1847,6 +1847,10 @@ public class DatabasePipeline {
 		return challenges;
 	}
 	
+	public void removeChallengeFromDB(String challenge_id) {
+		
+	}
+	
 	// --------------------------------------- rating system ---------------------------------------------- //
 	
 	/*
@@ -1934,6 +1938,27 @@ public class DatabasePipeline {
 		return SD;
 		
 	}
+	
+	// returns an integer array representing the frequency table of
+	public int[] getQuizFrequencyTable(String quiz_id) {
+		int[] freqTable = new int[21];
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE"
+												+ "quiz_id=\"" + quiz_id + "\";");
+			while (rs.next()) {
+				double score = rs.getDouble("score");
+				int bucketIndex = (int) score * (N_BUCKET_INDICES - 1);
+				freqTable[bucketIndex]++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return freqTable;
+		
+	}
+	
+	public static final int N_BUCKET_INDICES = 21;
 	
 	
 		

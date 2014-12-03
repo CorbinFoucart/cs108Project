@@ -351,13 +351,13 @@ public class DatabasePipelineMethodTest {
 		badq1.addAcceptedAnswer("Fancy Feast");
 		badq1.addAcceptedAnswer("Meow Mix");
 		badq1.addAcceptedAnswer("fancy feast");
-		quiz1.addQuestion(badq2);
+		quiz2.addQuestion(badq2);
 		
 		QuestionResponse badq5 = new QuestionResponse("Who was the most famous cat?");
 		badq2.addAcceptedAnswer("Garfield");
 		badq2.addAcceptedAnswer("garfield");
 		badq2.addAcceptedAnswer("GARFIELD");
-		quiz1.addQuestion(badq5);
+		quiz2.addQuestion(badq5);
 		
 		pipeline.addQuizToDB(ohNoBadQuiz2);
 		
