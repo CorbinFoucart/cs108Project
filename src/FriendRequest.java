@@ -7,6 +7,6 @@ public class FriendRequest extends Message{
 	 * to the database; inherits the message ctor.
 	 */
 	public FriendRequest(String to, String from) {
-		super(to, from, null, null, REQUEST);
+		super(to, from, null, REQUEST);
 	}
 }
