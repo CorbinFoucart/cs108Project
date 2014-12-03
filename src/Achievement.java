@@ -31,6 +31,8 @@ public class Achievement {
 	public static final String DEAD_EYE = "dead_eye";
 	public static final String BLACK_KNIGHT = "black_knight";
 	public static final String WHITE_KNIGHT = "white_knight";
+	
+	// Relevant numbers for achievements
 	public static final String QUIZ_MACHINE = "quiz_machine";
 	public static final String I_AM_THE_GREATEST = "i_am_the_greatest";
 	public static final String PRACTICE_MAKES_PERFECT = "practice_makes_perfect";
@@ -51,13 +53,14 @@ public class Achievement {
 	public static final int DEAD_EYE_NUM = 50;
 	public static final int BLACK_KNIGHT_NUM = 20;
 	public static final int WHITE_KNIGHT_NUM = 20;
+
 	public static final int QUIZ_MACHINE_NUM = 10;
 	public static final double BEAT_THE_MONKEY_NUM = 0.5;
 	public static final double BEAT_THE_RAVEN_NUM = 0.75;
 	public static final double BEAT_THE_ELEPHANT_NUM = 0.9;
 	public static final int NUM_THRESHOLD_BEAT_THE = 5;
 	
-	
+       
 	/**
 	 * Creates a new Achievement for the given user, of the 
 	 * specified type.  Auto-generates an ID and date.
