@@ -1485,7 +1485,7 @@ public class DatabasePipeline {
 	 */
 	public boolean isAlreadyAchieved(String username, String achievement_type) {
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * WHERE achievement_type=\"" + 
+			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE achievement_type=\"" + 
 					achievement_type + "\"");
 			if (rs.next()) return true;
 		} catch (SQLException e) {
@@ -1847,7 +1847,7 @@ public class DatabasePipeline {
 		return challenges;
 	}
 	
-	// ------ rating system -------- //
+	// --------------------------------------- rating system ---------------------------------------------- //
 	
 	/*
 	 * Changes the rating of a particular user without needing to deal
@@ -1860,6 +1860,82 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 	}
+	
+	// --------------------------------------- Quiz Statistics ---------------------------------------------- //
+	
+	// TODO 
+	// get performance by id --- DONE
+	// get quiz average
+	// get quiz standard deviation
+	// get quiz buckets 
+	
+	public Performance getPerformanceByID(String performanceID) {
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE"
+					+ "performance_id=\"" + performanceID + "\";");
+			if (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
+				return perf;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	 // Returns the overall average score for a quiz
+	public double getQuizOverallMean(String quiz_id) {
+		double mean = 0;
+		double total = 0;
+		int N = 0;
+		
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE"
+												+ "quiz_id=\"" + quiz_id + "\";");
+			while (rs.next()) {
+				total += rs.getDouble("score");
+				N++;
+			}
+			if  (N != 0) mean  = total / N;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return mean;
+	}
+	
+	// Returns the overall standard deviation for a quiz
+	public double getQuizOverallStandardDeviation(String quiz_id) {
+		double SD = 0;
+		double x_bar = getQuizOverallMean(quiz_id);
+		double total = 0;
+		int N = 0;
+		
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE"
+												+ "quiz_id=\"" + quiz_id + "\";");
+			while (rs.next()) {
+				double x_i = rs.getDouble("score");
+				total += (x_i - x_bar)*(x_i - x_bar);
+				N++;
+			}
+			if (N != 0) SD = Math.sqrt(total / N);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return SD;
+		
+	}
+	
+	
 		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
