@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 
 /**
  * Class that does database interaction.
- * @author rebeccadeubler
  *
  */
 
@@ -501,10 +500,14 @@ public class DatabasePipeline {
 			try {
 				ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE message_id =\"" + message_id + "\"");
 				if (rs.next()) {
-					Message retrieved = new Message(rs.getString("recipient"), rs.getString("sender"), 
-							rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-							rs.getBoolean("was_read"), rs.getString("message_type"),
-							rs.getString("message_id"));
+					Message retrieved = new Message(rs.getString("recipient"),
+													rs.getString("sender"),
+													rs.getString("message"),
+													rs.getString("date_string"),
+													rs.getLong("date_long"),
+													rs.getBoolean("was_read"),
+													rs.getString("message_type"),
+													rs.getString("message_id"));
 					return retrieved;
 				}
 			} catch (Exception e) {
@@ -512,33 +515,8 @@ public class DatabasePipeline {
 			}
 			
 			return null;
-		}
+		}	
 	
-	//-----------------------------------------------------   UNTESTED  ------------------------------------------------ //
-	
-		
-		// stuff for front end to mull over; things we need
-		// TODO inform front end that usernames are case insensitive
-		// TODO Challenges can be made between non existent users; need fix?
-		// TODO case where both have friended each other, and one accepts, need request remove
-		// TODO general message check where checks if both users exist before message is sent
-		// TODO do friend requests need a read boolean?
-		// TODO user can only send an announcement if admin
-		// TODO add announcement method 
-		// TODO ask front end to never pass in empty string for username; password.
-		// TODO inform front end of name change quiz
-		// TODO CHECK USER ASK FRONT END
-		
-		
-		// write 
-		// TODO ifUserExists boolean
-
-		
-		
-		// do we need more specificity here? Assumptions
-		
-		
-
 
 	/**
 	 * Adds an Achievement to the database
@@ -572,7 +550,7 @@ public class DatabasePipeline {
 	/**
 	 * Returns a list of all the usernames of the 
 	 * friends of the specified user.
-	 * @param user username of user
+	 * @param user username of useruser
 	 * @return list of friends' usernames
 	 */
 	public ArrayList<String> getFriends(String user) {
@@ -600,10 +578,14 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
 											 + user + "\" AND message_type=\"note\" ORDER BY date_long DESC");
 			while (rs.next()) {
-				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
-						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("message_type"),
-						rs.getString("message_id"));
+				Message msg = new Message(rs.getString("recipient"),
+										  rs.getString("sender"),
+										  rs.getString("message"),
+										  rs.getString("date_string"),
+										  rs.getLong("date_long"),
+										  rs.getBoolean("was_read"),
+										  rs.getString("message_type"),
+										  rs.getString("message_id"));
 				messages.add(msg);
 			}
 		} catch (SQLException e) {
@@ -658,10 +640,14 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\""
 											+ user + "\" AND message_type=\"friend_request\" ORDER BY date_long DESC");
 			while (rs.next()) {
-				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
-						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("message_type"),
-						rs.getString("message_id"));
+				Message msg = new Message(rs.getString("recipient"),
+										  rs.getString("sender"),
+										  rs.getString("message"),
+										  rs.getString("date_string"),
+										  rs.getLong("date_long"),
+										  rs.getBoolean("was_read"),
+										  rs.getString("message_type"),
+										  rs.getString("message_id"));
 				requests.add(msg);
 			}
 		} catch (SQLException e) {
@@ -682,10 +668,14 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
 											 + user + "\" AND message_type =\"announcement\" ORDER BY date_long DESC");
 			while (rs.next()) {
-				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
-						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
-						rs.getBoolean("was_read"), rs.getString("message_type"),
-						rs.getString("message_id"));
+				Message announcement = new Message(rs.getString("recipient"),
+												   rs.getString("sender"),
+												   rs.getString("message"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getBoolean("was_read"),
+												   rs.getString("message_type"),
+												   rs.getString("message_id"));
 				announcements.add(announcement);
 			}
 		} catch (SQLException e) {
@@ -706,11 +696,17 @@ public class DatabasePipeline {
 		ArrayList<Message> announcements = new ArrayList<Message>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
-											 + user + "\" AND message_type =\"announcement\" AND was_read=0 ORDER BY date_long DESC LIMIT " + numLimit);
+											 + user + "\" AND message_type =\"announcement\" AND was_read=0 ORDER BY" +
+					                         "date_long DESC LIMIT " + numLimit);
 			while (rs.next()) {
-				Message announcement = new Message(rs.getString("recipient"), rs.getString("sender"),
-						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"),
-						rs.getBoolean("was_read"), rs.getString("message_type"), rs.getString("message_id"));
+				Message announcement = new Message(rs.getString("recipient"), 
+												   rs.getString("sender"),
+												   rs.getString("message"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getBoolean("was_read"),
+												   rs.getString("message_type"),
+												   rs.getString("message_id"));
 				announcements.add(announcement);
 			}
 		} catch (SQLException e) {
@@ -739,7 +735,7 @@ public class DatabasePipeline {
 									 rs.getLong("rating"));
 				} else {
 					user = new User(rs.getString("username"),
-									rs.getString("password"),
+									rs.getString("password"),		
 									rs.getInt("privacy"),
 									rs.getLong("rating"));
 				}
@@ -747,7 +743,7 @@ public class DatabasePipeline {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return user;
+		return user;		
 	}
 	
 
@@ -940,10 +936,14 @@ public class DatabasePipeline {
 												"\" AND message_type=\"" + type + 
 												"\" AND was_read=0 ORDER BY date_long DESC LIMIT " + num_recent);
 			while (rs.next()) {
-				Message msg = new Message(rs.getString("recipient"), rs.getString("sender"), 
-						rs.getString("message"), rs.getString("date_string"), rs.getLong("date_long"), 
-						rs.getBoolean("was_read"), rs.getString("message_type"),
-						rs.getString("message_id"));
+				Message msg = new Message(rs.getString("recipient"),
+										  rs.getString("sender"),
+										  rs.getString("message"),
+										  rs.getString("date_string"),
+										  rs.getLong("date_long"),
+										  rs.getBoolean("was_read"),
+										  rs.getString("message_type"),
+										  rs.getString("message_id"));
 				messages.add(msg);
 			}
 		} catch (SQLException e) {
@@ -978,7 +978,7 @@ public class DatabasePipeline {
 	
 	/**
 	 * Returns a list of performances (on all quizzes)
-	 *  for the specified user sorted by date
+	 *  for the specified user
 	 * @param user username of user
 	 * @return list of performances for user
 	 */
@@ -988,59 +988,14 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
 					+ user + "\" ORDER BY date_long DESC");
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
-				retrieved.add(perf);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retrieved;
-	}
-	
-	
-	
-	/**
-	 * Returns a list of performances (on all quizzes)
-	 *  for the specified user sorted by score
-	 * @param user username of user
-	 * @return list of performances for user
-	 */
-	public ArrayList<Performance> getPerformancesSortByScore(String user) {
-		ArrayList<Performance> retrieved = new ArrayList<Performance>();
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
-					+ user + "\" ORDER BY score DESC");
-			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
-				retrieved.add(perf);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retrieved;
-	}
-	
-	
-	
-	/**
-	 * Returns a list of performances (on all quizzes)
-	 *  for the specified user sorted by time taken for quiz
-	 * @param user username of user
-	 * @return list of performances for user
-	 */
-	public ArrayList<Performance> getPerformancesSortByTimeTaken(String user) {
-		ArrayList<Performance> retrieved = new ArrayList<Performance>();
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
-					+ user + "\" ORDER BY time_taken ASC");
-			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1063,9 +1018,14 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
 							+ user + "\" ORDER BY date_long DESC LIMIT " + num_recent);
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1089,9 +1049,14 @@ public class DatabasePipeline {
 												+ quiz_id + "\" AND taken_by_user=\"" + user + 
 												"\" ORDER BY date_long DESC");
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1099,60 +1064,6 @@ public class DatabasePipeline {
 		}
 		return retrieved;
 	}
-	
-	
-	
-	/**
-	 * Returns a list of performances for a specified user
-	 * on a specified quiz ordered by score
-	 * @param user username of user
-	 * @param quiz_id id of quiz
-	 * @return list of performances on quiz for user
-	 */
-	public ArrayList<Performance> getQuizPerformancesSortByScore(String user, String quiz_id) {
-		ArrayList<Performance> retrieved = new ArrayList<Performance>();
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
-												+ quiz_id + "\" AND taken_by_user=\"" + user + 
-												"\" ORDER BY score DESC");
-			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
-				retrieved.add(perf);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retrieved;
-	}
-	
-	
-	/**
-	 * Returns a list of performances for a specified user
-	 * on a specified quiz sorted by time taken
-	 * @param user username of user
-	 * @param quiz_id id of quiz
-	 * @return list of performances on quiz for user
-	 */
-	public ArrayList<Performance> getQuizPerformancesSortByTimeTaken(String user, String quiz_id) {
-		ArrayList<Performance> retrieved = new ArrayList<Performance>();
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
-												+ quiz_id + "\" AND taken_by_user=\"" + user + 
-												"\" ORDER BY time_taken ASC");
-			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
-				retrieved.add(perf);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retrieved;
-	}
-	
 	
 	
 	/**
@@ -1174,18 +1085,11 @@ public class DatabasePipeline {
 	}
 	
 	
-	
-	/**
-	 * Returns a list of all the quiz ids of quizzes in a 
-	 * given category
-	 * @param category name of category
-	 * @return list of quiz ids for quizzes in this category
-	 */
 	public ArrayList<String> getQuizzesInCategory(String category) {
 		ArrayList<String> quizzes = new ArrayList<String>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table WHERE " +
-					"category=\"" + category + "\" ORDER BY quiz_name");
+										"category=\"" + category + "\" ORDER BY quiz_name");
 			while (rs.next()) {
 				quizzes.add(rs.getString("quiz_id"));
 			}
@@ -1196,16 +1100,11 @@ public class DatabasePipeline {
 	}
 	
 	
-	/**
-	 * Returns a list of quiz ids for quizzes with the specified tag
-	 * @param tag name of tag
-	 * @return list of quiz ids for quizzes with tag
-	 */
 	public ArrayList<String> getQuizzesWithTag(String tag) {
 		ArrayList<String> quizzes = new ArrayList<String>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table WHERE " +
-					"tag_string LIKE \"%/" + tag + "/%\" ORDER BY quiz_name");
+								"tag_string LIKE \"%/" + tag + "/%\" ORDER BY quiz_name");
 			while (rs.next()) {
 				quizzes.add(rs.getString("quiz_id"));
 			}
@@ -1279,7 +1178,8 @@ public class DatabasePipeline {
 	public ArrayList<String> getNOwnRecentlyCreatedQuizzes(String username, int num_recent) {
 		ArrayList<String> recent = new ArrayList<String>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table WHERE creator=\"" + username + "\" ORDER BY date_long DESC LIMIT " + num_recent);
+			ResultSet rs = stmt.executeQuery("SELECT quiz_id FROM quiz_table WHERE creator=\"" 
+								+ username + "\" ORDER BY date_long DESC LIMIT " + num_recent);
 			while (rs.next()) {
 				String id = rs.getString("quiz_id");
 				recent.add(id);
@@ -1325,9 +1225,14 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
 												+ quiz_id + "\" ORDER BY date_long DESC LIMIT " + num_recent);
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1350,9 +1255,14 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + username + 
 					"\" ORDER BY date_long DESC LIMIT " + num_recent);
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1374,8 +1284,12 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE username=\"" + username + 
 					"\" AND announced=0 ORDER BY achievement_type");
 			while (rs.next()) {
-				Achievement ach = new Achievement(rs.getString("username"), rs.getString("achievement_type"), 
-						rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("announced"), rs.getString("achievement_id"));
+				Achievement ach = new Achievement(rs.getString("username"),
+												  rs.getString("achievement_type"),
+												  rs.getString("date_string"),
+												  rs.getLong("date_long"),
+												  rs.getBoolean("announced"),
+												  rs.getString("achievement_id"));
 				retrieved.add(ach);
 			}
 		} catch (SQLException e) {
@@ -1407,8 +1321,12 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM achievement_table WHERE username=\"" + username + 
 					"\" ORDER BY achievement_type");
 			while (rs.next()) {
-				Achievement ach = new Achievement(rs.getString("username"), rs.getString("achievement_type"), 
-						rs.getString("date_string"), rs.getLong("date_long"), rs.getBoolean("announced"), rs.getString("achievement_id"));
+				Achievement ach = new Achievement(rs.getString("username"),
+												  rs.getString("achievement_type"),
+												  rs.getString("date_string"),
+												  rs.getLong("date_long"),
+												  rs.getBoolean("announced"),
+												  rs.getString("achievement_id"));
 				retrieved.add(ach);
 			}
 		} catch (SQLException e) {
@@ -1452,9 +1370,7 @@ public class DatabasePipeline {
 	// QUIZ MACHINE -Take 10 quizzes
 	// I am the greatest - highest score on a quiz
 	
-	/**
-	 * Checks for all Achievements Beat The _ variety.
-	 */
+	
 	private void checkForBeatTheAchievements(String username) {
 		checkBeatTheAchievement(username, Achievement.BEAT_THE_MONKEY, Achievement.BEAT_THE_MONKEY_NUM);
 		checkBeatTheAchievement(username, Achievement.BEAT_THE_RAVEN, Achievement.BEAT_THE_RAVEN_NUM);
@@ -1464,63 +1380,29 @@ public class DatabasePipeline {
 		// helper method to ^ that checks for specific cases of "Beat the..." achievements
 		private void checkBeatTheAchievement(String username, String achievement_type, double benchMark) {
 			if (getNumberQuizzesTaken(username) > Achievement.NUM_THRESHOLD_BEAT_THE &&
-				getUserAverage(username) > benchMark) {
+				getUserQuizAverage(username) > benchMark) {
 				Achievement ach = new Achievement(username, achievement_type);
 				addAchievementToDB(ach);
 			}
 		}
 		
-		
-	/**
-	 * Returns the average quiz score for a user
-	 * @param username user's username
-	 * @return avg on all quizzes by user
-	 */
-	private double getUserAverage(String username) {
-		double average = 0;
-		double total = 0;
-		int numQuizzes = 0;			
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + username + "\"");
-			while (rs.next()) {
-				double quizScore = rs.getDouble("score");
-				total += quizScore;
-				numQuizzes++;
+		private double getUserQuizAverage(String username) {
+			double average = 0;
+			double total = 0;
+			int numQuizzes = 0;
+			try {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" + username + "\"");
+				while (rs.next()) {
+					double quizScore = rs.getDouble("score");
+					total += quizScore;
+					numQuizzes++;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			average = total / numQuizzes;
+			return average;
 		}
-		average = total / numQuizzes;
-		return average;
-	}
-	
-	
-	
-	/**
-	 * Returns the average quiz score for a user
-	 * for specific quiz
-	 * @param username user's username
-	 * @return avg on a quiz by user
-	 */
-	private double getUserQuizAverage(String username, String quiz_id) {
-		double average = 0;
-		double total = 0;
-		int numPerformances = 0;			
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
-					+ username + "\" AND quiz_id=\"" + quiz_id + "\"");
-			while (rs.next()) {
-				double quizScore = rs.getDouble("score");
-				total += quizScore;
-				numPerformances++;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		average = total / numPerformances;
-		return average;
-	}
-	
 	
 	/**
 	 * Checks for achievements associated with creating quizzes
@@ -1613,10 +1495,7 @@ public class DatabasePipeline {
 	}
 	
 	
-	/**
-	 * Adds an activity to the database
-	 * @param act activity to be added
-	 */
+	
 	public void addActivity(Activity act) {
 		try {
 			PreparedStatement pstmt = 
@@ -1633,13 +1512,6 @@ public class DatabasePipeline {
 		}
 	}
 	
-	
-	/**
-	 * Returns a list of recent friend activity ordered by date
-	 * @param username username of user
-	 * @param num_recent number of activities to return
-	 * @return list of recent friend activity
-	 */
 	public ArrayList<Activity> getRecentFriendActivity(String username, int num_recent) {
 		ArrayList<Activity> recent = new ArrayList<Activity>();
 		try {
@@ -1652,9 +1524,11 @@ public class DatabasePipeline {
 			input_str += " ORDER BY date_long DESC";
 			ResultSet rs = stmt.executeQuery(input_str);
 			while (rs.next()) {
-				Activity act = new Activity(rs.getString("username"), 
-						rs.getString("activity_type"), rs.getString("relevant_id"),
-						rs.getString("date_string"), rs.getLong("date_long"));
+				Activity act = new Activity(rs.getString("username"),
+											rs.getString("activity_type"),
+											rs.getString("relevant_id"),
+											rs.getString("date_string"),
+											rs.getLong("date_long"));
 				recent.add(act);
 			}
 		} catch (SQLException e) {
@@ -1664,11 +1538,6 @@ public class DatabasePipeline {
 	}
 	
 	
-	/**
-	 * Returns a description for specified quiz
-	 * @param quiz_id id of quiz
-	 * @return quiz description
-	 */
 	public String getQuizDescription(String quiz_id) {
 		String description = "";
 		try {
@@ -1680,11 +1549,6 @@ public class DatabasePipeline {
 		return description;
 	}
 	
-	/**
-	 * Returns the username of the creator of the specified quiz
-	 * @param quiz_id
-	 * @return
-	 */
 	public String getCreator(String quiz_id) {
 		String creator = "";
 		try {
@@ -1705,9 +1569,14 @@ public class DatabasePipeline {
 					"x.max_score WHERE quiz_id=\"" + quiz_id + "\" ORDER BY score DESC, time_taken ASC LIMIT " + 
 					num_performers);
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}
 		} catch (SQLException e) {
@@ -1716,14 +1585,6 @@ public class DatabasePipeline {
 		return retrieved;
 	}
 	
-	
-	/**
-	 * Returns a list of today's highest performances for a specific quiz
-	 * without repetition of users
-	 * @param quiz_id quiz's id
-	 * @param num_performers number of users
-	 * @return list of today's highest performances for specific quiz
-	 */
 	public ArrayList<Performance> getTodaysHighestUniquePerformances(String quiz_id,  int num_performers) {
 		ArrayList<Performance> retrieved = new ArrayList<Performance>();
 		Date dateObj = new Date();
@@ -1737,9 +1598,14 @@ public class DatabasePipeline {
 					"x.max_score WHERE quiz_id=\"" + quiz_id + "\" AND date_long >=" + this_date_long + 
 					" ORDER BY score DESC, time_taken ASC LIMIT " + num_performers);
 			while (rs.next()) {
-				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
-						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
-						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				Performance perf = new Performance(rs.getString("quiz_name"),
+												   rs.getString("quiz_id"),
+												   rs.getString("taken_by_user"),
+												   rs.getDouble("score"),
+												   rs.getString("date_string"),
+												   rs.getLong("date_long"),
+												   rs.getString("performance_id"),
+												   rs.getLong("time_taken"));
 				retrieved.add(perf);
 			}		
 		} catch (SQLException e) {
@@ -1749,11 +1615,6 @@ public class DatabasePipeline {
 	}
 
 	
-	/**
-	 * Returns the number of times the specific quiz was taken
-	 * @param quiz_id quiz id
-	 * @return number of times quiz has been taken
-	 */
 	public int getNumTimesQuizTaken(String quiz_id) {
 		int num = 0;
 		try {
@@ -1765,12 +1626,6 @@ public class DatabasePipeline {
 		return num;
 	}
 	
-	/**
-	 * Returns the quiz average across all users for
-	 * a specific quiz
-	 * @param quiz_id quiz id
-	 * @return average on quiz
-	 */
 	public double getQuizAverage(String quiz_id) {
 		double total = 0;
 		int num_taken = 0;
@@ -1794,7 +1649,7 @@ public class DatabasePipeline {
 	public void addQuizReview(QuizReview rev) {
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO review_table VALUES(?, ?, ?);");
+			con.prepareStatement("INSERT INTO review_table VALUES(?, ?, ?);");
 			pstmt.setString(1, rev.getQuizID());
 			pstmt.setString(2, rev.getUsername());
 			pstmt.setString(3, rev.getReviewText());
@@ -1817,7 +1672,9 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM review_table WHERE quiz_id=\"" 
 					+ quiz_id + "\"");
 			while (rs.next()) {
-				QuizReview rev = new QuizReview(rs.getString("quiz_id"), rs.getString("username"), rs.getString("review_text"));
+				QuizReview rev = new QuizReview(rs.getString("quiz_id"),
+											    rs.getString("username"),
+											    rs.getString("review_text"));
 				reviews.add(rev);
 			}
 		} catch (SQLException e) {
@@ -1838,8 +1695,9 @@ public class DatabasePipeline {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM review_table WHERE username=\"" + username + "\"");
 			while (rs.next()) {
-				QuizReview rev = new QuizReview(rs.getString("quiz_id"), 
-						rs.getString("username"), rs.getString("review_text"));
+				QuizReview rev = new QuizReview(rs.getString("quiz_id"),
+												rs.getString("username"),
+												rs.getString("review_text"));
 				reviews.add(rev);
 			}
 		} catch (SQLException e) {
@@ -1879,7 +1737,9 @@ public class DatabasePipeline {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_rating_table WHERE quiz_id=\"" 
 					+ quiz_id + "\"");
 			while (rs.next()) {
-				QuizRating rat = new QuizRating(rs.getString("quiz_id"), rs.getString("username"), rs.getInt("rating_val"));
+				QuizRating rat = new QuizRating(rs.getString("quiz_id"),
+												rs.getString("username"),
+												rs.getInt("rating_val"));
 				ratings.add(rat);
 			}
 		} catch (SQLException e) {
@@ -1900,7 +1760,9 @@ public class DatabasePipeline {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz_rating_table WHERE username=\"" + username + "\"");
 			while (rs.next()) {
-				QuizRating rat= new QuizRating(rs.getString("quiz_id"), rs.getString("username"), rs.getInt("rating_val"));
+				QuizRating rat= new QuizRating(rs.getString("quiz_id"),
+											   rs.getString("username"),
+											   rs.getInt("rating_val"));
 				ratings.add(rat);
 			}
 		} catch (SQLException e) {
@@ -1911,9 +1773,6 @@ public class DatabasePipeline {
 	
 	// ----------- challenge methods ---------- //
 	
-	/**
-	 * Returns a challenge object given its id
-	 */
 	public Challenge getChallenge(String challenge_id) {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM challenge_table WHERE challenge_id=\"" + challenge_id + "\"");
@@ -1938,11 +1797,6 @@ public class DatabasePipeline {
 		return null;
 	}	
 	
-	
-	/**
-	 * Adds a challenge to the database
-	 * @param ch challenge to be added
-	 */
 	public void addChallengeToDB(Challenge ch) {
 		try {
 			PreparedStatement pstmt = 
@@ -1992,12 +1846,23 @@ public class DatabasePipeline {
 		}
 		return challenges;
 	}
+	
+	// ------ rating system -------- //
+	
+	/*
+	 * Changes the rating of a particular user without needing to deal
+	 * with user objects. 
+	 */
+	public void changeUserRating(String username) {
+		try {
+			stmt.executeUpdate("UPDATE user_table SET user_rating WHERE username=\"" + username + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
-	/**
-	 * Turns an object into a Blob object
-	 */
 	private Blob blobify(Object obj) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -2012,12 +1877,6 @@ public class DatabasePipeline {
 		}
 	}
 	
-	/**
-	 * Forms an object from a byte stream
-	 * @param rs
-	 * @param index
-	 * @return
-	 */
 	public Object deBlob(ResultSet rs, int index) {
 		try {
 			if (rs.next()) {
@@ -2051,12 +1910,12 @@ public class DatabasePipeline {
 		+ "review_table;";
 		
 		String AddQuizTables1 = "CREATE TABLE user_table (" +
-				" username CHAR(64)," +
-				" password CHAR(64), " +
-			    " privacy INT," +  
-			    " admin_status BOOLEAN," +
-			    " rating BIGINT" +
-			    ");";
+								" username CHAR(64)," +
+								" password CHAR(64), " +
+								" privacy INT," +  
+								" admin_status BOOLEAN," +
+								" rating BIGINT" +
+								");";
 			    
 		String AddQuizTables2 = "CREATE TABLE friends_table (" +
 							       " friend_one CHAR(64)," +
@@ -2205,25 +2064,14 @@ public class DatabasePipeline {
 			}
 		}
 		
-		/**
-		 * Returns the statement
-		 * @return statement
-		 */
 		public Statement getStatement() {
 			return stmt;
 		}
 		
-		/**
-		 * Returns the connection
-		 * @return connection
-		 */
 		public Connection getConnection() {
 			return con;
 		}
 		
-		/**
-		 * Closes the connection
-		 */
 		public void closeConnection() {
 			try {
 				con.close();
