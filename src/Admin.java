@@ -21,15 +21,9 @@ public class Admin extends User {
 		admin = true; 
 	}
 	
-	/**
-	 * Creates an Admin object from info in the 
-	 * database
-	 * @param username user's username
-	 * @param hashedPassword user's hashed password
-	 * @param privacySetting user's privacy setting
-	 */
-	public Admin(String username, String hashedPassword, int privacySetting){
-		super(username, hashedPassword, privacySetting);
+	// To reconstruct from the database
+	public Admin(String username, String hashedPassword, int privacySetting, long rating){
+		super(username, hashedPassword, privacySetting, rating);
 		admin = true; 
 	}
 	

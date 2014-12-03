@@ -52,11 +52,12 @@ public class DatabasePipeline {
 	public void addUser(User user) {
 		try {
 			PreparedStatement pstmt = 
-				con.prepareStatement("INSERT INTO user_table VALUES(?, ?, ?, ?);");
+				con.prepareStatement("INSERT INTO user_table VALUES(?, ?, ?, ?, ?);");
 			pstmt.setString(1, user.getUsername());
 			pstmt.setString(2, user.getPassword());
 			pstmt.setInt(3, user.getPrivacy());
 			pstmt.setBoolean(4, user.isAdmin());
+			pstmt.setLong(5, user.getRating());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -732,9 +733,15 @@ public class DatabasePipeline {
 			if (rs.next()) {
 				boolean type = rs.getBoolean("admin_status");
 				if (type) {
-					user = new Admin(rs.getString("username"), rs.getString("password"), rs.getInt("privacy"));
+					user = new Admin(rs.getString("username"),
+									 rs.getString("password"),
+									 rs.getInt("privacy"),
+									 rs.getLong("rating"));
 				} else {
-					user = new User(rs.getString("username"), rs.getString("password"), rs.getInt("privacy"));
+					user = new User(rs.getString("username"),
+									rs.getString("password"),
+									rs.getInt("privacy"),
+									rs.getLong("rating"));
 				}
 			}
 		} catch (SQLException e) {
@@ -1327,7 +1334,6 @@ public class DatabasePipeline {
 	
 	//TODO
 	// QUIZ MACHINE -Take 10 quizzes
-	// beat the...
 	// I am the greatest - highest score on a quiz
 	
 	
@@ -1759,6 +1765,34 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	 * Returns an array list of all unannounced challenges
+	 */
+	public ArrayList<Challenge> getUnAnnouncedChallenges(String username) {
+		ArrayList<Challenge> challenges = new ArrayList<Challenge>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM challenge_table WHERE recipient=\"" 
+											 + username + "\" AND announced = 0");
+			while (rs.next()) {
+				Challenge ch = new Challenge(rs.getString("issuer"), 
+											 rs.getString("recipient"),
+											 rs.getString("quiz_id"),
+											 rs.getString("message"),
+											 rs.getString("issuer_perf_id"),
+											 rs.getString("recipient_perf_id"),
+											 rs.getString("status"),
+											 rs.getBoolean("announced"),
+											 rs.getString("winner"),
+											 rs.getString("loser"),
+											 rs.getString("challenge_id"));
+				challenges.add(ch);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return challenges;
+	}
 		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
@@ -1811,7 +1845,8 @@ public class DatabasePipeline {
 				" username CHAR(64)," +
 				" password CHAR(64), " +
 			    " privacy INT," +  
-			    " admin_status BOOLEAN" +
+			    " admin_status BOOLEAN," +
+			    " user_rating BIGINT" +
 			    ");";
 			    
 		String AddQuizTables2 = "CREATE TABLE friends_table (" +
