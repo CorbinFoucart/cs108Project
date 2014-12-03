@@ -74,14 +74,14 @@ public class Performance implements Serializable {
 		time_segments.add(time_segment);
 		sumTimeTaken();
 	}
-	
-	public long sumTimeTaken() {
-		time_taken = 0;
-		for (int i = 0; i < time_segments.size(); i++){
-			time_taken += time_segments.get(i);
+		// Helper method to StopTimer()
+		private long sumTimeTaken() {
+			time_taken = 0;
+			for (int i = 0; i < time_segments.size(); i++){
+				time_taken += time_segments.get(i);
+			}
+			return time_taken;
 		}
-		return time_taken;
-	}
 	
 	// ------------------ getters, setters ------------------ //
 	
