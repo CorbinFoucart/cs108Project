@@ -18,7 +18,7 @@ public class Challenge{
 	private String message;
 	private String issuer_perf_id;
 	private String recipient_perf_id;
-	private String status;
+	private int status;
 	private boolean announced;
 	private String winner;
 	private String loser;
@@ -39,7 +39,7 @@ public class Challenge{
 		this.quiz_id = quiz_id;
 		
 		generateID();
-		status = "0";
+		status = 0;
 		announced = false;
 		winner = null;
 		loser = null;
@@ -69,7 +69,7 @@ public class Challenge{
 					 String message,
 					 String issuer_perf_id,
 					 String recipient_perf_id,
-					 String status,
+					 int status,
 					 boolean announced,
 					 String winner,
 					 String loser,
@@ -129,7 +129,7 @@ public class Challenge{
 	 * @param status status of the challenge
 	 */
 	public void setStatus(int status) {
-		this.status = Integer.toString(status);
+		this.status = status;
 	}
 	
 	/**
@@ -212,7 +212,7 @@ public class Challenge{
 	 * Returns status of challenge
 	 * @return int status of challenge
 	 */
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 	
