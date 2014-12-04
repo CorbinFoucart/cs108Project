@@ -138,6 +138,15 @@ public class MultiAnswerQuestion implements Question, Serializable{
 		return userAnswers;
 	}
 	
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> correctAnswers = new ArrayList<String>();
+		for (int i = 0; i < acceptedAnswers.size(); i++) {
+			correctAnswers.add(acceptedAnswers.get(i).toString());
+		}
+		return correctAnswers;
+	}
+	
+	
 	// ---- answer inner array ----- //
 	
 	private class Answer implements Serializable {

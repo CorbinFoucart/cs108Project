@@ -10,11 +10,14 @@ public class QuestionMatching implements Question, Serializable {
 	private String quiz_id;
 	private String id;
 	private ArrayList<String> matchOptions;
+	private ArrayList<Boolean> results;
 	
 	public QuestionMatching(String question) {
 		this.question = question;
 		matchOptions = new ArrayList<String>();
 		matchings = new ArrayList<Matching>();
+		results = new ArrayList<Boolean>();
+		generateID();
 	}
 	
 	public void addMatching(String leftOption, String rightOption) {
@@ -109,9 +112,16 @@ public class QuestionMatching implements Question, Serializable {
 		double total = 0;
 		for (int i = 0; i < matchings.size(); i++) {
 			Matching match = matchings.get(i);
-			if (match.getRightOption().equals(match.getUserMatch())) total++;
+			if (match.getRightOption().equals(match.getUserMatch())) {
+				total++;
+				results.add(true);
+			} else results.add(false);
 		}
 		return total/(matchings.size());
+	}
+	
+	public ArrayList<Boolean> getResults() {
+		return results;
 	}
 	
 	

@@ -76,11 +76,11 @@ public class QuestionMultipleChoice implements Question, Serializable {
 		}
 	}
 	
-	public ArrayList<Boolean> getCorrectAnswers() {
-		ArrayList<Boolean> correctAnswers = new ArrayList<Boolean>();
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> correctAnswers = new ArrayList<String>();
 		for (int i = 0; i < choices.size(); i++) {
 			Choice ch = choices.get(i);
-			correctAnswers.add(ch.correct);
+			if (ch.correct) correctAnswers.add(ch.option);
 		}
 		return correctAnswers;
 	}
@@ -118,10 +118,10 @@ public class QuestionMultipleChoice implements Question, Serializable {
 		return results;
 	}
 	
-	public ArrayList<Boolean> getUserAnswers() {
-		ArrayList<Boolean> userAnswers = new ArrayList<Boolean>();
+	public ArrayList<String> getUserAnswers() {
+		ArrayList<String> userAnswers = new ArrayList<String>();
 		for (int i = 0; i < choices.size(); i++) {
-			userAnswers.add(choices.get(i).userSelection);
+			if (choices.get(i).userSelection) userAnswers.add(choices.get(i).option);
 		}
 		return userAnswers;
 	}

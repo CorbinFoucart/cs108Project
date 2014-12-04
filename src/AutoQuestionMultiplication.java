@@ -115,6 +115,18 @@ public class AutoQuestionMultiplication implements Question{
 		return 0;
 	}
 	
+	public ArrayList<String> getUserAnswers() {
+		ArrayList<String> ans = new ArrayList<String>();
+		ans.add(userAnswer.toString());
+		return ans;
+	}
+	
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> ans = new ArrayList<String>();
+		ans.add(answer.toString());
+		return ans;
+	}
+	
 	
 	// --------------------- Getter, Setter Methods ------------------------ //
 	
