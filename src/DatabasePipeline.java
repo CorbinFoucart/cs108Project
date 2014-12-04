@@ -696,7 +696,7 @@ public class DatabasePipeline {
 		ArrayList<Message> announcements = new ArrayList<Message>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM message_table WHERE recipient=\"" 
-											 + user + "\" AND message_type =\"announcement\" AND was_read=0 ORDER BY " +
+											 + user + "\" AND message_type =\"announcement\" AND was_read=0 ORDER BY" +
 					                         "date_long DESC LIMIT " + numLimit);
 			while (rs.next()) {
 				Message announcement = new Message(rs.getString("recipient"), 
@@ -801,25 +801,6 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 		return setting;
-	}
-	
-	/**
-	 * Returns the user's rating
-	 * @param user username
-	 * @return user's rating
-	 */
-	public int checkRating(String user) {
-		int rating = 0;
-		try {
-			ResultSet rs = stmt.executeQuery("SELECT rating FROM user_table WHERE username=\"" 
-					+ user + "\"");
-			if (rs.next()) {
-				rating = rs.getInt("rating");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return rating;
 	}
 	
 	
@@ -1803,7 +1784,7 @@ public class DatabasePipeline {
 								   rs.getString("message"),
 								   rs.getString("issuer_perf_id"),
 								   rs.getString("recipient_perf_id"),
-								   rs.getString("status"),
+								   rs.getInt("status"),
 								   rs.getBoolean("announced"),
 								   rs.getString("winner"),
 								   rs.getString("loser"),
@@ -1829,7 +1810,7 @@ public class DatabasePipeline {
 											 rs.getString("message"),
 											 rs.getString("issuer_perf_id"),
 											 rs.getString("recipient_perf_id"),
-											 rs.getString("status"),
+											 rs.getInt("status"),
 											 rs.getBoolean("announced"),
 											 rs.getString("winner"),
 											 rs.getString("loser"),
@@ -1852,7 +1833,7 @@ public class DatabasePipeline {
 			pstmt.setString(4, ch.getMessage());
 			pstmt.setString(5, ch.getIssuerPerfID());
 			pstmt.setString(6, ch.getRecipientPerfID());
-			pstmt.setString(7, ch.getStatus());
+			pstmt.setInt(7, ch.getStatus());
 			pstmt.setBoolean(8, ch.getAnnounced());
 			pstmt.setString(9, ch.getWinner());
 			pstmt.setString(10, ch.getLoser());
@@ -1879,7 +1860,7 @@ public class DatabasePipeline {
 											 rs.getString("message"),
 											 rs.getString("issuer_perf_id"),
 											 rs.getString("recipient_perf_id"),
-											 rs.getString("status"),
+											 rs.getInt("status"),
 											 rs.getBoolean("announced"),
 											 rs.getString("winner"),
 											 rs.getString("loser"),
@@ -2170,7 +2151,7 @@ public class DatabasePipeline {
 								 " message VARCHAR(1000)," +
 								 " issuer_perf_id CHAR(64), " +
 								 " recipient_perf_id CHAR(64), " +
-								 " status CHAR(64)," +
+								 " status INT," +
 								 " announced BOOLEAN, " +
 								 " winner CHAR(64)," +
 								 " loser CHAR(64)," +
