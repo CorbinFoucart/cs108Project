@@ -1241,6 +1241,8 @@ public class DatabasePipeline {
 		return retrieved;
 	}
 	
+	// ------------------- Performance Code
+	
 	
 	/**
 	 * Returns a list of the N most recent performances for
@@ -1270,6 +1272,156 @@ public class DatabasePipeline {
 		}
 		return retrieved;
 	}
+	
+	/**
+	 * Returns a list of performances (on all quizzes)
+	 *  for the specified user sorted by score
+	 * @param user username of user
+	 * @return list of performances for user
+	 */
+	public ArrayList<Performance> getPerformancesSortByScore(String user) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
+					+ user + "\" ORDER BY score DESC");
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				retrieved.add(perf);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	
+	
+	/**
+	 * Returns a list of performances (on all quizzes)
+	 *  for the specified user sorted by time taken for quiz
+	 * @param user username of user
+	 * @return list of performances for user
+	 */
+	public ArrayList<Performance> getPerformancesSortByTimeTaken(String user) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE taken_by_user=\"" 
+					+ user + "\" ORDER BY time_taken ASC");
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				retrieved.add(perf);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	/**
+	 * Returns a list of performances for a specified user
+	 * on a specified quiz ordered by score
+	 * @param user username of user
+	 * @param quiz_id id of quiz
+	 * @return list of performances on quiz for user
+	 */
+	public ArrayList<Performance> getQuizPerformancesSortByScore(String user, String quiz_id) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
+												+ quiz_id + "\" AND taken_by_user=\"" + user + 
+												"\" ORDER BY score DESC, time_taken ASC");
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				retrieved.add(perf);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	
+	/**
+	 * Returns a list of performances for a specified user
+	 * on a specified quiz sorted by time taken
+	 * @param user username of user
+	 * @param quiz_id id of quiz
+	 * @return list of performances on quiz for user
+	 */
+	public ArrayList<Performance> getQuizPerformancesSortByTimeTaken(String user, String quiz_id) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
+												+ quiz_id + "\" AND taken_by_user=\"" + user + 
+												"\" ORDER BY time_taken ASC");
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				retrieved.add(perf);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	/**
+	 * Returns a list of performances for a specified user
+	 * on a specified quiz ordered by score
+	 * @param user username of user
+	 * @param quiz_id id of quiz
+	 * @return list of performances on quiz for user
+	 */
+	public ArrayList<Performance> getAllQuizPerformancesSortByScore(String quiz_id) {
+		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
+												+ quiz_id + "\"" + "\" ORDER BY score DESC, time_taken ASC");
+			while (rs.next()) {
+				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+				retrieved.add(perf);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retrieved;
+	}
+	
+	
+//	/**
+//	 * Returns a list of performances for a specified user
+//	 * on a specified quiz sorted by time taken
+//	 * @param user username of user
+//	 * @param quiz_id id of quiz
+//	 * @return list of performances on quiz for user
+//	 */
+//	public ArrayList<Performance> getAllQuizPerformancesSortByTimeTaken(String quiz_id) {
+//		ArrayList<Performance> retrieved = new ArrayList<Performance>();
+//		try {
+//			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE quiz_id=\""
+//											+ quiz_id + "\"" + "\" ORDER BY score DESC, time_taken ASC");
+//			while (rs.next()) {
+//				Performance perf = new Performance(rs.getString("quiz_name"), rs.getString("quiz_id"), 
+//						rs.getString("taken_by_user"), rs.getDouble("score"), rs.getString("date_string"),
+//						rs.getLong("date_long"), rs.getString("performance_id"), rs.getLong("time_taken"));
+//				retrieved.add(perf);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return retrieved;
+//	}
+	
+	// ------------------------------------- Achievements
 	
 	
 	/**
@@ -2017,6 +2169,25 @@ public class DatabasePipeline {
 			}			
 		}		
 		return pctHist;
+	}
+	
+	// Returns the user's percentile
+	public int getPercentile(String quiz_id, String performance_id) {
+		int N_below = 0;
+		ArrayList<Performance> perfs = getAllQuizPerformancesSortByScore(quiz_id);
+		for (int i = perfs.size() - 1; i >= 0; i--) {
+			Performance currPerf = perfs.get(i);
+			String currID = currPerf.getID();
+			if (!currID.equals(performance_id)) {
+				N_below++;
+			}else {
+				break;
+			}			
+		}
+		int N_total = perfs.size();
+		double percent = N_below / N_total * 100;
+		int percentile = (int) percent;
+		return percentile;
 	}
 	
 		
