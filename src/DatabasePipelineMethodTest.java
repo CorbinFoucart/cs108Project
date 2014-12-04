@@ -1,6 +1,7 @@
 package project;
 
 import static org.junit.Assert.*;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -227,6 +228,62 @@ public class DatabasePipelineMethodTest {
 		pipeline.addPerformanceToDB(per9);
 		pipeline.addPerformanceToDB(per10);
 		
+		// test of statistics
+		
+		// make ollie quiz
+		Quiz OllieQuiz = new Quiz("Ollie Quiz", false, false, false, "Ollie");
+		QuestionResponse qOllie = new QuestionResponse("Who is the fastest Doggie?");
+		q1.addAcceptedAnswer("Ollie!");
+		q1.addAcceptedAnswer("ollie!");
+		q1.addAcceptedAnswer("OLLIE IS!");
+		OllieQuiz.addQuestion(qOllie);
+		
+		
+		
+		// take ollie quiz like a billion times
+		int NPerfs = 100;
+		for (int i = 0; i < NPerfs; i++) {
+			
+			Performance perf = new Performance(OllieQuiz, "Ollie", 0);
+			perf.startTimer();
+			
+			double randScore = Math.random();
+			
+			try {
+				long sleep = (long) (100 * randScore);
+				Thread.sleep(sleep);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			// on his last try, Ollie fucking nails it
+			if (i == NPerfs - 1) randScore = 1.0;
+			
+			perf.stopTimer();
+			perf.setScore(randScore);
+			
+			pipeline.addPerformanceToDB(perf);
+			
+			double avOllie = pipeline.getQuizAverage(OllieQuiz.getQuizID());
+			System.out.println(avOllie);
+			
+		}
+		
+		double SdOllie = pipeline.getQuizOverallStandardDeviation(OllieQuiz.getQuizID());
+		System.out.println(SdOllie);
+		
+		int[] frqTable = pipeline.getQuizFrequencyTable(OllieQuiz.getQuizID());
+		for (int i = 0; i < frqTable.length; i++) {
+			System.out.println(frqTable[i]);
+		}
+		
+		double[] histPct = pipeline.getQuizHistPct(OllieQuiz.getQuizID());
+		for (int i = 0; i < histPct.length; i++) {
+			System.out.println(histPct[i]);
+		}
+
+		
+		
 		pipeline.addCategory("Art");
 		pipeline.addCategory("Entertainment");
 		pipeline.addCategory("Geography");
@@ -304,6 +361,15 @@ public class DatabasePipelineMethodTest {
 		pipeline.addChallengeToDB(challenge16);
 		pipeline.addChallengeToDB(challenge17);
 		pipeline.addChallengeToDB(challenge18);
+		
+		
+		Achievement ach = new Achievement("Sarge", "amateur_author");
+		Achievement ach2 = new Achievement("Sarge", Achievement.QUIZ_MACHINE);
+		Achievement ach3 = new Achievement("Sarge", Achievement.BEAT_THE_ELEPHANT);
+		pipeline.addAchievementToDB(ach);
+		pipeline.addAchievementToDB(ach2);
+		pipeline.addAchievementToDB(ach3);
+		
 
 		
 		// creates announcements
