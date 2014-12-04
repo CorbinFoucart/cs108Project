@@ -173,6 +173,89 @@ public class DatabasePipelineMethodTest {
 		pipeline.addQuizToDB(quiz1);
 		pipeline.addQuizToDB(quiz2);
 		
+		// random order
+		Quiz quiz3 = new Quiz("Rebecca's Dogs", true, false, false, "Oski");
+		MultiAnswerQuestion q31 = new MultiAnswerQuestion("Names of Dogs", false, 2);
+		q31.addAcceptedAnswer("Oski");
+		q31.addAcceptedAnswer("Cal");
+		q31.setWeight(2);
+		quiz3.addQuestion(q31);
+		
+		QuestionMultipleChoice q32 = new QuestionMultipleChoice("Which are Rebecca's dogs?");
+		q32.addChoice(true, "Oski");
+		q32.addChoice(false, "Leland");
+		q32.addChoice(true, "Cal");
+		q32.addChoice(false, "Tree");
+		quiz3.addQuestion(q32);
+		
+		QuestionResponse q33 = new QuestionResponse("How many dogs has Rebecca had?");
+		q33.addAcceptedAnswer("2");
+		q33.setWeight(2);
+		quiz3.addQuestion(q33);
+		
+		quiz3.setCategory("Miscellaneous");
+		quiz3.addTag("fun");
+		quiz3.addTag("doggies");
+		pipeline.addQuizToDB(quiz3);
+		
+		// one per page, immediate
+		Quiz quiz4 = new Quiz("Famous Dogs On Film", false, true, true, "Randy");
+		QuestionResponse q41 = new QuestionResponse("101 dogs with spots");
+		q41.addAcceptedAnswer("Dalmatians");
+		q41.addAcceptedAnswer("dalmatians");
+		q41.setWeight(3);
+		QuestionMultipleChoice q42 = new QuestionMultipleChoice("Elle Woods has a Chihuahua named:");
+		q42.addChoice(false, "Fluffy");
+		q42.addChoice(true, "Bruiser");
+		q42.addChoice(false, "Bunny");
+		q42.setWeight(2);
+		quiz4.addQuestion(q41);
+		quiz4.addQuestion(q42);
+		quiz4.setCategory("Movies");
+		quiz4.addTag("doggies");
+		quiz4.addTag("elle woods");
+		pipeline.addQuizToDB(quiz4);
+		
+		
+		// one per page, not immediate
+		Quiz quiz5 = new Quiz("Goings on in Lathrop", false, true, false, "Spot");
+		MultiAnswerQuestion q51 = new MultiAnswerQuestion("The 3 coolest people in Lathrop, alphabetical order", true, 3);
+		q51.addAcceptedAnswer("Corbin");
+		q51.addAcceptedAnswer("Emily");
+		q51.addAcceptedAnswer("Rebecca");
+		q51.setWeight(10);
+		quiz5.addQuestion(q51);
+		MultiAnswerQuestion q52 = new MultiAnswerQuestion("3 things on the desk", false, 3); 
+		q52.addAcceptedAnswer("cold coffee");
+		q52.addAcceptedAnswer("water bottle");
+		q52.addAcceptedAnswer("laptop");
+		q52.addAcceptedAnswer("pen");
+		q52.addAcceptedAnswer("soy sauce");
+		q52.setWeight(10);
+		quiz5.addQuestion(q52);
+		quiz5.setCategory("Miscellaneous");
+		quiz5.addTag("fun times in Lathrop");
+		pipeline.addQuizToDB(quiz5);
+		
+		Quiz quiz6 = new Quiz("Stanford", false, false, true, "Spot");
+		QuestionResponse q61 = new QuestionResponse("Who is our mascot?");
+		q61.addAcceptedAnswer("The Tree");
+		q61.addAcceptedAnswer("tree");
+		q61.addAcceptedAnswer("Tree");
+		QuestionMultipleChoice q62 = new QuestionMultipleChoice("Where is Stanford?");
+		q62.addChoice(true, "California");
+		q62.addChoice(true, "Palo Alto");
+		q62.addChoice(false, "Outer Space");
+		q62.addChoice(true, "USA! USA!");
+		q62.addChoice(false, "A sucky state");
+		quiz6.addQuestion(q61);
+		quiz6.addQuestion(q62);
+		quiz6.setCategory("Miscellaneous");
+		quiz6.addTag("cool");
+		quiz6.addTag("stanFORD");
+		pipeline.addQuizToDB(quiz6);
+		
+		
 		// quiz incrementation
 		// tests incrementQuizTaken(), clearquizPerformace()
 		

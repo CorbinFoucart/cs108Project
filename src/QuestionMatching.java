@@ -15,6 +15,7 @@ public class QuestionMatching implements Question, Serializable {
 		this.question = question;
 		matchOptions = new ArrayList<String>();
 		matchings = new ArrayList<Matching>();
+		generateID();
 	}
 	
 	public void addMatching(String leftOption, String rightOption) {
