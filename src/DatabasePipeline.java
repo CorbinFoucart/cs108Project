@@ -521,7 +521,7 @@ public class DatabasePipeline {
 	/**
 	 * Adds an Achievement to the database
 	 */
-	private void addAchievementToDB(Achievement achievement) {
+	public void addAchievementToDB(Achievement achievement) {
 		try {
 			while (true) {
 				String id = achievement.getID();
@@ -1873,6 +1873,16 @@ public class DatabasePipeline {
 		return challenges;
 	}
 	
+	//
+	public void setChallengeStatus(String challenge_id, int status) {
+		try {
+			stmt.executeUpdate("UPDATE challenge_table WHERE challenge_id=\"" 
+								+ challenge_id +"\"" + " SET status=" + status + ";");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void removeChallengeFromDB(String challenge_id) {
 		try {
 			stmt.executeUpdate("DELETE FROM challenge_table WHERE challenge_id=\"" 
@@ -1972,10 +1982,11 @@ public class DatabasePipeline {
 		int[] freqTable = new int[21];
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE "
-						       	+ "quiz_id=\"" + quiz_id + "\";");
+												+ "quiz_id=\"" + quiz_id + "\";");
 			while (rs.next()) {
 				double score = rs.getDouble("score");
-				int bucketIndex = (int) score * (N_BUCKET_INDICES - 1);
+				double scaledScore = score * (N_BUCKET_INDICES - 1);
+				int bucketIndex = (int) scaledScore;
 				freqTable[bucketIndex]++;
 			}
 		} catch (SQLException e) {
@@ -2002,11 +2013,13 @@ public class DatabasePipeline {
 		int[] freqTable = getQuizFrequencyTable(quiz_id);
 		if (N != 0) {
 			for (int i = 0; i < freqTable.length; i++) {
-				pctHist[i] = freqTable[i] / N;
+				pctHist[i] = (double) freqTable[i] / N;
 			}			
 		}		
 		return pctHist;
-	}		
+	}
+	
+		
 		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
@@ -2190,10 +2203,10 @@ public class DatabasePipeline {
 		private Statement stmt;
 		private Connection con;
 		
-		public static final String MYSQL_USERNAME = "ccs108cfoucart";  // //  "ccs108cfoucart"; // //   
-		public static final String MYSQL_PASSWORD =  "aigookue";  // //     "aigook"; // //
+		public static final String MYSQL_USERNAME = "ccs108rdeubler"; // //"ccs108cfoucart";  // //     
+		public static final String MYSQL_PASSWORD =  "vohhaegh"; // //"aigookue";  // //     
 		public static final String MYSQL_DATABASE_SERVER = "mysql-user-master.stanford.edu";
-		public static final String MYSQL_DATABASE_NAME = "c_cs108_cfoucart"; //"c_cs108_rdeubler"; //      
+		public static final String MYSQL_DATABASE_NAME = "c_cs108_rdeubler"; //"c_cs108_cfoucart"; //      
 		
 		public DBConnection() {
 			try {
