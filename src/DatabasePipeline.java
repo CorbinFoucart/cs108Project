@@ -1795,7 +1795,33 @@ public class DatabasePipeline {
 			e.printStackTrace();
 		}
 		return null;
-	}	
+	}
+	
+
+	public ArrayList<Challenge> getAllUserChallenges(String username) {
+		ArrayList<Challenge> challenges = new ArrayList<Challenge>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM challenge_table WHERE recipient=\"" 
+											 + username + "\"");
+			while (rs.next()) {
+				Challenge ch = new Challenge(rs.getString("issuer"), 
+											 rs.getString("recipient"),
+											 rs.getString("quiz_id"),
+											 rs.getString("message"),
+											 rs.getString("issuer_perf_id"),
+											 rs.getString("recipient_perf_id"),
+											 rs.getString("status"),
+											 rs.getBoolean("announced"),
+											 rs.getString("winner"),
+											 rs.getString("loser"),
+											 rs.getString("challenge_id"));
+				challenges.add(ch);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return challenges;
+	}
 	
 	public void addChallengeToDB(Challenge ch) {
 		try {
@@ -1822,7 +1848,7 @@ public class DatabasePipeline {
 	/*
 	 * Returns an array list of all unannounced challenges
 	 */
-	public ArrayList<Challenge> getUnAnnouncedChallenges(String username) {
+	public ArrayList<Challenge> getUnannouncedChallenges(String username) {
 		ArrayList<Challenge> challenges = new ArrayList<Challenge>();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM challenge_table WHERE recipient=\"" 
@@ -1847,6 +1873,15 @@ public class DatabasePipeline {
 		return challenges;
 	}
 	
+	public void removeChallengeFromDB(String challenge_id) {
+		try {
+			stmt.executeUpdate("DELETE FROM challenge_table WHERE challenge_id=\"" 
+					+ challenge_id + "\"");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	// --------------------------------------- rating system ---------------------------------------------- //
 	
 	/*
@@ -1863,11 +1898,8 @@ public class DatabasePipeline {
 	
 	// --------------------------------------- Quiz Statistics ---------------------------------------------- //
 	
-	// TODO 
-	// get performance by id --- DONE
-	// get quiz average
-	// get quiz standard deviation
-	// get quiz buckets 
+	// number of histogram buckets - consider making this auto
+	public static final int N_BUCKET_INDICES = 21;
 	
 	public Performance getPerformanceByID(String performanceID) {
 		try {
@@ -1898,7 +1930,7 @@ public class DatabasePipeline {
 		int N = 0;
 		
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE"
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE "
 												+ "quiz_id=\"" + quiz_id + "\";");
 			while (rs.next()) {
 				total += rs.getDouble("score");
@@ -1919,7 +1951,7 @@ public class DatabasePipeline {
 		int N = 0;
 		
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE"
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE "
 												+ "quiz_id=\"" + quiz_id + "\";");
 			while (rs.next()) {
 				double x_i = rs.getDouble("score");
@@ -1935,7 +1967,48 @@ public class DatabasePipeline {
 		
 	}
 	
+	// returns an integer array representing the frequency table of
+	public int[] getQuizFrequencyTable(String quiz_id) {
+		int[] freqTable = new int[21];
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE "
+												+ "quiz_id=\"" + quiz_id + "\";");
+			while (rs.next()) {
+				double score = rs.getDouble("score");
+				int bucketIndex = (int) score * (N_BUCKET_INDICES - 1);
+				freqTable[bucketIndex]++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return freqTable;
+	}
 	
+	// returns an double array representing the percentage of performances in each bucket
+	public double[] getQuizHistPct(String quiz_id) {
+		double[] pctHist = new double[N_BUCKET_INDICES];
+		int N = 0;
+		
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE "
+												+ "quiz_id=\"" + quiz_id + "\";");
+			while (rs.next()) {
+				N++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		int[] freqTable = getQuizFrequencyTable(quiz_id);
+		if (N != 0) {
+			for (int i = 0; i < freqTable.length; i++) {
+				pctHist[i] = freqTable[i] / N;
+			}			
+		}		
+		return pctHist;
+	}
+	
+		
 		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
