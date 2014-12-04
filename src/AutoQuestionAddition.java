@@ -1,5 +1,6 @@
 package project;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class AutoQuestionAddition implements Question{
@@ -110,6 +111,18 @@ public class AutoQuestionAddition implements Question{
 		return 0;
 	}
 	
+	public ArrayList<String> getUserAnswers() {
+		ArrayList<String> ans = new ArrayList<String>();
+		ans.add(userAnswer.toString());
+		return ans;
+	}
+	
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> ans = new ArrayList<String>();
+		ans.add(answer.toString());
+		return ans;
+	}
+	
 	
 	// --------------------- Getter, Setter Methods ------------------------ //
 	
@@ -156,4 +169,6 @@ public class AutoQuestionAddition implements Question{
 	public String getID() {
 		return id;
 	}
+	
+	
 }

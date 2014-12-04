@@ -11,12 +11,14 @@ public class QuestionResponse implements Question, Serializable {
 	private double weight;
 	private String quiz_id;
 	private String id;
+	private Boolean result;
 	
 	public QuestionResponse(String question) {
 		this.question = question;
 		this.acceptedAnswers = new ArrayList<Answer>();
 		this.weight = 1;
 		this.userAnswer = new Answer("");
+		result = false;
 		generateID();
 	}
 	
@@ -39,9 +41,11 @@ public class QuestionResponse implements Question, Serializable {
 		if (userAnswer == null) System.out.println("Need an answer");
 		
 		for (int i = 0; i < acceptedAnswers.size(); i++) {
-			if (acceptedAnswers.get(i).equals(userAnswer)) return true;
+			if (acceptedAnswers.get(i).equals(userAnswer)) {
+				result = true;
+			}
 		}
-		return false;
+		return result;
 	}
 
 	public String getQuestion() {
@@ -61,15 +65,27 @@ public class QuestionResponse implements Question, Serializable {
 			this.question = childQuestion;
 		}
 	
-	
-	public String getCorrectAnswer() {
-		String correctAns = null;
-		if (acceptedAnswers.size() > 0) {
-			Answer ans = acceptedAnswers.get(0);
-			correctAns = ans.toString();
-		}
-		return correctAns;
+		
+	public ArrayList<String> getUserAnswers() {
+			ArrayList<String> ans = new ArrayList<String>();
+			ans.add(userAnswer.toString());
+			return ans;
 	}
+	
+	public ArrayList<String> getCorrectAnswers() {
+			ArrayList<String> correctAnswers = new ArrayList<String>();
+			for (int i = 0; i < acceptedAnswers.size(); i++) {
+				correctAnswers.add(acceptedAnswers.get(i).toString());
+			}
+			return correctAnswers;
+		}
+	
+	public ArrayList<Boolean> getResults() {
+		ArrayList<Boolean> results = new ArrayList<Boolean>();
+		results.add(result);
+		return results;
+	}
+	
 	
 	public void printPossible() {
 		for (int i = 0; i < acceptedAnswers.size(); i++) {

@@ -1,5 +1,6 @@
 package project;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class AutoQuestionSubtraction implements Question{
@@ -156,6 +157,18 @@ public class AutoQuestionSubtraction implements Question{
 	
 	public String getID() {
 		return id;
+	}
+	
+	public ArrayList<String> getUserAnswers() {
+		ArrayList<String> ans = new ArrayList<String>();
+		ans.add(userAnswer.toString());
+		return ans;
+	}
+	
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> ans = new ArrayList<String>();
+		ans.add(answer.toString());
+		return ans;
 	}
 	
 }

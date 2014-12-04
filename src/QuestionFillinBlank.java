@@ -14,6 +14,7 @@ public class QuestionFillinBlank implements Question, Serializable {
 	private double weight;
 	private String quiz_id;
 	private String id;
+	private boolean result;
 	
 	public QuestionFillinBlank(String ques_part1, String ques_part2) {
 		this.question_part1 = ques_part1;
@@ -21,6 +22,7 @@ public class QuestionFillinBlank implements Question, Serializable {
 		this.acceptedAnswers = new ArrayList<Answer>();
 		this.weight = 1;
 		this.userAnswer = new Answer("");
+		result = false;
 		generateID();
 	}
 	
@@ -43,9 +45,11 @@ public class QuestionFillinBlank implements Question, Serializable {
 		if (userAnswer == null) System.out.println("Need an answer");
 		
 		for (int i = 0; i < acceptedAnswers.size(); i++) {
-			if (acceptedAnswers.get(i).equals(userAnswer)) return true;
+			if (acceptedAnswers.get(i).equals(userAnswer)) {
+				result =  true;
+			}
 		}
-		return false;
+		return result;
 	}
 
 	public String getQuestion() {
@@ -73,13 +77,20 @@ public class QuestionFillinBlank implements Question, Serializable {
 		acceptedAnswers = new ArrayList<Answer>();
 	}
 	
-	public String getCorrectAnswer() {
-		if (acceptedAnswers.size() >= 1) {
-			Answer ans = acceptedAnswers.get(0);
-			return ans.toString();
+	public ArrayList<String> getCorrectAnswers() {
+		ArrayList<String> correctAnswers = new ArrayList<String>();
+		for (int i = 0; i < acceptedAnswers.size(); i++) {
+			correctAnswers.add(acceptedAnswers.get(i).toString());
 		}
-		return null;
+		return correctAnswers;
 	}
+	
+	public ArrayList<String> getUserAnswers() {
+		ArrayList<String> ans = new ArrayList<String>();
+		ans.add(userAnswer.toString());
+		return ans;
+	}
+	
 	
 	public double getPercentage() {
 		if (isCorrect()) return 1;
@@ -109,6 +120,12 @@ public class QuestionFillinBlank implements Question, Serializable {
 	
 	public String getID() {
 		return id;
+	}
+	
+	public ArrayList<Boolean> getResults() {
+		ArrayList<Boolean> results = new ArrayList<Boolean>();
+		results.add(result);
+		return results;
 	}
 	
 	// ----------------------- Answer Inner Class ----------------- //
