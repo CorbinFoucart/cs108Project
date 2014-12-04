@@ -1972,7 +1972,7 @@ public class DatabasePipeline {
 		int[] freqTable = new int[21];
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM performance_table WHERE "
-												+ "quiz_id=\"" + quiz_id + "\";");
+						       	+ "quiz_id=\"" + quiz_id + "\";");
 			while (rs.next()) {
 				double score = rs.getDouble("score");
 				int bucketIndex = (int) score * (N_BUCKET_INDICES - 1);
@@ -2006,9 +2006,7 @@ public class DatabasePipeline {
 			}			
 		}		
 		return pctHist;
-	}
-	
-		
+	}		
 		
 	// --------------------------------------------- Extra  Utilities -------------------------------------------- //
 	
